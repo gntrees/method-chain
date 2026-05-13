@@ -1,0 +1,5914 @@
+{
+    "total_keywords": 844,
+    "extracted_on": "2025-12-06T15:49:47.520Z",
+    "keywords": [
+        {
+            "KEY_WORD": "A",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ABORT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ABS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ABSENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ABSOLUTE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ACCESS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ACCORDING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ACOS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ACTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ADA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "ADD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ADMIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AFTER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AGGREGATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ALL",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ALLOCATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ALSO",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ALTER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ALWAYS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ANALYSE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ANALYZE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AND",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ANY",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ANY_VALUE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ARE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ARRAY",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ARRAY_AGG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ARRAY_MAX_CARDINALITY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AS",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ASC",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ASENSITIVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ASIN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ASSERTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ASSIGNMENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ASYMMETRIC",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ATAN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ATOMIC",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ATTACH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ATTRIBUTE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ATTRIBUTES",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "AUTHORIZATION",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "AVG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BACKWARD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BASE64",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BEFORE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BEGIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BEGIN_FRAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BEGIN_PARTITION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BERNOULLI",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BETWEEN",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BIGINT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BINARY",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BIT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BIT_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BLOB",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BLOCKED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BOM",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BOOLEAN",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BOTH",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "BREADTH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BTRIM",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "BY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "C",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CACHE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CALL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CALLED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CARDINALITY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CASCADE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CASCADED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CASE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CAST",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CATALOG",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CATALOG_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CEIL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CEILING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CHAIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CHAINING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CHAR",
+            "POSTGRESQL": "non-reserved (cannot be function or type), requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CHARACTER",
+            "POSTGRESQL": "non-reserved (cannot be function or type), requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CHARACTERISTICS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CHARACTERS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CHARACTER_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CHARACTER_SET_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CHARACTER_SET_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CHARACTER_SET_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CHAR_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CHECK",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CHECKPOINT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CLASS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CLASSIFIER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CLASS_ORIGIN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CLOB",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CLOSE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CLUSTER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COALESCE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COBOL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COLLATE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COLLATION",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COLLATION_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COLLATION_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COLLATION_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COLLECT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COLUMN",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COLUMNS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COLUMN_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COMMAND_FUNCTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COMMAND_FUNCTION_CODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COMMENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COMMENTS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COMMIT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COMMITTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "COMPRESSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONCURRENTLY",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONDITION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONDITIONAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONDITION_NUMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CONFIGURATION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONFLICT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONNECT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CONNECTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CONNECTION_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRAINT",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRAINTS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRAINT_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRAINT_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRAINT_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CONSTRUCTOR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONTAINS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONTENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONTINUE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CONTROL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONVERSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CONVERT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COPARTITION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COPY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CORR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CORRESPONDING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COSH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COST",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COUNT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "COVAR_POP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "COVAR_SAMP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CREATE",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CROSS",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CSV",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CUBE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CUME_DIST",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURRENT_CATALOG",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_DATE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURRENT_DEFAULT_TRANSFORM_GROUP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_PATH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_ROLE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_ROW",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_SCHEMA",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_TIME",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURRENT_TIMESTAMP",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURRENT_TRANSFORM_GROUP_FOR_TYPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "CURRENT_USER",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURSOR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "CURSOR_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "CYCLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DATA",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "DATABASE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DATALINK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DATETIME_INTERVAL_CODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "DATETIME_INTERVAL_PRECISION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "DAY",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DB",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEALLOCATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DEC",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DECFLOAT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DECIMAL",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DECLARE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DEFAULT",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DEFAULTS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEFERRABLE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DEFERRED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DEFINE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEFINED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEFINER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEGREE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DELETE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DELIMITER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DELIMITERS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DENSE_RANK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEPENDS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEPTH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DEREF",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DERIVED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DESC",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DESCRIBE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DESCRIPTOR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DETACH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DETERMINISTIC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DIAGNOSTICS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DICTIONARY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DISABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DISCARD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DISCONNECT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DISPATCH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DISTINCT",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DLNEWCOPY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLPREVIOUSCOPY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLCOMPLETE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLCOMPLETEONLY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLCOMPLETEWRITE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLPATH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLPATHONLY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLPATHWRITE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLSCHEME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLURLSERVER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DLVALUE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DO",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DOCUMENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DOMAIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DOUBLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DROP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "DYNAMIC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "DYNAMIC_FUNCTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "DYNAMIC_FUNCTION_CODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EACH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ELEMENT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ELSE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EMPTY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ENABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ENCODING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ENCRYPTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "END",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "END-EXEC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "END_FRAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "END_PARTITION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ENFORCED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ENUM",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EQUALS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ERROR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ESCAPE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EVENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EVERY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXCEPT",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXCEPTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXCLUDE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXCLUDING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXCLUSIVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXEC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXECUTE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXISTS",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXPLAIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXPRESSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXTENSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "EXTERNAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "EXTRACT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FALSE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FAMILY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FETCH",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FILE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FILTER",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FINAL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FINALIZE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FINISH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FIRST",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FIRST_VALUE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FLAG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FLOAT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FLOOR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FOLLOWING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FOR",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FORCE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FOREIGN",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FORMAT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FORTRAN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "FORWARD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FOUND",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FRAME_ROW",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FREE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FREEZE",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FROM",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FULFILL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FULL",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "FUNCTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FUNCTIONS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "FUSION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "G",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GENERAL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GENERATED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GET",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GLOBAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GO",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GOTO",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GRANT",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GRANTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GREATEST",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GROUP",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "GROUPING",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "GROUPS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HANDLER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HAVING",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "HEADER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HIERARCHY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HOLD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "HOUR",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ID",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IDENTITY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "IF",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IGNORE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ILIKE",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IMMEDIATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "IMMEDIATELY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IMMUTABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IMPLEMENTATION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IMPLICIT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IMPORT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IN",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INCLUDE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INCLUDING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INCREMENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INDENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INDEX",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INDEXES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INDICATOR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INHERIT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INHERITS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INITIAL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INITIALLY",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INLINE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INNER",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INOUT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INPUT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INSENSITIVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INSERT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INSTANCE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INSTANTIABLE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INSTEAD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INTEGER",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INTEGRITY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INTERSECT",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INTERSECTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "INTERVAL",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INTO",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "INVOKER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "IS",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ISNULL",
+            "POSTGRESQL": "reserved (can be function or type), requires AS",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ISOLATION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "JOIN",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "JSON",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_ARRAY",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_ARRAYAGG",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_EXISTS",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_OBJECT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_OBJECTAGG",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_QUERY",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_SCALAR",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_SERIALIZE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_TABLE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_TABLE_PRIMITIVE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "JSON_VALUE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "K",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "KEEP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "KEY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "KEYS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "KEY_MEMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "KEY_TYPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LABEL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LAG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LANGUAGE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LARGE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LAST",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LAST_VALUE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LATERAL",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LEAD",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LEADING",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LEAKPROOF",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LEAST",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LEFT",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "LEVEL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LIBRARY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LIKE",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LIKE_REGEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LIMIT",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LINK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LISTAGG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LISTEN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOAD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LOCALTIME",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCALTIMESTAMP",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCATION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCATOR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCK",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOCKED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOG10",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOGGED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LOWER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "LPAD",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "LTRIM",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "M",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MAP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MAPPING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MATCH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MATCHED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MATCHES",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MATCH_NUMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MATCH_RECOGNIZE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MATERIALIZED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MAX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MAXVALUE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MEASURES",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MEMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MERGE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MERGE_ACTION",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MESSAGE_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "MESSAGE_OCTET_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "MESSAGE_TEXT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "METHOD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MIN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MINUTE",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MINVALUE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MOD",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MODE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MODIFIES",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MODULE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MONTH",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "MORE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "MOVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MULTISET",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "MUMPS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "NAME",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "NAMES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NAMESPACE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NATIONAL",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NATURAL",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NCHAR",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NCLOB",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NESTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NESTING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NEW",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NEXT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NFC",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NFD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NFKC",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NFKD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NIL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NO",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NONE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NORMALIZE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NORMALIZED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NOT",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NOTHING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NOTIFY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NOTNULL",
+            "POSTGRESQL": "reserved (can be function or type), requires AS",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NOWAIT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NTH_VALUE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NTILE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NULL",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NULLABLE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "NULLIF",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "NULLS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NULL_ORDERING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "NUMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "NUMERIC",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OBJECT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OBJECTS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OCCURRENCE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OCCURRENCES_REGEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OCTETS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OCTET_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OF",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OFF",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OFFSET",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OIDS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OLD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OMIT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ON",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ONE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ONLY",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OPEN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OPERATOR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OPTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OPTIONS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OR",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ORDER",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ORDERING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ORDINALITY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OTHERS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OUT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OUTER",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OUTPUT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OVER",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OVERFLOW",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OVERLAPS",
+            "POSTGRESQL": "reserved (can be function or type), requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "OVERLAY",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OVERRIDING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OWNED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "OWNER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "P",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PAD",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PARALLEL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_MODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_ORDINAL_POSITION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_SPECIFIC_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_SPECIFIC_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARAMETER_SPECIFIC_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARSER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PARTIAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PARTITION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PASCAL",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "PASS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PASSING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PASSTHROUGH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PASSWORD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PAST",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PATH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PATTERN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERCENT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERCENTILE_CONT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERCENTILE_DISC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERCENT_RANK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERIOD",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERMISSION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PERMUTE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PIPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PLACING",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PLAN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PLANS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PLI",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "POLICY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PORTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "POSITION",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "POSITION_REGEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "POWER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRECEDES",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRECEDING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRECISION",
+            "POSTGRESQL": "non-reserved (cannot be function or type), requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PREPARE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PREPARED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRESERVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PREV",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRIMARY",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PRIOR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PRIVATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRIVILEGES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PROCEDURAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PROCEDURE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PROCEDURES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PROGRAM",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PRUNE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PTF",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "PUBLIC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "PUBLICATION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "QUOTE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "QUOTES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RANGE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RANK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "READ",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "READS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REAL",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "REASSIGN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RECOVERY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RECURSIVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REF",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REFERENCES",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "REFERENCING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REFRESH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_AVGX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_AVGY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_COUNT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_INTERCEPT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_R2",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_SLOPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_SXX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_SXY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REGR_SYY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REINDEX",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RELATIVE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "RELEASE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RENAME",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REPEATABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "REPLACE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REPLICA",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REQUIRING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RESET",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RESPECT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RESTART",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RESTORE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RESTRICT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "RESULT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RETURN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RETURNED_CARDINALITY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RETURNED_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "RETURNED_OCTET_LENGTH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "RETURNED_SQLSTATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "RETURNING",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RETURNS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "REVOKE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "RIGHT",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ROLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROLLBACK",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ROLLUP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROUTINE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROUTINES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROUTINE_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROUTINE_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROUTINE_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROW",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ROWS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "ROW_COUNT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "ROW_NUMBER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RPAD",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RTRIM",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RULE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "RUNNING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SAVEPOINT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCALAR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCALE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "SCHEMA",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SCHEMAS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCHEMA_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "SCOPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCOPE_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCOPE_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCOPE_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SCROLL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SEARCH",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SECOND",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SECTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SECURITY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SEEK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SELECT",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SELECTIVE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SELF",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SEMANTICS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SENSITIVE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SEQUENCE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SEQUENCES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SERIALIZABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "SERVER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SERVER_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "SESSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SESSION_USER",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SET",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SETOF",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SETS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SHARE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SHOW",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SIMILAR",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SIMPLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SIN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SINH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SIZE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SKIP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SMALLINT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SNAPSHOT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SOME",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SORT_DIRECTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SOURCE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SPACE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SPECIFIC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SPECIFICTYPE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SPECIFIC_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SQL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SQLCODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SQLERROR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SQLEXCEPTION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SQLSTATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SQLWARNING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SQRT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STABLE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STANDALONE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "START",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STATEMENT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STATIC",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STATISTICS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STDDEV_POP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STDDEV_SAMP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STDIN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STDOUT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STORAGE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STORED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STRICT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STRING",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STRIP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STRUCTURE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "STYLE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUBCLASS_ORIGIN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "SUBMULTISET",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUBSCRIPTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUBSET",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUBSTRING",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SUBSTRING_REGEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUCCEEDS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SUM",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "SUPPORT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SYMMETRIC",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SYSID",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SYSTEM",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SYSTEM_TIME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "SYSTEM_USER",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "T",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TABLE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TABLES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TABLESAMPLE",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TABLESPACE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TABLE_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "TAN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TANH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TARGET",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TEMP",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TEMPLATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TEMPORARY",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TEXT",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "THEN",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "THROUGH",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TIES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TIME",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TIMESTAMP",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TIMEZONE_HOUR",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TIMEZONE_MINUTE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TO",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TOKEN",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TOP_LEVEL_COUNT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRAILING",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TRANSACTION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TRANSACTIONS_COMMITTED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSACTIONS_ROLLED_BACK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSACTION_ACTIVE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSFORM",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSFORMS",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSLATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TRANSLATE_REGEX",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRANSLATION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TREAT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRIGGER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRIGGER_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRIGGER_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRIGGER_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRIM",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TRIM_ARRAY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRUE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "TRUNCATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TRUSTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "TYPE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "TYPES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UESCAPE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNBOUNDED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNCOMMITTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "UNCONDITIONAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNDER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNENCRYPTED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNION",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "UNIQUE",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "UNKNOWN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "UNLINK",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNLISTEN",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNLOGGED",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNMATCHED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNNAMED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "non-reserved"
+        },
+        {
+            "KEY_WORD": "UNNEST",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNTIL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UNTYPED",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UPDATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "UPPER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "URI",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "USAGE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "USER",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "USER_DEFINED_TYPE_CATALOG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "USER_DEFINED_TYPE_CODE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "USER_DEFINED_TYPE_NAME",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "USER_DEFINED_TYPE_SCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "USING",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "UTF16",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UTF32",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "UTF8",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VACUUM",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VALID",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VALIDATE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VALIDATOR",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VALUE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "VALUES",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "VALUE_OF",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VARBINARY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VARCHAR",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "VARIADIC",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VARYING",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "VAR_POP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VAR_SAMP",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VERBOSE",
+            "POSTGRESQL": "reserved (can be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VERSION",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VERSIONING",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VIEW",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "VIEWS",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VIRTUAL",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "VOLATILE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WHEN",
+            "POSTGRESQL": "reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "WHENEVER",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "WHERE",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "WHITESPACE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WIDTH_BUCKET",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WINDOW",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WITH",
+            "POSTGRESQL": "reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "WITHIN",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WITHOUT",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WORK",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "WRAPPER",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "WRITE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "XML",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLAGG",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLATTRIBUTES",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLBINARY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLCAST",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLCOMMENT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLCONCAT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLDECLARATION",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLDOCUMENT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLELEMENT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLEXISTS",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLFOREST",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLITERATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLNAMESPACES",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLPARSE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLPI",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLQUERY",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLROOT",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "NOT_MENTIONED",
+            "SQL:2016": "NOT_MENTIONED",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLSCHEMA",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLSERIALIZE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLTABLE",
+            "POSTGRESQL": "non-reserved (cannot be function or type)",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLTEXT",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "XMLVALIDATE",
+            "POSTGRESQL": "NOT_MENTIONED",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "YEAR",
+            "POSTGRESQL": "non-reserved, requires AS",
+            "SQL:2023": "reserved",
+            "SQL:2016": "reserved",
+            "SQL-92": "reserved"
+        },
+        {
+            "KEY_WORD": "YES",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "NOT_MENTIONED"
+        },
+        {
+            "KEY_WORD": "ZONE",
+            "POSTGRESQL": "non-reserved",
+            "SQL:2023": "non-reserved",
+            "SQL:2016": "non-reserved",
+            "SQL-92": "reserved"
+        }
+    ]
+}

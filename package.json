@@ -1,0 +1,12 @@
+{
+  "name": "gntrees-method-chain",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.8.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "type": "module"
+}
