@@ -72,10 +72,20 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
     if (target == "typescript" || target == "javascript") {
         return chain.chain.values.map(value => {
             if ("functionCall" in value) {
-                const args = value.functionCall.arguments.map(arg => {
-                    return normalizeArgument(arg);
-                }).join(", ");
-                return `.${normalizeName(value.functionCall.name, "camel")}(${args})`;
+                let args: string;
+                if (value.functionCall.isTemplateLiteral) {
+                    args = value.functionCall.arguments.map(arg => {
+                        if ("string" in arg) {
+                            return arg.string.value;
+                        }
+                        else return '${' + normalizeArgument(arg) + '}';
+                    }).join("")
+                } else [
+                    args = value.functionCall.arguments.map(arg => {
+                        return normalizeArgument(arg);
+                    }).join(", ")
+                ]
+                return `.${normalizeName(value.functionCall.name, "camel")}${value.functionCall.isTemplateLiteral ? `\`${args}\`` : `(${args})`}`;
             }
             if ("propertyCall" in value) {
                 return `.${normalizeName(value.propertyCall.name, "camel")}`;

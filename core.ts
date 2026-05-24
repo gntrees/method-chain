@@ -9,26 +9,31 @@ const baseTypesContent = {
 }
 
 export async function generateProject(project: ProjectType, config: ConfigType) {
-    const stringifyStruct = (struct: StructType): string => {
-        if ("string" in struct.struct) {
+    const stringifyStruct = (struct: StructType['struct']): string => {
+        if ("string" in struct) {
             return "string";
-        } else if ("number" in struct.struct) {
+        } else if ("number" in struct) {
             return "number";
-        } else if ("boolean" in struct.struct) {
+        } else if ("boolean" in struct) {
             return "boolean";
-        } else if ("null" in struct.struct) {
+        } else if ("null" in struct) {
             return "null";
-        } else if ("object" in struct.struct) {
-            const properties = Object.entries(struct.struct.object.values)
-                .map(([key, value]) => `${key}: ${stringifyStruct(value)}`)
-                .join('; ');
+        } else if ("object" in struct) {
+            const properties = struct.object.values.map((item) => {
+                if (item.key === null && item.value !== null) {
+                    return `[key: string]: ${stringifyStruct(item.value)}`;
+                } else if (item.key !== null && item.value !== null) {
+                    return `${item.key}: ${stringifyStruct(item.value)}`;
+                } else throw new Error("Object properties must have a key or a value");
+            }).join('; ');
             return `{ ${properties} }`;
-        } else if ("array" in struct.struct) {
-            return `${stringifyStruct(struct.struct.array.value)}[]`;
-        } else if ("structureCall" in struct.struct) {
-            return normalizeName(struct.struct.structureCall.name, "pascal");
-        } else if ("union" in struct.struct) {
-            return struct.struct.union.values.map(value => stringifyStruct(value)).join(' | ');
+        } else if ("array" in struct) {
+            const arrayTypes = struct.array.values.map(item => stringifyStruct(item)).join(' | ');
+            return `(${arrayTypes})[]`;
+        } else if ("structureCall" in struct) {
+            return normalizeName(struct.structureCall.name, "pascal");
+        } else if ("union" in struct) {
+            return struct.union.values.map(value => stringifyStruct(value)).join(' | ');
         } else {
             throw new Error("Unknown struct type");
         }
@@ -160,14 +165,17 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                 if ("customFunction" in func) {
                     definitionContent += `${normalizeName(func.customFunction.name, "camel")}(...args: Parameters<typeof ${normalizeName(func.customFunction.name, "camel")}>): ReturnType<typeof ${normalizeName(func.customFunction.name, "camel")}> {\nreturn ${normalizeName(func.customFunction.name, "camel")}.apply(this, args);\n}\n`;
                 } else if ("function" in func) {
-                    const args = func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.optional ? "?" : ""}: ${stringifyStruct(arg.argument.struct)}`)
+                    if (func.function.isTemplateLiteral && func.function.arguments.length !== 1) throw new Error("Template literal functions must have one argument");
+                    const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: ('+func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
+                        +')[]'] :
+                    func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.optional ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`)
                     const argsString = args.join(', ');
-                    definitionContent += `${normalizeName(func.function.name, "camel")}(${args}): ${stringifyStructureCall(func.function.return,"pascal")} {
+                    definitionContent += `${normalizeName(func.function.name, "camel")}(${argsString}): ${stringifyStructureCall(func.function.return,"pascal")} {
                     ${"this" in func.function.return ? `
-                        this.${schemaVariableName} = cloneSchema(this.${schemaVariableName}, "${normalizeName(func.function.name,"camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}]);
+                        this.${schemaVariableName} = cloneSchema(this.${schemaVariableName}, "${normalizeName(func.function.name,"camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral});
                         return this;` :
                             "structureCall" in func.function.return ? `return (new ${stringifyStructureCall(func.function.return, "pascal")}())
-                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(cloneSchema(this.getSchema(),"${normalizeName(func.function.name,"camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}]))` : ""}
+                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(cloneSchema(this.getSchema(),"${normalizeName(func.function.name,"camel")}", [${func.function.isTemplateLiteral ? 'strings, ...args' : func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
                     }\n`;
                 } else {
                     throw new Error("Unknown function type");
@@ -257,7 +265,8 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             | undefined
             | ArgObject
             | ArgArray
-            | ${structureTypeOrName};
+            | ${structureTypeOrName}
+            | TemplateStringsArray;
 
         function normalizeArgument(arg: ArgType): FunctionCallType['functionCall']['arguments'][number] {
             if (typeof arg === "string") {
@@ -308,8 +317,9 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
 
         export function cloneSchema(
             oldSchema: SchemaType,
-            functionName?:string,
-            functionArgs?: ArgType[]
+            functionName:string,
+            functionArgs: ArgType[],
+            isTemplateLiteral: boolean
         ):SchemaType {
             const newSchema = {
                 schema: {
@@ -322,12 +332,28 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                     }
                 }
             };
-            if (functionName === undefined || functionArgs == undefined) return newSchema;
             const normalizedArgs = functionArgs.map(arg => arg === undefined ? arg : normalizeArgument(arg)).filter(arg => arg !== undefined);
+            let args = normalizedArgs
+            if (isTemplateLiteral) {
+                const strings = functionArgs[0] as unknown as TemplateStringsArray;
+                const expressions = functionArgs.slice(1);
+                const normalizedTemplateLiteralArgs: FunctionCallType['functionCall']['arguments'] = strings.reduce((acc, str, index) => {
+                    if (str) {
+                        acc.push({ string: { value: str } });
+                    }
+                    if (index < expressions.length) {
+                        const expr = expressions[index];
+                        acc.push(normalizeArgument(expr));
+                    }
+                    return acc;
+                }, [] as FunctionCallType['functionCall']['arguments']);
+                args = normalizedTemplateLiteralArgs;
+            }
             newSchema.schema.chain.chain.values.push({
                 functionCall: {
                     name: functionName ,
-                    arguments: normalizedArgs,
+                    arguments: args,
+                    isTemplateLiteral: isTemplateLiteral,
                 }
             })
             return newSchema;

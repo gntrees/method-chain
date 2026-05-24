@@ -41,6 +41,7 @@ type FunctionCallType = {
     functionCall: {
         name: string,
         arguments: (StringType | NumberType | BooleanType | NullType | ArrayType | ObjectType | ChainType)[]
+        isTemplateLiteral: boolean
     }
 }
 

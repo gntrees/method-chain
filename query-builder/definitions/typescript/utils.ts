@@ -21,7 +21,8 @@ type ArgType =
   | undefined
   | ArgObject
   | ArgArray
-  | QueryBuilder;
+  | QueryBuilder
+  | TemplateStringsArray;
 
 function normalizeArgument(
   arg: ArgType,
@@ -96,8 +97,9 @@ function normalizeArgument(
 
 export function cloneSchema(
   oldSchema: SchemaType,
-  functionName?: string,
-  functionArgs?: ArgType[],
+  functionName: string,
+  functionArgs: ArgType[],
+  isTemplateLiteral: boolean,
 ): SchemaType {
   const newSchema = {
     schema: {
@@ -110,14 +112,34 @@ export function cloneSchema(
       },
     },
   };
-  if (functionName === undefined || functionArgs == undefined) return newSchema;
   const normalizedArgs = functionArgs
     .map((arg) => (arg === undefined ? arg : normalizeArgument(arg)))
     .filter((arg) => arg !== undefined);
+  let args = normalizedArgs;
+  if (isTemplateLiteral) {
+    const strings = functionArgs[0] as unknown as TemplateStringsArray;
+    const expressions = functionArgs.slice(1);
+    const normalizedTemplateLiteralArgs: FunctionCallType["functionCall"]["arguments"] =
+      strings.reduce(
+        (acc, str, index) => {
+          if (str) {
+            acc.push({ string: { value: str } });
+          }
+          if (index < expressions.length) {
+            const expr = expressions[index];
+            acc.push(normalizeArgument(expr));
+          }
+          return acc;
+        },
+        [] as FunctionCallType["functionCall"]["arguments"],
+      );
+    args = normalizedTemplateLiteralArgs;
+  }
   newSchema.schema.chain.chain.values.push({
     functionCall: {
       name: functionName,
-      arguments: normalizedArgs,
+      arguments: args,
+      isTemplateLiteral: isTemplateLiteral,
     },
   });
   return newSchema;

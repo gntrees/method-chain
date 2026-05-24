@@ -35,4224 +35,4247 @@ export class QueryBuilder {
     this.schemaQueryBuilder.schema.chain.chain.initFunction = initFunction;
     return this;
   }
-  a(arg1?: QueryBuilder): QueryBuilder {
+  a(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "a", [arg1]),
+      cloneSchema(this.getSchema(), "a", [], false),
     );
   }
-  abort(arg1?: QueryBuilder): QueryBuilder {
+  abort(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "abort", [arg1]),
+      cloneSchema(this.getSchema(), "abort", [], false),
     );
   }
-  abs(arg1?: QueryBuilder): QueryBuilder {
+  abs(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "abs", [arg1]),
+      cloneSchema(this.getSchema(), "abs", [], false),
     );
   }
-  absent(arg1?: QueryBuilder): QueryBuilder {
+  absent(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "absent", [arg1]),
+      cloneSchema(this.getSchema(), "absent", [], false),
     );
   }
-  absolute(arg1?: QueryBuilder): QueryBuilder {
+  absolute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "absolute", [arg1]),
+      cloneSchema(this.getSchema(), "absolute", [], false),
     );
   }
-  access(arg1?: QueryBuilder): QueryBuilder {
+  access(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "access", [arg1]),
+      cloneSchema(this.getSchema(), "access", [], false),
     );
   }
-  according(arg1?: QueryBuilder): QueryBuilder {
+  according(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "according", [arg1]),
+      cloneSchema(this.getSchema(), "according", [], false),
     );
   }
-  acos(arg1?: QueryBuilder): QueryBuilder {
+  acos(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "acos", [arg1]),
+      cloneSchema(this.getSchema(), "acos", [], false),
     );
   }
-  action(arg1?: QueryBuilder): QueryBuilder {
+  action(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "action", [arg1]),
+      cloneSchema(this.getSchema(), "action", [], false),
     );
   }
-  ada(arg1?: QueryBuilder): QueryBuilder {
+  ada(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ada", [arg1]),
+      cloneSchema(this.getSchema(), "ada", [], false),
     );
   }
-  add(arg1?: QueryBuilder): QueryBuilder {
+  add(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "add", [arg1]),
+      cloneSchema(this.getSchema(), "add", [], false),
     );
   }
-  admin(arg1?: QueryBuilder): QueryBuilder {
+  admin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "admin", [arg1]),
+      cloneSchema(this.getSchema(), "admin", [], false),
     );
   }
-  after(arg1?: QueryBuilder): QueryBuilder {
+  after(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "after", [arg1]),
+      cloneSchema(this.getSchema(), "after", [], false),
     );
   }
-  aggregate(arg1?: QueryBuilder): QueryBuilder {
+  aggregate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "aggregate", [arg1]),
+      cloneSchema(this.getSchema(), "aggregate", [], false),
     );
   }
-  all(arg1?: QueryBuilder): QueryBuilder {
+  all(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "all", [arg1]),
+      cloneSchema(this.getSchema(), "all", [], false),
     );
   }
-  allocate(arg1?: QueryBuilder): QueryBuilder {
+  allocate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "allocate", [arg1]),
+      cloneSchema(this.getSchema(), "allocate", [], false),
     );
   }
-  also(arg1?: QueryBuilder): QueryBuilder {
+  also(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "also", [arg1]),
+      cloneSchema(this.getSchema(), "also", [], false),
     );
   }
-  alter(arg1?: QueryBuilder): QueryBuilder {
+  alter(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "alter", [arg1]),
+      cloneSchema(this.getSchema(), "alter", [], false),
     );
   }
-  always(arg1?: QueryBuilder): QueryBuilder {
+  always(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "always", [arg1]),
+      cloneSchema(this.getSchema(), "always", [], false),
     );
   }
-  analyse(arg1?: QueryBuilder): QueryBuilder {
+  analyse(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "analyse", [arg1]),
+      cloneSchema(this.getSchema(), "analyse", [], false),
     );
   }
-  analyze(arg1?: QueryBuilder): QueryBuilder {
+  analyze(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "analyze", [arg1]),
+      cloneSchema(this.getSchema(), "analyze", [], false),
     );
   }
-  and(arg1?: QueryBuilder): QueryBuilder {
+  and(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "and", [arg1]),
+      cloneSchema(this.getSchema(), "and", [], false),
     );
   }
-  any(arg1?: QueryBuilder): QueryBuilder {
+  any(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "any", [arg1]),
+      cloneSchema(this.getSchema(), "any", [], false),
     );
   }
-  anyValue(arg1?: QueryBuilder): QueryBuilder {
+  anyValue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "anyValue", [arg1]),
+      cloneSchema(this.getSchema(), "anyValue", [], false),
     );
   }
-  are(arg1?: QueryBuilder): QueryBuilder {
+  are(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "are", [arg1]),
+      cloneSchema(this.getSchema(), "are", [], false),
     );
   }
-  array(arg1?: QueryBuilder): QueryBuilder {
+  array(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "array", [arg1]),
+      cloneSchema(this.getSchema(), "array", [], false),
     );
   }
-  arrayAgg(arg1?: QueryBuilder): QueryBuilder {
+  arrayAgg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "arrayAgg", [arg1]),
+      cloneSchema(this.getSchema(), "arrayAgg", [], false),
     );
   }
-  arrayMaxCardinality(arg1?: QueryBuilder): QueryBuilder {
+  arrayMaxCardinality(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "arrayMaxCardinality", [arg1]),
+      cloneSchema(this.getSchema(), "arrayMaxCardinality", [], false),
     );
   }
-  as(arg1?: QueryBuilder): QueryBuilder {
+  as(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "as", [arg1]),
+      cloneSchema(this.getSchema(), "as", [], false),
     );
   }
-  asc(arg1?: QueryBuilder): QueryBuilder {
+  asc(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "asc", [arg1]),
+      cloneSchema(this.getSchema(), "asc", [], false),
     );
   }
-  asensitive(arg1?: QueryBuilder): QueryBuilder {
+  asensitive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "asensitive", [arg1]),
+      cloneSchema(this.getSchema(), "asensitive", [], false),
     );
   }
-  asin(arg1?: QueryBuilder): QueryBuilder {
+  asin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "asin", [arg1]),
+      cloneSchema(this.getSchema(), "asin", [], false),
     );
   }
-  assertion(arg1?: QueryBuilder): QueryBuilder {
+  assertion(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "assertion", [arg1]),
+      cloneSchema(this.getSchema(), "assertion", [], false),
     );
   }
-  assignment(arg1?: QueryBuilder): QueryBuilder {
+  assignment(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "assignment", [arg1]),
+      cloneSchema(this.getSchema(), "assignment", [], false),
     );
   }
-  asymmetric(arg1?: QueryBuilder): QueryBuilder {
+  asymmetric(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "asymmetric", [arg1]),
+      cloneSchema(this.getSchema(), "asymmetric", [], false),
     );
   }
-  at(arg1?: QueryBuilder): QueryBuilder {
+  at(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "at", [arg1]),
+      cloneSchema(this.getSchema(), "at", [], false),
     );
   }
-  atan(arg1?: QueryBuilder): QueryBuilder {
+  atan(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "atan", [arg1]),
+      cloneSchema(this.getSchema(), "atan", [], false),
     );
   }
-  atomic(arg1?: QueryBuilder): QueryBuilder {
+  atomic(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "atomic", [arg1]),
+      cloneSchema(this.getSchema(), "atomic", [], false),
     );
   }
-  attach(arg1?: QueryBuilder): QueryBuilder {
+  attach(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "attach", [arg1]),
+      cloneSchema(this.getSchema(), "attach", [], false),
     );
   }
-  attribute(arg1?: QueryBuilder): QueryBuilder {
+  attribute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "attribute", [arg1]),
+      cloneSchema(this.getSchema(), "attribute", [], false),
     );
   }
-  attributes(arg1?: QueryBuilder): QueryBuilder {
+  attributes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "attributes", [arg1]),
+      cloneSchema(this.getSchema(), "attributes", [], false),
     );
   }
-  authorization(arg1?: QueryBuilder): QueryBuilder {
+  authorization(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "authorization", [arg1]),
+      cloneSchema(this.getSchema(), "authorization", [], false),
     );
   }
-  avg(arg1?: QueryBuilder): QueryBuilder {
+  avg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "avg", [arg1]),
+      cloneSchema(this.getSchema(), "avg", [], false),
     );
   }
-  backward(arg1?: QueryBuilder): QueryBuilder {
+  backward(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "backward", [arg1]),
+      cloneSchema(this.getSchema(), "backward", [], false),
     );
   }
-  base64(arg1?: QueryBuilder): QueryBuilder {
+  base64(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "base64", [arg1]),
+      cloneSchema(this.getSchema(), "base64", [], false),
     );
   }
-  before(arg1?: QueryBuilder): QueryBuilder {
+  before(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "before", [arg1]),
+      cloneSchema(this.getSchema(), "before", [], false),
     );
   }
-  begin(arg1?: QueryBuilder): QueryBuilder {
+  begin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "begin", [arg1]),
+      cloneSchema(this.getSchema(), "begin", [], false),
     );
   }
-  beginFrame(arg1?: QueryBuilder): QueryBuilder {
+  beginFrame(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "beginFrame", [arg1]),
+      cloneSchema(this.getSchema(), "beginFrame", [], false),
     );
   }
-  beginPartition(arg1?: QueryBuilder): QueryBuilder {
+  beginPartition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "beginPartition", [arg1]),
+      cloneSchema(this.getSchema(), "beginPartition", [], false),
     );
   }
-  bernoulli(arg1?: QueryBuilder): QueryBuilder {
+  bernoulli(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "bernoulli", [arg1]),
+      cloneSchema(this.getSchema(), "bernoulli", [], false),
     );
   }
-  between(arg1?: QueryBuilder): QueryBuilder {
+  between(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "between", [arg1]),
+      cloneSchema(this.getSchema(), "between", [], false),
     );
   }
-  bigint(arg1?: QueryBuilder): QueryBuilder {
+  bigint(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "bigint", [arg1]),
+      cloneSchema(this.getSchema(), "bigint", [], false),
     );
   }
-  binary(arg1?: QueryBuilder): QueryBuilder {
+  binary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "binary", [arg1]),
+      cloneSchema(this.getSchema(), "binary", [], false),
     );
   }
-  bit(arg1?: QueryBuilder): QueryBuilder {
+  bit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "bit", [arg1]),
+      cloneSchema(this.getSchema(), "bit", [], false),
     );
   }
-  bitLength(arg1?: QueryBuilder): QueryBuilder {
+  bitLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "bitLength", [arg1]),
+      cloneSchema(this.getSchema(), "bitLength", [], false),
     );
   }
-  blob(arg1?: QueryBuilder): QueryBuilder {
+  blob(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "blob", [arg1]),
+      cloneSchema(this.getSchema(), "blob", [], false),
     );
   }
-  blocked(arg1?: QueryBuilder): QueryBuilder {
+  blocked(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "blocked", [arg1]),
+      cloneSchema(this.getSchema(), "blocked", [], false),
     );
   }
-  bom(arg1?: QueryBuilder): QueryBuilder {
+  bom(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "bom", [arg1]),
+      cloneSchema(this.getSchema(), "bom", [], false),
     );
   }
-  boolean(arg1?: QueryBuilder): QueryBuilder {
+  boolean(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "boolean", [arg1]),
+      cloneSchema(this.getSchema(), "boolean", [], false),
     );
   }
-  both(arg1?: QueryBuilder): QueryBuilder {
+  both(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "both", [arg1]),
+      cloneSchema(this.getSchema(), "both", [], false),
     );
   }
-  breadth(arg1?: QueryBuilder): QueryBuilder {
+  breadth(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "breadth", [arg1]),
+      cloneSchema(this.getSchema(), "breadth", [], false),
     );
   }
-  btrim(arg1?: QueryBuilder): QueryBuilder {
+  btrim(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "btrim", [arg1]),
+      cloneSchema(this.getSchema(), "btrim", [], false),
     );
   }
-  by(arg1?: QueryBuilder): QueryBuilder {
+  by(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "by", [arg1]),
+      cloneSchema(this.getSchema(), "by", [], false),
     );
   }
-  c(arg1?: QueryBuilder): QueryBuilder {
+  c(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "c", [arg1]),
+      cloneSchema(this.getSchema(), "c", [], false),
     );
   }
-  cache(arg1?: QueryBuilder): QueryBuilder {
+  cache(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cache", [arg1]),
+      cloneSchema(this.getSchema(), "cache", [], false),
     );
   }
-  call(arg1?: QueryBuilder): QueryBuilder {
+  call(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "call", [arg1]),
+      cloneSchema(this.getSchema(), "call", [], false),
     );
   }
-  called(arg1?: QueryBuilder): QueryBuilder {
+  called(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "called", [arg1]),
+      cloneSchema(this.getSchema(), "called", [], false),
     );
   }
-  cardinality(arg1?: QueryBuilder): QueryBuilder {
+  cardinality(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cardinality", [arg1]),
+      cloneSchema(this.getSchema(), "cardinality", [], false),
     );
   }
-  cascade(arg1?: QueryBuilder): QueryBuilder {
+  cascade(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cascade", [arg1]),
+      cloneSchema(this.getSchema(), "cascade", [], false),
     );
   }
-  cascaded(arg1?: QueryBuilder): QueryBuilder {
+  cascaded(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cascaded", [arg1]),
+      cloneSchema(this.getSchema(), "cascaded", [], false),
     );
   }
-  case(arg1?: QueryBuilder): QueryBuilder {
+  case(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "case", [arg1]),
+      cloneSchema(this.getSchema(), "case", [], false),
     );
   }
-  cast(arg1?: QueryBuilder): QueryBuilder {
+  cast(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cast", [arg1]),
+      cloneSchema(this.getSchema(), "cast", [], false),
     );
   }
-  catalog(arg1?: QueryBuilder): QueryBuilder {
+  catalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "catalog", [arg1]),
+      cloneSchema(this.getSchema(), "catalog", [], false),
     );
   }
-  catalogName(arg1?: QueryBuilder): QueryBuilder {
+  catalogName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "catalogName", [arg1]),
+      cloneSchema(this.getSchema(), "catalogName", [], false),
     );
   }
-  ceil(arg1?: QueryBuilder): QueryBuilder {
+  ceil(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ceil", [arg1]),
+      cloneSchema(this.getSchema(), "ceil", [], false),
     );
   }
-  ceiling(arg1?: QueryBuilder): QueryBuilder {
+  ceiling(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ceiling", [arg1]),
+      cloneSchema(this.getSchema(), "ceiling", [], false),
     );
   }
-  chain(arg1?: QueryBuilder): QueryBuilder {
+  chain(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "chain", [arg1]),
+      cloneSchema(this.getSchema(), "chain", [], false),
     );
   }
-  chaining(arg1?: QueryBuilder): QueryBuilder {
+  chaining(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "chaining", [arg1]),
+      cloneSchema(this.getSchema(), "chaining", [], false),
     );
   }
-  char(arg1?: QueryBuilder): QueryBuilder {
+  char(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "char", [arg1]),
+      cloneSchema(this.getSchema(), "char", [], false),
     );
   }
-  character(arg1?: QueryBuilder): QueryBuilder {
+  character(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "character", [arg1]),
+      cloneSchema(this.getSchema(), "character", [], false),
     );
   }
-  characteristics(arg1?: QueryBuilder): QueryBuilder {
+  characteristics(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characteristics", [arg1]),
+      cloneSchema(this.getSchema(), "characteristics", [], false),
     );
   }
-  characters(arg1?: QueryBuilder): QueryBuilder {
+  characters(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characters", [arg1]),
+      cloneSchema(this.getSchema(), "characters", [], false),
     );
   }
-  characterLength(arg1?: QueryBuilder): QueryBuilder {
+  characterLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characterLength", [arg1]),
+      cloneSchema(this.getSchema(), "characterLength", [], false),
     );
   }
-  characterSetCatalog(arg1?: QueryBuilder): QueryBuilder {
+  characterSetCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characterSetCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "characterSetCatalog", [], false),
     );
   }
-  characterSetName(arg1?: QueryBuilder): QueryBuilder {
+  characterSetName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characterSetName", [arg1]),
+      cloneSchema(this.getSchema(), "characterSetName", [], false),
     );
   }
-  characterSetSchema(arg1?: QueryBuilder): QueryBuilder {
+  characterSetSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "characterSetSchema", [arg1]),
+      cloneSchema(this.getSchema(), "characterSetSchema", [], false),
     );
   }
-  charLength(arg1?: QueryBuilder): QueryBuilder {
+  charLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "charLength", [arg1]),
+      cloneSchema(this.getSchema(), "charLength", [], false),
     );
   }
-  check(arg1?: QueryBuilder): QueryBuilder {
+  check(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "check", [arg1]),
+      cloneSchema(this.getSchema(), "check", [], false),
     );
   }
-  checkpoint(arg1?: QueryBuilder): QueryBuilder {
+  checkpoint(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "checkpoint", [arg1]),
+      cloneSchema(this.getSchema(), "checkpoint", [], false),
     );
   }
-  class(arg1?: QueryBuilder): QueryBuilder {
+  class(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "class", [arg1]),
+      cloneSchema(this.getSchema(), "class", [], false),
     );
   }
-  classifier(arg1?: QueryBuilder): QueryBuilder {
+  classifier(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "classifier", [arg1]),
+      cloneSchema(this.getSchema(), "classifier", [], false),
     );
   }
-  classOrigin(arg1?: QueryBuilder): QueryBuilder {
+  classOrigin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "classOrigin", [arg1]),
+      cloneSchema(this.getSchema(), "classOrigin", [], false),
     );
   }
-  clob(arg1?: QueryBuilder): QueryBuilder {
+  clob(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "clob", [arg1]),
+      cloneSchema(this.getSchema(), "clob", [], false),
     );
   }
-  close(arg1?: QueryBuilder): QueryBuilder {
+  close(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "close", [arg1]),
+      cloneSchema(this.getSchema(), "close", [], false),
     );
   }
-  cluster(arg1?: QueryBuilder): QueryBuilder {
+  cluster(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cluster", [arg1]),
+      cloneSchema(this.getSchema(), "cluster", [], false),
     );
   }
-  coalesce(arg1?: QueryBuilder): QueryBuilder {
+  coalesce(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "coalesce", [arg1]),
+      cloneSchema(this.getSchema(), "coalesce", [], false),
     );
   }
-  cobol(arg1?: QueryBuilder): QueryBuilder {
+  cobol(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cobol", [arg1]),
+      cloneSchema(this.getSchema(), "cobol", [], false),
     );
   }
-  collate(arg1?: QueryBuilder): QueryBuilder {
+  collate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collate", [arg1]),
+      cloneSchema(this.getSchema(), "collate", [], false),
     );
   }
-  collation(arg1?: QueryBuilder): QueryBuilder {
+  collation(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collation", [arg1]),
+      cloneSchema(this.getSchema(), "collation", [], false),
     );
   }
-  collationCatalog(arg1?: QueryBuilder): QueryBuilder {
+  collationCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collationCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "collationCatalog", [], false),
     );
   }
-  collationName(arg1?: QueryBuilder): QueryBuilder {
+  collationName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collationName", [arg1]),
+      cloneSchema(this.getSchema(), "collationName", [], false),
     );
   }
-  collationSchema(arg1?: QueryBuilder): QueryBuilder {
+  collationSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collationSchema", [arg1]),
+      cloneSchema(this.getSchema(), "collationSchema", [], false),
     );
   }
-  collect(arg1?: QueryBuilder): QueryBuilder {
+  collect(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "collect", [arg1]),
+      cloneSchema(this.getSchema(), "collect", [], false),
     );
   }
-  column(arg1?: QueryBuilder): QueryBuilder {
+  column(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "column", [arg1]),
+      cloneSchema(this.getSchema(), "column", [], false),
     );
   }
-  columns(arg1?: QueryBuilder): QueryBuilder {
+  columns(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "columns", [arg1]),
+      cloneSchema(this.getSchema(), "columns", [], false),
     );
   }
-  columnName(arg1?: QueryBuilder): QueryBuilder {
+  columnName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "columnName", [arg1]),
+      cloneSchema(this.getSchema(), "columnName", [], false),
     );
   }
-  commandFunction(arg1?: QueryBuilder): QueryBuilder {
+  commandFunction(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "commandFunction", [arg1]),
+      cloneSchema(this.getSchema(), "commandFunction", [], false),
     );
   }
-  commandFunctionCode(arg1?: QueryBuilder): QueryBuilder {
+  commandFunctionCode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "commandFunctionCode", [arg1]),
+      cloneSchema(this.getSchema(), "commandFunctionCode", [], false),
     );
   }
-  comment(arg1?: QueryBuilder): QueryBuilder {
+  comment(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "comment", [arg1]),
+      cloneSchema(this.getSchema(), "comment", [], false),
     );
   }
-  comments(arg1?: QueryBuilder): QueryBuilder {
+  comments(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "comments", [arg1]),
+      cloneSchema(this.getSchema(), "comments", [], false),
     );
   }
-  commit(arg1?: QueryBuilder): QueryBuilder {
+  commit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "commit", [arg1]),
+      cloneSchema(this.getSchema(), "commit", [], false),
     );
   }
-  committed(arg1?: QueryBuilder): QueryBuilder {
+  committed(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "committed", [arg1]),
+      cloneSchema(this.getSchema(), "committed", [], false),
     );
   }
-  compression(arg1?: QueryBuilder): QueryBuilder {
+  compression(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "compression", [arg1]),
+      cloneSchema(this.getSchema(), "compression", [], false),
     );
   }
-  concurrently(arg1?: QueryBuilder): QueryBuilder {
+  concurrently(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "concurrently", [arg1]),
+      cloneSchema(this.getSchema(), "concurrently", [], false),
     );
   }
-  condition(arg1?: QueryBuilder): QueryBuilder {
+  condition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "condition", [arg1]),
+      cloneSchema(this.getSchema(), "condition", [], false),
     );
   }
-  conditional(arg1?: QueryBuilder): QueryBuilder {
+  conditional(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "conditional", [arg1]),
+      cloneSchema(this.getSchema(), "conditional", [], false),
     );
   }
-  conditionNumber(arg1?: QueryBuilder): QueryBuilder {
+  conditionNumber(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "conditionNumber", [arg1]),
+      cloneSchema(this.getSchema(), "conditionNumber", [], false),
     );
   }
-  configuration(arg1?: QueryBuilder): QueryBuilder {
+  configuration(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "configuration", [arg1]),
+      cloneSchema(this.getSchema(), "configuration", [], false),
     );
   }
-  conflict(arg1?: QueryBuilder): QueryBuilder {
+  conflict(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "conflict", [arg1]),
+      cloneSchema(this.getSchema(), "conflict", [], false),
     );
   }
-  connect(arg1?: QueryBuilder): QueryBuilder {
+  connect(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "connect", [arg1]),
+      cloneSchema(this.getSchema(), "connect", [], false),
     );
   }
-  connection(arg1?: QueryBuilder): QueryBuilder {
+  connection(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "connection", [arg1]),
+      cloneSchema(this.getSchema(), "connection", [], false),
     );
   }
-  connectionName(arg1?: QueryBuilder): QueryBuilder {
+  connectionName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "connectionName", [arg1]),
+      cloneSchema(this.getSchema(), "connectionName", [], false),
     );
   }
-  constraint(arg1?: QueryBuilder): QueryBuilder {
+  constraint(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constraint", [arg1]),
+      cloneSchema(this.getSchema(), "constraint", [], false),
     );
   }
-  constraints(arg1?: QueryBuilder): QueryBuilder {
+  constraints(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constraints", [arg1]),
+      cloneSchema(this.getSchema(), "constraints", [], false),
     );
   }
-  constraintCatalog(arg1?: QueryBuilder): QueryBuilder {
+  constraintCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constraintCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "constraintCatalog", [], false),
     );
   }
-  constraintName(arg1?: QueryBuilder): QueryBuilder {
+  constraintName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constraintName", [arg1]),
+      cloneSchema(this.getSchema(), "constraintName", [], false),
     );
   }
-  constraintSchema(arg1?: QueryBuilder): QueryBuilder {
+  constraintSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constraintSchema", [arg1]),
+      cloneSchema(this.getSchema(), "constraintSchema", [], false),
     );
   }
-  constructorKeyword(arg1?: QueryBuilder): QueryBuilder {
+  constructorKeyword(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "constructorKeyword", [arg1]),
+      cloneSchema(this.getSchema(), "constructorKeyword", [], false),
     );
   }
-  contains(arg1?: QueryBuilder): QueryBuilder {
+  contains(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "contains", [arg1]),
+      cloneSchema(this.getSchema(), "contains", [], false),
     );
   }
-  content(arg1?: QueryBuilder): QueryBuilder {
+  content(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "content", [arg1]),
+      cloneSchema(this.getSchema(), "content", [], false),
     );
   }
-  continue(arg1?: QueryBuilder): QueryBuilder {
+  continue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "continue", [arg1]),
+      cloneSchema(this.getSchema(), "continue", [], false),
     );
   }
-  control(arg1?: QueryBuilder): QueryBuilder {
+  control(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "control", [arg1]),
+      cloneSchema(this.getSchema(), "control", [], false),
     );
   }
-  conversion(arg1?: QueryBuilder): QueryBuilder {
+  conversion(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "conversion", [arg1]),
+      cloneSchema(this.getSchema(), "conversion", [], false),
     );
   }
-  convert(arg1?: QueryBuilder): QueryBuilder {
+  convert(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "convert", [arg1]),
+      cloneSchema(this.getSchema(), "convert", [], false),
     );
   }
-  copartition(arg1?: QueryBuilder): QueryBuilder {
+  copartition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "copartition", [arg1]),
+      cloneSchema(this.getSchema(), "copartition", [], false),
     );
   }
-  copy(arg1?: QueryBuilder): QueryBuilder {
+  copy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "copy", [arg1]),
+      cloneSchema(this.getSchema(), "copy", [], false),
     );
   }
-  corr(arg1?: QueryBuilder): QueryBuilder {
+  corr(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "corr", [arg1]),
+      cloneSchema(this.getSchema(), "corr", [], false),
     );
   }
-  corresponding(arg1?: QueryBuilder): QueryBuilder {
+  corresponding(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "corresponding", [arg1]),
+      cloneSchema(this.getSchema(), "corresponding", [], false),
     );
   }
-  cos(arg1?: QueryBuilder): QueryBuilder {
+  cos(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cos", [arg1]),
+      cloneSchema(this.getSchema(), "cos", [], false),
     );
   }
-  cosh(arg1?: QueryBuilder): QueryBuilder {
+  cosh(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cosh", [arg1]),
+      cloneSchema(this.getSchema(), "cosh", [], false),
     );
   }
-  cost(arg1?: QueryBuilder): QueryBuilder {
+  cost(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cost", [arg1]),
+      cloneSchema(this.getSchema(), "cost", [], false),
     );
   }
-  count(arg1?: QueryBuilder): QueryBuilder {
+  count(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "count", [arg1]),
+      cloneSchema(this.getSchema(), "count", [], false),
     );
   }
-  covarPop(arg1?: QueryBuilder): QueryBuilder {
+  covarPop(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "covarPop", [arg1]),
+      cloneSchema(this.getSchema(), "covarPop", [], false),
     );
   }
-  covarSamp(arg1?: QueryBuilder): QueryBuilder {
+  covarSamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "covarSamp", [arg1]),
+      cloneSchema(this.getSchema(), "covarSamp", [], false),
     );
   }
-  create(arg1?: QueryBuilder): QueryBuilder {
+  create(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "create", [arg1]),
+      cloneSchema(this.getSchema(), "create", [], false),
     );
   }
-  cross(arg1?: QueryBuilder): QueryBuilder {
+  cross(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cross", [arg1]),
+      cloneSchema(this.getSchema(), "cross", [], false),
     );
   }
-  csv(arg1?: QueryBuilder): QueryBuilder {
+  csv(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "csv", [arg1]),
+      cloneSchema(this.getSchema(), "csv", [], false),
     );
   }
-  cube(arg1?: QueryBuilder): QueryBuilder {
+  cube(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cube", [arg1]),
+      cloneSchema(this.getSchema(), "cube", [], false),
     );
   }
-  cumeDist(arg1?: QueryBuilder): QueryBuilder {
+  cumeDist(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cumeDist", [arg1]),
+      cloneSchema(this.getSchema(), "cumeDist", [], false),
     );
   }
-  current(arg1?: QueryBuilder): QueryBuilder {
+  current(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "current", [arg1]),
+      cloneSchema(this.getSchema(), "current", [], false),
     );
   }
-  currentCatalog(arg1?: QueryBuilder): QueryBuilder {
+  currentCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "currentCatalog", [], false),
     );
   }
-  currentDate(arg1?: QueryBuilder): QueryBuilder {
+  currentDate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentDate", [arg1]),
+      cloneSchema(this.getSchema(), "currentDate", [], false),
     );
   }
-  currentDefaultTransformGroup(arg1?: QueryBuilder): QueryBuilder {
+  currentDefaultTransformGroup(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentDefaultTransformGroup", [arg1]),
+      cloneSchema(this.getSchema(), "currentDefaultTransformGroup", [], false),
     );
   }
-  currentPath(arg1?: QueryBuilder): QueryBuilder {
+  currentPath(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentPath", [arg1]),
+      cloneSchema(this.getSchema(), "currentPath", [], false),
     );
   }
-  currentRole(arg1?: QueryBuilder): QueryBuilder {
+  currentRole(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentRole", [arg1]),
+      cloneSchema(this.getSchema(), "currentRole", [], false),
     );
   }
-  currentRow(arg1?: QueryBuilder): QueryBuilder {
+  currentRow(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentRow", [arg1]),
+      cloneSchema(this.getSchema(), "currentRow", [], false),
     );
   }
-  currentSchema(arg1?: QueryBuilder): QueryBuilder {
+  currentSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentSchema", [arg1]),
+      cloneSchema(this.getSchema(), "currentSchema", [], false),
     );
   }
-  currentTime(arg1?: QueryBuilder): QueryBuilder {
+  currentTime(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentTime", [arg1]),
+      cloneSchema(this.getSchema(), "currentTime", [], false),
     );
   }
-  currentTimestamp(arg1?: QueryBuilder): QueryBuilder {
+  currentTimestamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentTimestamp", [arg1]),
+      cloneSchema(this.getSchema(), "currentTimestamp", [], false),
     );
   }
-  currentTransformGroupForType(arg1?: QueryBuilder): QueryBuilder {
+  currentTransformGroupForType(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentTransformGroupForType", [arg1]),
+      cloneSchema(this.getSchema(), "currentTransformGroupForType", [], false),
     );
   }
-  currentUser(arg1?: QueryBuilder): QueryBuilder {
+  currentUser(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "currentUser", [arg1]),
+      cloneSchema(this.getSchema(), "currentUser", [], false),
     );
   }
-  cursor(arg1?: QueryBuilder): QueryBuilder {
+  cursor(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cursor", [arg1]),
+      cloneSchema(this.getSchema(), "cursor", [], false),
     );
   }
-  cursorName(arg1?: QueryBuilder): QueryBuilder {
+  cursorName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cursorName", [arg1]),
+      cloneSchema(this.getSchema(), "cursorName", [], false),
     );
   }
-  cycle(arg1?: QueryBuilder): QueryBuilder {
+  cycle(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "cycle", [arg1]),
+      cloneSchema(this.getSchema(), "cycle", [], false),
     );
   }
-  data(arg1?: QueryBuilder): QueryBuilder {
+  data(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "data", [arg1]),
+      cloneSchema(this.getSchema(), "data", [], false),
     );
   }
-  database(arg1?: QueryBuilder): QueryBuilder {
+  database(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "database", [arg1]),
+      cloneSchema(this.getSchema(), "database", [], false),
     );
   }
-  datalink(arg1?: QueryBuilder): QueryBuilder {
+  datalink(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "datalink", [arg1]),
+      cloneSchema(this.getSchema(), "datalink", [], false),
     );
   }
-  date(arg1?: QueryBuilder): QueryBuilder {
+  date(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "date", [arg1]),
+      cloneSchema(this.getSchema(), "date", [], false),
     );
   }
-  datetimeIntervalCode(arg1?: QueryBuilder): QueryBuilder {
+  datetimeIntervalCode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "datetimeIntervalCode", [arg1]),
+      cloneSchema(this.getSchema(), "datetimeIntervalCode", [], false),
     );
   }
-  datetimeIntervalPrecision(arg1?: QueryBuilder): QueryBuilder {
+  datetimeIntervalPrecision(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "datetimeIntervalPrecision", [arg1]),
+      cloneSchema(this.getSchema(), "datetimeIntervalPrecision", [], false),
     );
   }
-  day(arg1?: QueryBuilder): QueryBuilder {
+  day(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "day", [arg1]),
+      cloneSchema(this.getSchema(), "day", [], false),
     );
   }
-  db(arg1?: QueryBuilder): QueryBuilder {
+  db(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "db", [arg1]),
+      cloneSchema(this.getSchema(), "db", [], false),
     );
   }
-  deallocate(arg1?: QueryBuilder): QueryBuilder {
+  deallocate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "deallocate", [arg1]),
+      cloneSchema(this.getSchema(), "deallocate", [], false),
     );
   }
-  dec(arg1?: QueryBuilder): QueryBuilder {
+  dec(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dec", [arg1]),
+      cloneSchema(this.getSchema(), "dec", [], false),
     );
   }
-  decfloat(arg1?: QueryBuilder): QueryBuilder {
+  decfloat(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "decfloat", [arg1]),
+      cloneSchema(this.getSchema(), "decfloat", [], false),
     );
   }
-  decimal(arg1?: QueryBuilder): QueryBuilder {
+  decimal(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "decimal", [arg1]),
+      cloneSchema(this.getSchema(), "decimal", [], false),
     );
   }
-  declare(arg1?: QueryBuilder): QueryBuilder {
+  declare(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "declare", [arg1]),
+      cloneSchema(this.getSchema(), "declare", [], false),
     );
   }
-  default(arg1?: QueryBuilder): QueryBuilder {
+  default(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "default", [arg1]),
+      cloneSchema(this.getSchema(), "default", [], false),
     );
   }
-  defaults(arg1?: QueryBuilder): QueryBuilder {
+  defaults(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "defaults", [arg1]),
+      cloneSchema(this.getSchema(), "defaults", [], false),
     );
   }
-  deferrable(arg1?: QueryBuilder): QueryBuilder {
+  deferrable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "deferrable", [arg1]),
+      cloneSchema(this.getSchema(), "deferrable", [], false),
     );
   }
-  deferred(arg1?: QueryBuilder): QueryBuilder {
+  deferred(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "deferred", [arg1]),
+      cloneSchema(this.getSchema(), "deferred", [], false),
     );
   }
-  define(arg1?: QueryBuilder): QueryBuilder {
+  define(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "define", [arg1]),
+      cloneSchema(this.getSchema(), "define", [], false),
     );
   }
-  defined(arg1?: QueryBuilder): QueryBuilder {
+  defined(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "defined", [arg1]),
+      cloneSchema(this.getSchema(), "defined", [], false),
     );
   }
-  definer(arg1?: QueryBuilder): QueryBuilder {
+  definer(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "definer", [arg1]),
+      cloneSchema(this.getSchema(), "definer", [], false),
     );
   }
-  degree(arg1?: QueryBuilder): QueryBuilder {
+  degree(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "degree", [arg1]),
+      cloneSchema(this.getSchema(), "degree", [], false),
     );
   }
-  delete(arg1?: QueryBuilder): QueryBuilder {
+  delete(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "delete", [arg1]),
+      cloneSchema(this.getSchema(), "delete", [], false),
     );
   }
-  delimiter(arg1?: QueryBuilder): QueryBuilder {
+  delimiter(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "delimiter", [arg1]),
+      cloneSchema(this.getSchema(), "delimiter", [], false),
     );
   }
-  delimiters(arg1?: QueryBuilder): QueryBuilder {
+  delimiters(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "delimiters", [arg1]),
+      cloneSchema(this.getSchema(), "delimiters", [], false),
     );
   }
-  denseRank(arg1?: QueryBuilder): QueryBuilder {
+  denseRank(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "denseRank", [arg1]),
+      cloneSchema(this.getSchema(), "denseRank", [], false),
     );
   }
-  depends(arg1?: QueryBuilder): QueryBuilder {
+  depends(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "depends", [arg1]),
+      cloneSchema(this.getSchema(), "depends", [], false),
     );
   }
-  depth(arg1?: QueryBuilder): QueryBuilder {
+  depth(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "depth", [arg1]),
+      cloneSchema(this.getSchema(), "depth", [], false),
     );
   }
-  deref(arg1?: QueryBuilder): QueryBuilder {
+  deref(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "deref", [arg1]),
+      cloneSchema(this.getSchema(), "deref", [], false),
     );
   }
-  derived(arg1?: QueryBuilder): QueryBuilder {
+  derived(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "derived", [arg1]),
+      cloneSchema(this.getSchema(), "derived", [], false),
     );
   }
-  desc(arg1?: QueryBuilder): QueryBuilder {
+  desc(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "desc", [arg1]),
+      cloneSchema(this.getSchema(), "desc", [], false),
     );
   }
-  describe(arg1?: QueryBuilder): QueryBuilder {
+  describe(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "describe", [arg1]),
+      cloneSchema(this.getSchema(), "describe", [], false),
     );
   }
-  descriptor(arg1?: QueryBuilder): QueryBuilder {
+  descriptor(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "descriptor", [arg1]),
+      cloneSchema(this.getSchema(), "descriptor", [], false),
     );
   }
-  detach(arg1?: QueryBuilder): QueryBuilder {
+  detach(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "detach", [arg1]),
+      cloneSchema(this.getSchema(), "detach", [], false),
     );
   }
-  deterministic(arg1?: QueryBuilder): QueryBuilder {
+  deterministic(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "deterministic", [arg1]),
+      cloneSchema(this.getSchema(), "deterministic", [], false),
     );
   }
-  diagnostics(arg1?: QueryBuilder): QueryBuilder {
+  diagnostics(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "diagnostics", [arg1]),
+      cloneSchema(this.getSchema(), "diagnostics", [], false),
     );
   }
-  dictionary(arg1?: QueryBuilder): QueryBuilder {
+  dictionary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dictionary", [arg1]),
+      cloneSchema(this.getSchema(), "dictionary", [], false),
     );
   }
-  disable(arg1?: QueryBuilder): QueryBuilder {
+  disable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "disable", [arg1]),
+      cloneSchema(this.getSchema(), "disable", [], false),
     );
   }
-  discard(arg1?: QueryBuilder): QueryBuilder {
+  discard(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "discard", [arg1]),
+      cloneSchema(this.getSchema(), "discard", [], false),
     );
   }
-  disconnect(arg1?: QueryBuilder): QueryBuilder {
+  disconnect(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "disconnect", [arg1]),
+      cloneSchema(this.getSchema(), "disconnect", [], false),
     );
   }
-  dispatch(arg1?: QueryBuilder): QueryBuilder {
+  dispatch(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dispatch", [arg1]),
+      cloneSchema(this.getSchema(), "dispatch", [], false),
     );
   }
-  distinct(arg1?: QueryBuilder): QueryBuilder {
+  distinct(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "distinct", [arg1]),
+      cloneSchema(this.getSchema(), "distinct", [], false),
     );
   }
-  dlnewcopy(arg1?: QueryBuilder): QueryBuilder {
+  dlnewcopy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlnewcopy", [arg1]),
+      cloneSchema(this.getSchema(), "dlnewcopy", [], false),
     );
   }
-  dlpreviouscopy(arg1?: QueryBuilder): QueryBuilder {
+  dlpreviouscopy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlpreviouscopy", [arg1]),
+      cloneSchema(this.getSchema(), "dlpreviouscopy", [], false),
     );
   }
-  dlurlcomplete(arg1?: QueryBuilder): QueryBuilder {
+  dlurlcomplete(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlcomplete", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlcomplete", [], false),
     );
   }
-  dlurlcompleteonly(arg1?: QueryBuilder): QueryBuilder {
+  dlurlcompleteonly(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlcompleteonly", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlcompleteonly", [], false),
     );
   }
-  dlurlcompletewrite(arg1?: QueryBuilder): QueryBuilder {
+  dlurlcompletewrite(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlcompletewrite", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlcompletewrite", [], false),
     );
   }
-  dlurlpath(arg1?: QueryBuilder): QueryBuilder {
+  dlurlpath(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlpath", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlpath", [], false),
     );
   }
-  dlurlpathonly(arg1?: QueryBuilder): QueryBuilder {
+  dlurlpathonly(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlpathonly", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlpathonly", [], false),
     );
   }
-  dlurlpathwrite(arg1?: QueryBuilder): QueryBuilder {
+  dlurlpathwrite(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlpathwrite", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlpathwrite", [], false),
     );
   }
-  dlurlscheme(arg1?: QueryBuilder): QueryBuilder {
+  dlurlscheme(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlscheme", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlscheme", [], false),
     );
   }
-  dlurlserver(arg1?: QueryBuilder): QueryBuilder {
+  dlurlserver(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlurlserver", [arg1]),
+      cloneSchema(this.getSchema(), "dlurlserver", [], false),
     );
   }
-  dlvalue(arg1?: QueryBuilder): QueryBuilder {
+  dlvalue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dlvalue", [arg1]),
+      cloneSchema(this.getSchema(), "dlvalue", [], false),
     );
   }
-  do(arg1?: QueryBuilder): QueryBuilder {
+  do(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "do", [arg1]),
+      cloneSchema(this.getSchema(), "do", [], false),
     );
   }
-  document(arg1?: QueryBuilder): QueryBuilder {
+  document(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "document", [arg1]),
+      cloneSchema(this.getSchema(), "document", [], false),
     );
   }
-  domain(arg1?: QueryBuilder): QueryBuilder {
+  domain(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "domain", [arg1]),
+      cloneSchema(this.getSchema(), "domain", [], false),
     );
   }
-  double(arg1?: QueryBuilder): QueryBuilder {
+  double(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "double", [arg1]),
+      cloneSchema(this.getSchema(), "double", [], false),
     );
   }
-  drop(arg1?: QueryBuilder): QueryBuilder {
+  drop(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "drop", [arg1]),
+      cloneSchema(this.getSchema(), "drop", [], false),
     );
   }
-  dynamic(arg1?: QueryBuilder): QueryBuilder {
+  dynamic(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dynamic", [arg1]),
+      cloneSchema(this.getSchema(), "dynamic", [], false),
     );
   }
-  dynamicFunction(arg1?: QueryBuilder): QueryBuilder {
+  dynamicFunction(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dynamicFunction", [arg1]),
+      cloneSchema(this.getSchema(), "dynamicFunction", [], false),
     );
   }
-  dynamicFunctionCode(arg1?: QueryBuilder): QueryBuilder {
+  dynamicFunctionCode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "dynamicFunctionCode", [arg1]),
+      cloneSchema(this.getSchema(), "dynamicFunctionCode", [], false),
     );
   }
-  each(arg1?: QueryBuilder): QueryBuilder {
+  each(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "each", [arg1]),
+      cloneSchema(this.getSchema(), "each", [], false),
     );
   }
-  element(arg1?: QueryBuilder): QueryBuilder {
+  element(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "element", [arg1]),
+      cloneSchema(this.getSchema(), "element", [], false),
     );
   }
-  else(arg1?: QueryBuilder): QueryBuilder {
+  else(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "else", [arg1]),
+      cloneSchema(this.getSchema(), "else", [], false),
     );
   }
-  empty(arg1?: QueryBuilder): QueryBuilder {
+  empty(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "empty", [arg1]),
+      cloneSchema(this.getSchema(), "empty", [], false),
     );
   }
-  enable(arg1?: QueryBuilder): QueryBuilder {
+  enable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "enable", [arg1]),
+      cloneSchema(this.getSchema(), "enable", [], false),
     );
   }
-  encoding(arg1?: QueryBuilder): QueryBuilder {
+  encoding(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "encoding", [arg1]),
+      cloneSchema(this.getSchema(), "encoding", [], false),
     );
   }
-  encrypted(arg1?: QueryBuilder): QueryBuilder {
+  encrypted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "encrypted", [arg1]),
+      cloneSchema(this.getSchema(), "encrypted", [], false),
     );
   }
-  end(arg1?: QueryBuilder): QueryBuilder {
+  end(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "end", [arg1]),
+      cloneSchema(this.getSchema(), "end", [], false),
     );
   }
-  endExec(arg1?: QueryBuilder): QueryBuilder {
+  endExec(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "endExec", [arg1]),
+      cloneSchema(this.getSchema(), "endExec", [], false),
     );
   }
-  endFrame(arg1?: QueryBuilder): QueryBuilder {
+  endFrame(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "endFrame", [arg1]),
+      cloneSchema(this.getSchema(), "endFrame", [], false),
     );
   }
-  endPartition(arg1?: QueryBuilder): QueryBuilder {
+  endPartition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "endPartition", [arg1]),
+      cloneSchema(this.getSchema(), "endPartition", [], false),
     );
   }
-  enforced(arg1?: QueryBuilder): QueryBuilder {
+  enforced(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "enforced", [arg1]),
+      cloneSchema(this.getSchema(), "enforced", [], false),
     );
   }
-  enum(arg1?: QueryBuilder): QueryBuilder {
+  enum(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "enum", [arg1]),
+      cloneSchema(this.getSchema(), "enum", [], false),
     );
   }
-  equals(arg1?: QueryBuilder): QueryBuilder {
+  equals(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "equals", [arg1]),
+      cloneSchema(this.getSchema(), "equals", [], false),
     );
   }
-  error(arg1?: QueryBuilder): QueryBuilder {
+  error(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "error", [arg1]),
+      cloneSchema(this.getSchema(), "error", [], false),
     );
   }
-  escape(arg1?: QueryBuilder): QueryBuilder {
+  escape(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "escape", [arg1]),
+      cloneSchema(this.getSchema(), "escape", [], false),
     );
   }
-  event(arg1?: QueryBuilder): QueryBuilder {
+  event(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "event", [arg1]),
+      cloneSchema(this.getSchema(), "event", [], false),
     );
   }
-  every(arg1?: QueryBuilder): QueryBuilder {
+  every(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "every", [arg1]),
+      cloneSchema(this.getSchema(), "every", [], false),
     );
   }
-  except(arg1?: QueryBuilder): QueryBuilder {
+  except(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "except", [arg1]),
+      cloneSchema(this.getSchema(), "except", [], false),
     );
   }
-  exception(arg1?: QueryBuilder): QueryBuilder {
+  exception(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exception", [arg1]),
+      cloneSchema(this.getSchema(), "exception", [], false),
     );
   }
-  exclude(arg1?: QueryBuilder): QueryBuilder {
+  exclude(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exclude", [arg1]),
+      cloneSchema(this.getSchema(), "exclude", [], false),
     );
   }
-  excluding(arg1?: QueryBuilder): QueryBuilder {
+  excluding(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "excluding", [arg1]),
+      cloneSchema(this.getSchema(), "excluding", [], false),
     );
   }
-  exclusive(arg1?: QueryBuilder): QueryBuilder {
+  exclusive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exclusive", [arg1]),
+      cloneSchema(this.getSchema(), "exclusive", [], false),
     );
   }
-  exec(arg1?: QueryBuilder): QueryBuilder {
+  exec(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exec", [arg1]),
+      cloneSchema(this.getSchema(), "exec", [], false),
     );
   }
-  execute(arg1?: QueryBuilder): QueryBuilder {
+  execute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "execute", [arg1]),
+      cloneSchema(this.getSchema(), "execute", [], false),
     );
   }
-  exists(arg1?: QueryBuilder): QueryBuilder {
+  exists(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exists", [arg1]),
+      cloneSchema(this.getSchema(), "exists", [], false),
     );
   }
-  exp(arg1?: QueryBuilder): QueryBuilder {
+  exp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "exp", [arg1]),
+      cloneSchema(this.getSchema(), "exp", [], false),
     );
   }
-  explain(arg1?: QueryBuilder): QueryBuilder {
+  explain(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "explain", [arg1]),
+      cloneSchema(this.getSchema(), "explain", [], false),
     );
   }
-  expression(arg1?: QueryBuilder): QueryBuilder {
+  expression(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "expression", [arg1]),
+      cloneSchema(this.getSchema(), "expression", [], false),
     );
   }
-  extension(arg1?: QueryBuilder): QueryBuilder {
+  extension(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "extension", [arg1]),
+      cloneSchema(this.getSchema(), "extension", [], false),
     );
   }
-  external(arg1?: QueryBuilder): QueryBuilder {
+  external(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "external", [arg1]),
+      cloneSchema(this.getSchema(), "external", [], false),
     );
   }
-  extract(arg1?: QueryBuilder): QueryBuilder {
+  extract(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "extract", [arg1]),
+      cloneSchema(this.getSchema(), "extract", [], false),
     );
   }
-  false(arg1?: QueryBuilder): QueryBuilder {
+  false(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "false", [arg1]),
+      cloneSchema(this.getSchema(), "false", [], false),
     );
   }
-  family(arg1?: QueryBuilder): QueryBuilder {
+  family(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "family", [arg1]),
+      cloneSchema(this.getSchema(), "family", [], false),
     );
   }
-  fetch(arg1?: QueryBuilder): QueryBuilder {
+  fetch(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "fetch", [arg1]),
+      cloneSchema(this.getSchema(), "fetch", [], false),
     );
   }
-  file(arg1?: QueryBuilder): QueryBuilder {
+  file(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "file", [arg1]),
+      cloneSchema(this.getSchema(), "file", [], false),
     );
   }
-  filter(arg1?: QueryBuilder): QueryBuilder {
+  filter(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "filter", [arg1]),
+      cloneSchema(this.getSchema(), "filter", [], false),
     );
   }
-  final(arg1?: QueryBuilder): QueryBuilder {
+  final(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "final", [arg1]),
+      cloneSchema(this.getSchema(), "final", [], false),
     );
   }
-  finalize(arg1?: QueryBuilder): QueryBuilder {
+  finalize(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "finalize", [arg1]),
+      cloneSchema(this.getSchema(), "finalize", [], false),
     );
   }
-  finish(arg1?: QueryBuilder): QueryBuilder {
+  finish(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "finish", [arg1]),
+      cloneSchema(this.getSchema(), "finish", [], false),
     );
   }
-  first(arg1?: QueryBuilder): QueryBuilder {
+  first(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "first", [arg1]),
+      cloneSchema(this.getSchema(), "first", [], false),
     );
   }
-  firstValue(arg1?: QueryBuilder): QueryBuilder {
+  firstValue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "firstValue", [arg1]),
+      cloneSchema(this.getSchema(), "firstValue", [], false),
     );
   }
-  flag(arg1?: QueryBuilder): QueryBuilder {
+  flag(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "flag", [arg1]),
+      cloneSchema(this.getSchema(), "flag", [], false),
     );
   }
-  float(arg1?: QueryBuilder): QueryBuilder {
+  float(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "float", [arg1]),
+      cloneSchema(this.getSchema(), "float", [], false),
     );
   }
-  floor(arg1?: QueryBuilder): QueryBuilder {
+  floor(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "floor", [arg1]),
+      cloneSchema(this.getSchema(), "floor", [], false),
     );
   }
-  following(arg1?: QueryBuilder): QueryBuilder {
+  following(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "following", [arg1]),
+      cloneSchema(this.getSchema(), "following", [], false),
     );
   }
-  for(arg1?: QueryBuilder): QueryBuilder {
+  for(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "for", [arg1]),
+      cloneSchema(this.getSchema(), "for", [], false),
     );
   }
-  force(arg1?: QueryBuilder): QueryBuilder {
+  force(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "force", [arg1]),
+      cloneSchema(this.getSchema(), "force", [], false),
     );
   }
-  foreign(arg1?: QueryBuilder): QueryBuilder {
+  foreign(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "foreign", [arg1]),
+      cloneSchema(this.getSchema(), "foreign", [], false),
     );
   }
-  format(arg1?: QueryBuilder): QueryBuilder {
+  format(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "format", [arg1]),
+      cloneSchema(this.getSchema(), "format", [], false),
     );
   }
-  fortran(arg1?: QueryBuilder): QueryBuilder {
+  fortran(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "fortran", [arg1]),
+      cloneSchema(this.getSchema(), "fortran", [], false),
     );
   }
-  forward(arg1?: QueryBuilder): QueryBuilder {
+  forward(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "forward", [arg1]),
+      cloneSchema(this.getSchema(), "forward", [], false),
     );
   }
-  found(arg1?: QueryBuilder): QueryBuilder {
+  found(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "found", [arg1]),
+      cloneSchema(this.getSchema(), "found", [], false),
     );
   }
-  frameRow(arg1?: QueryBuilder): QueryBuilder {
+  frameRow(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "frameRow", [arg1]),
+      cloneSchema(this.getSchema(), "frameRow", [], false),
     );
   }
-  free(arg1?: QueryBuilder): QueryBuilder {
+  free(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "free", [arg1]),
+      cloneSchema(this.getSchema(), "free", [], false),
     );
   }
-  freeze(arg1?: QueryBuilder): QueryBuilder {
+  freeze(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "freeze", [arg1]),
+      cloneSchema(this.getSchema(), "freeze", [], false),
     );
   }
-  from(arg1?: QueryBuilder): QueryBuilder {
+  from(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "from", [arg1]),
+      cloneSchema(this.getSchema(), "from", [], false),
     );
   }
-  fs(arg1?: QueryBuilder): QueryBuilder {
+  fs(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "fs", [arg1]),
+      cloneSchema(this.getSchema(), "fs", [], false),
     );
   }
-  fulfill(arg1?: QueryBuilder): QueryBuilder {
+  fulfill(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "fulfill", [arg1]),
+      cloneSchema(this.getSchema(), "fulfill", [], false),
     );
   }
-  full(arg1?: QueryBuilder): QueryBuilder {
+  full(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "full", [arg1]),
+      cloneSchema(this.getSchema(), "full", [], false),
     );
   }
-  function(arg1?: QueryBuilder): QueryBuilder {
+  function(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "function", [arg1]),
+      cloneSchema(this.getSchema(), "function", [], false),
     );
   }
-  functions(arg1?: QueryBuilder): QueryBuilder {
+  functions(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "functions", [arg1]),
+      cloneSchema(this.getSchema(), "functions", [], false),
     );
   }
-  fusion(arg1?: QueryBuilder): QueryBuilder {
+  fusion(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "fusion", [arg1]),
+      cloneSchema(this.getSchema(), "fusion", [], false),
     );
   }
-  g(arg1?: QueryBuilder): QueryBuilder {
+  g(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "g", [arg1]),
+      cloneSchema(this.getSchema(), "g", [], false),
     );
   }
-  general(arg1?: QueryBuilder): QueryBuilder {
+  general(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "general", [arg1]),
+      cloneSchema(this.getSchema(), "general", [], false),
     );
   }
-  generated(arg1?: QueryBuilder): QueryBuilder {
+  generated(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "generated", [arg1]),
+      cloneSchema(this.getSchema(), "generated", [], false),
     );
   }
-  get(arg1?: QueryBuilder): QueryBuilder {
+  get(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "get", [arg1]),
+      cloneSchema(this.getSchema(), "get", [], false),
     );
   }
-  global(arg1?: QueryBuilder): QueryBuilder {
+  global(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "global", [arg1]),
+      cloneSchema(this.getSchema(), "global", [], false),
     );
   }
-  go(arg1?: QueryBuilder): QueryBuilder {
+  go(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "go", [arg1]),
+      cloneSchema(this.getSchema(), "go", [], false),
     );
   }
-  goto(arg1?: QueryBuilder): QueryBuilder {
+  goto(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "goto", [arg1]),
+      cloneSchema(this.getSchema(), "goto", [], false),
     );
   }
-  grant(arg1?: QueryBuilder): QueryBuilder {
+  grant(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "grant", [arg1]),
+      cloneSchema(this.getSchema(), "grant", [], false),
     );
   }
-  granted(arg1?: QueryBuilder): QueryBuilder {
+  granted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "granted", [arg1]),
+      cloneSchema(this.getSchema(), "granted", [], false),
     );
   }
-  greatest(arg1?: QueryBuilder): QueryBuilder {
+  greatest(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "greatest", [arg1]),
+      cloneSchema(this.getSchema(), "greatest", [], false),
     );
   }
-  group(arg1?: QueryBuilder): QueryBuilder {
+  group(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "group", [arg1]),
+      cloneSchema(this.getSchema(), "group", [], false),
     );
   }
-  grouping(arg1?: QueryBuilder): QueryBuilder {
+  grouping(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "grouping", [arg1]),
+      cloneSchema(this.getSchema(), "grouping", [], false),
     );
   }
-  groups(arg1?: QueryBuilder): QueryBuilder {
+  groups(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "groups", [arg1]),
+      cloneSchema(this.getSchema(), "groups", [], false),
     );
   }
-  handler(arg1?: QueryBuilder): QueryBuilder {
+  handler(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "handler", [arg1]),
+      cloneSchema(this.getSchema(), "handler", [], false),
     );
   }
-  having(arg1?: QueryBuilder): QueryBuilder {
+  having(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "having", [arg1]),
+      cloneSchema(this.getSchema(), "having", [], false),
     );
   }
-  header(arg1?: QueryBuilder): QueryBuilder {
+  header(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "header", [arg1]),
+      cloneSchema(this.getSchema(), "header", [], false),
     );
   }
-  hex(arg1?: QueryBuilder): QueryBuilder {
+  hex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "hex", [arg1]),
+      cloneSchema(this.getSchema(), "hex", [], false),
     );
   }
-  hierarchy(arg1?: QueryBuilder): QueryBuilder {
+  hierarchy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "hierarchy", [arg1]),
+      cloneSchema(this.getSchema(), "hierarchy", [], false),
     );
   }
-  hold(arg1?: QueryBuilder): QueryBuilder {
+  hold(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "hold", [arg1]),
+      cloneSchema(this.getSchema(), "hold", [], false),
     );
   }
-  hour(arg1?: QueryBuilder): QueryBuilder {
+  hour(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "hour", [arg1]),
+      cloneSchema(this.getSchema(), "hour", [], false),
     );
   }
-  id(arg1?: QueryBuilder): QueryBuilder {
+  id(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "id", [arg1]),
+      cloneSchema(this.getSchema(), "id", [], false),
     );
   }
-  identity(arg1?: QueryBuilder): QueryBuilder {
+  identity(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "identity", [arg1]),
+      cloneSchema(this.getSchema(), "identity", [], false),
     );
   }
-  if(arg1?: QueryBuilder): QueryBuilder {
+  if(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "if", [arg1]),
+      cloneSchema(this.getSchema(), "if", [], false),
     );
   }
-  ignore(arg1?: QueryBuilder): QueryBuilder {
+  ignore(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ignore", [arg1]),
+      cloneSchema(this.getSchema(), "ignore", [], false),
     );
   }
-  ilike(arg1?: QueryBuilder): QueryBuilder {
+  ilike(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ilike", [arg1]),
+      cloneSchema(this.getSchema(), "ilike", [], false),
     );
   }
-  immediate(arg1?: QueryBuilder): QueryBuilder {
+  immediate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "immediate", [arg1]),
+      cloneSchema(this.getSchema(), "immediate", [], false),
     );
   }
-  immediately(arg1?: QueryBuilder): QueryBuilder {
+  immediately(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "immediately", [arg1]),
+      cloneSchema(this.getSchema(), "immediately", [], false),
     );
   }
-  immutable(arg1?: QueryBuilder): QueryBuilder {
+  immutable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "immutable", [arg1]),
+      cloneSchema(this.getSchema(), "immutable", [], false),
     );
   }
-  implementation(arg1?: QueryBuilder): QueryBuilder {
+  implementation(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "implementation", [arg1]),
+      cloneSchema(this.getSchema(), "implementation", [], false),
     );
   }
-  implicit(arg1?: QueryBuilder): QueryBuilder {
+  implicit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "implicit", [arg1]),
+      cloneSchema(this.getSchema(), "implicit", [], false),
     );
   }
-  import(arg1?: QueryBuilder): QueryBuilder {
+  import(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "import", [arg1]),
+      cloneSchema(this.getSchema(), "import", [], false),
     );
   }
-  in(arg1?: QueryBuilder): QueryBuilder {
+  in(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "in", [arg1]),
+      cloneSchema(this.getSchema(), "in", [], false),
     );
   }
-  include(arg1?: QueryBuilder): QueryBuilder {
+  include(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "include", [arg1]),
+      cloneSchema(this.getSchema(), "include", [], false),
     );
   }
-  including(arg1?: QueryBuilder): QueryBuilder {
+  including(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "including", [arg1]),
+      cloneSchema(this.getSchema(), "including", [], false),
     );
   }
-  increment(arg1?: QueryBuilder): QueryBuilder {
+  increment(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "increment", [arg1]),
+      cloneSchema(this.getSchema(), "increment", [], false),
     );
   }
-  indent(arg1?: QueryBuilder): QueryBuilder {
+  indent(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "indent", [arg1]),
+      cloneSchema(this.getSchema(), "indent", [], false),
     );
   }
-  index(arg1?: QueryBuilder): QueryBuilder {
+  index(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "index", [arg1]),
+      cloneSchema(this.getSchema(), "index", [], false),
     );
   }
-  indexes(arg1?: QueryBuilder): QueryBuilder {
+  indexes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "indexes", [arg1]),
+      cloneSchema(this.getSchema(), "indexes", [], false),
     );
   }
-  indicator(arg1?: QueryBuilder): QueryBuilder {
+  indicator(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "indicator", [arg1]),
+      cloneSchema(this.getSchema(), "indicator", [], false),
     );
   }
-  inherit(arg1?: QueryBuilder): QueryBuilder {
+  inherit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "inherit", [arg1]),
+      cloneSchema(this.getSchema(), "inherit", [], false),
     );
   }
-  inherits(arg1?: QueryBuilder): QueryBuilder {
+  inherits(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "inherits", [arg1]),
+      cloneSchema(this.getSchema(), "inherits", [], false),
     );
   }
-  initial(arg1?: QueryBuilder): QueryBuilder {
+  initial(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "initial", [arg1]),
+      cloneSchema(this.getSchema(), "initial", [], false),
     );
   }
-  initially(arg1?: QueryBuilder): QueryBuilder {
+  initially(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "initially", [arg1]),
+      cloneSchema(this.getSchema(), "initially", [], false),
     );
   }
-  inline(arg1?: QueryBuilder): QueryBuilder {
+  inline(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "inline", [arg1]),
+      cloneSchema(this.getSchema(), "inline", [], false),
     );
   }
-  inner(arg1?: QueryBuilder): QueryBuilder {
+  inner(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "inner", [arg1]),
+      cloneSchema(this.getSchema(), "inner", [], false),
     );
   }
-  inout(arg1?: QueryBuilder): QueryBuilder {
+  inout(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "inout", [arg1]),
+      cloneSchema(this.getSchema(), "inout", [], false),
     );
   }
-  input(arg1?: QueryBuilder): QueryBuilder {
+  input(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "input", [arg1]),
+      cloneSchema(this.getSchema(), "input", [], false),
     );
   }
-  insensitive(arg1?: QueryBuilder): QueryBuilder {
+  insensitive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "insensitive", [arg1]),
+      cloneSchema(this.getSchema(), "insensitive", [], false),
     );
   }
-  insert(arg1?: QueryBuilder): QueryBuilder {
+  insert(
+    table?: QueryBuilder,
+    values?:
+      | { [key: string]: QueryBuilder }
+      | { [key: string]: QueryBuilder }[],
+  ): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "insert", [arg1]),
+      cloneSchema(this.getSchema(), "insert", [table, values], false),
     );
   }
-  instance(arg1?: QueryBuilder): QueryBuilder {
+  instance(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "instance", [arg1]),
+      cloneSchema(this.getSchema(), "instance", [], false),
     );
   }
-  instantiable(arg1?: QueryBuilder): QueryBuilder {
+  instantiable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "instantiable", [arg1]),
+      cloneSchema(this.getSchema(), "instantiable", [], false),
     );
   }
-  instead(arg1?: QueryBuilder): QueryBuilder {
+  instead(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "instead", [arg1]),
+      cloneSchema(this.getSchema(), "instead", [], false),
     );
   }
-  int(arg1?: QueryBuilder): QueryBuilder {
+  int(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "int", [arg1]),
+      cloneSchema(this.getSchema(), "int", [], false),
     );
   }
-  integer(arg1?: QueryBuilder): QueryBuilder {
+  integer(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "integer", [arg1]),
+      cloneSchema(this.getSchema(), "integer", [], false),
     );
   }
-  integrity(arg1?: QueryBuilder): QueryBuilder {
+  integrity(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "integrity", [arg1]),
+      cloneSchema(this.getSchema(), "integrity", [], false),
     );
   }
-  intersect(arg1?: QueryBuilder): QueryBuilder {
+  intersect(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "intersect", [arg1]),
+      cloneSchema(this.getSchema(), "intersect", [], false),
     );
   }
-  intersection(arg1?: QueryBuilder): QueryBuilder {
+  intersection(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "intersection", [arg1]),
+      cloneSchema(this.getSchema(), "intersection", [], false),
     );
   }
-  interval(arg1?: QueryBuilder): QueryBuilder {
+  interval(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "interval", [arg1]),
+      cloneSchema(this.getSchema(), "interval", [], false),
     );
   }
-  into(arg1?: QueryBuilder): QueryBuilder {
+  into(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "into", [arg1]),
+      cloneSchema(this.getSchema(), "into", [], false),
     );
   }
-  invoker(arg1?: QueryBuilder): QueryBuilder {
+  invoker(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "invoker", [arg1]),
+      cloneSchema(this.getSchema(), "invoker", [], false),
     );
   }
-  is(arg1?: QueryBuilder): QueryBuilder {
+  is(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "is", [arg1]),
+      cloneSchema(this.getSchema(), "is", [], false),
     );
   }
-  isnull(arg1?: QueryBuilder): QueryBuilder {
+  isnull(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "isnull", [arg1]),
+      cloneSchema(this.getSchema(), "isnull", [], false),
     );
   }
-  isolation(arg1?: QueryBuilder): QueryBuilder {
+  isolation(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "isolation", [arg1]),
+      cloneSchema(this.getSchema(), "isolation", [], false),
     );
   }
-  join(arg1?: QueryBuilder): QueryBuilder {
+  join(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "join", [arg1]),
+      cloneSchema(this.getSchema(), "join", [], false),
     );
   }
-  json(arg1?: QueryBuilder): QueryBuilder {
+  json(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "json", [arg1]),
+      cloneSchema(this.getSchema(), "json", [], false),
     );
   }
-  jsonArray(arg1?: QueryBuilder): QueryBuilder {
+  jsonArray(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonArray", [arg1]),
+      cloneSchema(this.getSchema(), "jsonArray", [], false),
     );
   }
-  jsonArrayagg(arg1?: QueryBuilder): QueryBuilder {
+  jsonArrayagg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonArrayagg", [arg1]),
+      cloneSchema(this.getSchema(), "jsonArrayagg", [], false),
     );
   }
-  jsonExists(arg1?: QueryBuilder): QueryBuilder {
+  jsonExists(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonExists", [arg1]),
+      cloneSchema(this.getSchema(), "jsonExists", [], false),
     );
   }
-  jsonObject(arg1?: QueryBuilder): QueryBuilder {
+  jsonObject(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonObject", [arg1]),
+      cloneSchema(this.getSchema(), "jsonObject", [], false),
     );
   }
-  jsonObjectagg(arg1?: QueryBuilder): QueryBuilder {
+  jsonObjectagg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonObjectagg", [arg1]),
+      cloneSchema(this.getSchema(), "jsonObjectagg", [], false),
     );
   }
-  jsonQuery(arg1?: QueryBuilder): QueryBuilder {
+  jsonQuery(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonQuery", [arg1]),
+      cloneSchema(this.getSchema(), "jsonQuery", [], false),
     );
   }
-  jsonScalar(arg1?: QueryBuilder): QueryBuilder {
+  jsonScalar(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonScalar", [arg1]),
+      cloneSchema(this.getSchema(), "jsonScalar", [], false),
     );
   }
-  jsonSerialize(arg1?: QueryBuilder): QueryBuilder {
+  jsonSerialize(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonSerialize", [arg1]),
+      cloneSchema(this.getSchema(), "jsonSerialize", [], false),
     );
   }
-  jsonTable(arg1?: QueryBuilder): QueryBuilder {
+  jsonTable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonTable", [arg1]),
+      cloneSchema(this.getSchema(), "jsonTable", [], false),
     );
   }
-  jsonTablePrimitive(arg1?: QueryBuilder): QueryBuilder {
+  jsonTablePrimitive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonTablePrimitive", [arg1]),
+      cloneSchema(this.getSchema(), "jsonTablePrimitive", [], false),
     );
   }
-  jsonValue(arg1?: QueryBuilder): QueryBuilder {
+  jsonValue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "jsonValue", [arg1]),
+      cloneSchema(this.getSchema(), "jsonValue", [], false),
     );
   }
-  k(arg1?: QueryBuilder): QueryBuilder {
+  k(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "k", [arg1]),
+      cloneSchema(this.getSchema(), "k", [], false),
     );
   }
-  keep(arg1?: QueryBuilder): QueryBuilder {
+  keep(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "keep", [arg1]),
+      cloneSchema(this.getSchema(), "keep", [], false),
     );
   }
-  key(arg1?: QueryBuilder): QueryBuilder {
+  key(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "key", [arg1]),
+      cloneSchema(this.getSchema(), "key", [], false),
     );
   }
-  keys(arg1?: QueryBuilder): QueryBuilder {
+  keys(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "keys", [arg1]),
+      cloneSchema(this.getSchema(), "keys", [], false),
     );
   }
-  keyMember(arg1?: QueryBuilder): QueryBuilder {
+  keyMember(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "keyMember", [arg1]),
+      cloneSchema(this.getSchema(), "keyMember", [], false),
     );
   }
-  keyType(arg1?: QueryBuilder): QueryBuilder {
+  keyType(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "keyType", [arg1]),
+      cloneSchema(this.getSchema(), "keyType", [], false),
     );
   }
-  label(arg1?: QueryBuilder): QueryBuilder {
+  label(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "label", [arg1]),
+      cloneSchema(this.getSchema(), "label", [], false),
     );
   }
-  lag(arg1?: QueryBuilder): QueryBuilder {
+  lag(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lag", [arg1]),
+      cloneSchema(this.getSchema(), "lag", [], false),
     );
   }
-  language(arg1?: QueryBuilder): QueryBuilder {
+  language(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "language", [arg1]),
+      cloneSchema(this.getSchema(), "language", [], false),
     );
   }
-  large(arg1?: QueryBuilder): QueryBuilder {
+  large(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "large", [arg1]),
+      cloneSchema(this.getSchema(), "large", [], false),
     );
   }
-  last(arg1?: QueryBuilder): QueryBuilder {
+  last(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "last", [arg1]),
+      cloneSchema(this.getSchema(), "last", [], false),
     );
   }
-  lastValue(arg1?: QueryBuilder): QueryBuilder {
+  lastValue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lastValue", [arg1]),
+      cloneSchema(this.getSchema(), "lastValue", [], false),
     );
   }
-  lateral(arg1?: QueryBuilder): QueryBuilder {
+  lateral(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lateral", [arg1]),
+      cloneSchema(this.getSchema(), "lateral", [], false),
     );
   }
-  lead(arg1?: QueryBuilder): QueryBuilder {
+  lead(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lead", [arg1]),
+      cloneSchema(this.getSchema(), "lead", [], false),
     );
   }
-  leading(arg1?: QueryBuilder): QueryBuilder {
+  leading(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "leading", [arg1]),
+      cloneSchema(this.getSchema(), "leading", [], false),
     );
   }
-  leakproof(arg1?: QueryBuilder): QueryBuilder {
+  leakproof(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "leakproof", [arg1]),
+      cloneSchema(this.getSchema(), "leakproof", [], false),
     );
   }
-  least(arg1?: QueryBuilder): QueryBuilder {
+  least(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "least", [arg1]),
+      cloneSchema(this.getSchema(), "least", [], false),
     );
   }
-  left(arg1?: QueryBuilder): QueryBuilder {
+  left(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "left", [arg1]),
+      cloneSchema(this.getSchema(), "left", [], false),
     );
   }
-  length(arg1?: QueryBuilder): QueryBuilder {
+  length(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "length", [arg1]),
+      cloneSchema(this.getSchema(), "length", [], false),
     );
   }
-  level(arg1?: QueryBuilder): QueryBuilder {
+  level(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "level", [arg1]),
+      cloneSchema(this.getSchema(), "level", [], false),
     );
   }
-  library(arg1?: QueryBuilder): QueryBuilder {
+  library(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "library", [arg1]),
+      cloneSchema(this.getSchema(), "library", [], false),
     );
   }
-  like(arg1?: QueryBuilder): QueryBuilder {
+  like(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "like", [arg1]),
+      cloneSchema(this.getSchema(), "like", [], false),
     );
   }
-  likeRegex(arg1?: QueryBuilder): QueryBuilder {
+  likeRegex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "likeRegex", [arg1]),
+      cloneSchema(this.getSchema(), "likeRegex", [], false),
     );
   }
-  limit(arg1?: QueryBuilder): QueryBuilder {
+  limit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "limit", [arg1]),
+      cloneSchema(this.getSchema(), "limit", [], false),
     );
   }
-  link(arg1?: QueryBuilder): QueryBuilder {
+  link(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "link", [arg1]),
+      cloneSchema(this.getSchema(), "link", [], false),
     );
   }
-  listagg(arg1?: QueryBuilder): QueryBuilder {
+  listagg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "listagg", [arg1]),
+      cloneSchema(this.getSchema(), "listagg", [], false),
     );
   }
-  listen(arg1?: QueryBuilder): QueryBuilder {
+  listen(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "listen", [arg1]),
+      cloneSchema(this.getSchema(), "listen", [], false),
     );
   }
-  ln(arg1?: QueryBuilder): QueryBuilder {
+  ln(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ln", [arg1]),
+      cloneSchema(this.getSchema(), "ln", [], false),
     );
   }
-  load(arg1?: QueryBuilder): QueryBuilder {
+  load(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "load", [arg1]),
+      cloneSchema(this.getSchema(), "load", [], false),
     );
   }
-  local(arg1?: QueryBuilder): QueryBuilder {
+  local(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "local", [arg1]),
+      cloneSchema(this.getSchema(), "local", [], false),
     );
   }
-  localtime(arg1?: QueryBuilder): QueryBuilder {
+  localtime(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "localtime", [arg1]),
+      cloneSchema(this.getSchema(), "localtime", [], false),
     );
   }
-  localtimestamp(arg1?: QueryBuilder): QueryBuilder {
+  localtimestamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "localtimestamp", [arg1]),
+      cloneSchema(this.getSchema(), "localtimestamp", [], false),
     );
   }
-  location(arg1?: QueryBuilder): QueryBuilder {
+  location(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "location", [arg1]),
+      cloneSchema(this.getSchema(), "location", [], false),
     );
   }
-  locator(arg1?: QueryBuilder): QueryBuilder {
+  locator(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "locator", [arg1]),
+      cloneSchema(this.getSchema(), "locator", [], false),
     );
   }
-  lock(arg1?: QueryBuilder): QueryBuilder {
+  lock(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lock", [arg1]),
+      cloneSchema(this.getSchema(), "lock", [], false),
     );
   }
-  locked(arg1?: QueryBuilder): QueryBuilder {
+  locked(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "locked", [arg1]),
+      cloneSchema(this.getSchema(), "locked", [], false),
     );
   }
-  log(arg1?: QueryBuilder): QueryBuilder {
+  log(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "log", [arg1]),
+      cloneSchema(this.getSchema(), "log", [], false),
     );
   }
-  log10(arg1?: QueryBuilder): QueryBuilder {
+  log10(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "log10", [arg1]),
+      cloneSchema(this.getSchema(), "log10", [], false),
     );
   }
-  logged(arg1?: QueryBuilder): QueryBuilder {
+  logged(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "logged", [arg1]),
+      cloneSchema(this.getSchema(), "logged", [], false),
     );
   }
-  lower(arg1?: QueryBuilder): QueryBuilder {
+  lower(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lower", [arg1]),
+      cloneSchema(this.getSchema(), "lower", [], false),
     );
   }
-  lpad(arg1?: QueryBuilder): QueryBuilder {
+  lpad(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "lpad", [arg1]),
+      cloneSchema(this.getSchema(), "lpad", [], false),
     );
   }
-  ltrim(arg1?: QueryBuilder): QueryBuilder {
+  ltrim(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ltrim", [arg1]),
+      cloneSchema(this.getSchema(), "ltrim", [], false),
     );
   }
-  m(arg1?: QueryBuilder): QueryBuilder {
+  m(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "m", [arg1]),
+      cloneSchema(this.getSchema(), "m", [], false),
     );
   }
-  map(arg1?: QueryBuilder): QueryBuilder {
+  map(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "map", [arg1]),
+      cloneSchema(this.getSchema(), "map", [], false),
     );
   }
-  mapping(arg1?: QueryBuilder): QueryBuilder {
+  mapping(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "mapping", [arg1]),
+      cloneSchema(this.getSchema(), "mapping", [], false),
     );
   }
-  match(arg1?: QueryBuilder): QueryBuilder {
+  match(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "match", [arg1]),
+      cloneSchema(this.getSchema(), "match", [], false),
     );
   }
-  matched(arg1?: QueryBuilder): QueryBuilder {
+  matched(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "matched", [arg1]),
+      cloneSchema(this.getSchema(), "matched", [], false),
     );
   }
-  matches(arg1?: QueryBuilder): QueryBuilder {
+  matches(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "matches", [arg1]),
+      cloneSchema(this.getSchema(), "matches", [], false),
     );
   }
-  matchNumber(arg1?: QueryBuilder): QueryBuilder {
+  matchNumber(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "matchNumber", [arg1]),
+      cloneSchema(this.getSchema(), "matchNumber", [], false),
     );
   }
-  matchRecognize(arg1?: QueryBuilder): QueryBuilder {
+  matchRecognize(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "matchRecognize", [arg1]),
+      cloneSchema(this.getSchema(), "matchRecognize", [], false),
     );
   }
-  materialized(arg1?: QueryBuilder): QueryBuilder {
+  materialized(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "materialized", [arg1]),
+      cloneSchema(this.getSchema(), "materialized", [], false),
     );
   }
-  max(arg1?: QueryBuilder): QueryBuilder {
+  max(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "max", [arg1]),
+      cloneSchema(this.getSchema(), "max", [], false),
     );
   }
-  maxvalue(arg1?: QueryBuilder): QueryBuilder {
+  maxvalue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "maxvalue", [arg1]),
+      cloneSchema(this.getSchema(), "maxvalue", [], false),
     );
   }
-  measures(arg1?: QueryBuilder): QueryBuilder {
+  measures(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "measures", [arg1]),
+      cloneSchema(this.getSchema(), "measures", [], false),
     );
   }
-  member(arg1?: QueryBuilder): QueryBuilder {
+  member(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "member", [arg1]),
+      cloneSchema(this.getSchema(), "member", [], false),
     );
   }
-  merge(arg1?: QueryBuilder): QueryBuilder {
+  merge(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "merge", [arg1]),
+      cloneSchema(this.getSchema(), "merge", [], false),
     );
   }
-  mergeAction(arg1?: QueryBuilder): QueryBuilder {
+  mergeAction(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "mergeAction", [arg1]),
+      cloneSchema(this.getSchema(), "mergeAction", [], false),
     );
   }
-  messageLength(arg1?: QueryBuilder): QueryBuilder {
+  messageLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "messageLength", [arg1]),
+      cloneSchema(this.getSchema(), "messageLength", [], false),
     );
   }
-  messageOctetLength(arg1?: QueryBuilder): QueryBuilder {
+  messageOctetLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "messageOctetLength", [arg1]),
+      cloneSchema(this.getSchema(), "messageOctetLength", [], false),
     );
   }
-  messageText(arg1?: QueryBuilder): QueryBuilder {
+  messageText(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "messageText", [arg1]),
+      cloneSchema(this.getSchema(), "messageText", [], false),
     );
   }
-  method(arg1?: QueryBuilder): QueryBuilder {
+  method(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "method", [arg1]),
+      cloneSchema(this.getSchema(), "method", [], false),
     );
   }
-  min(arg1?: QueryBuilder): QueryBuilder {
+  min(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "min", [arg1]),
+      cloneSchema(this.getSchema(), "min", [], false),
     );
   }
-  minute(arg1?: QueryBuilder): QueryBuilder {
+  minute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "minute", [arg1]),
+      cloneSchema(this.getSchema(), "minute", [], false),
     );
   }
-  minvalue(arg1?: QueryBuilder): QueryBuilder {
+  minvalue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "minvalue", [arg1]),
+      cloneSchema(this.getSchema(), "minvalue", [], false),
     );
   }
-  mod(arg1?: QueryBuilder): QueryBuilder {
+  mod(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "mod", [arg1]),
+      cloneSchema(this.getSchema(), "mod", [], false),
     );
   }
-  mode(arg1?: QueryBuilder): QueryBuilder {
+  mode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "mode", [arg1]),
+      cloneSchema(this.getSchema(), "mode", [], false),
     );
   }
-  modifies(arg1?: QueryBuilder): QueryBuilder {
+  modifies(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "modifies", [arg1]),
+      cloneSchema(this.getSchema(), "modifies", [], false),
     );
   }
-  module(arg1?: QueryBuilder): QueryBuilder {
+  module(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "module", [arg1]),
+      cloneSchema(this.getSchema(), "module", [], false),
     );
   }
-  month(arg1?: QueryBuilder): QueryBuilder {
+  month(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "month", [arg1]),
+      cloneSchema(this.getSchema(), "month", [], false),
     );
   }
-  more(arg1?: QueryBuilder): QueryBuilder {
+  more(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "more", [arg1]),
+      cloneSchema(this.getSchema(), "more", [], false),
     );
   }
-  move(arg1?: QueryBuilder): QueryBuilder {
+  move(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "move", [arg1]),
+      cloneSchema(this.getSchema(), "move", [], false),
     );
   }
-  multiset(arg1?: QueryBuilder): QueryBuilder {
+  multiset(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "multiset", [arg1]),
+      cloneSchema(this.getSchema(), "multiset", [], false),
     );
   }
-  mumps(arg1?: QueryBuilder): QueryBuilder {
+  mumps(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "mumps", [arg1]),
+      cloneSchema(this.getSchema(), "mumps", [], false),
     );
   }
-  name(arg1?: QueryBuilder): QueryBuilder {
+  name(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "name", [arg1]),
+      cloneSchema(this.getSchema(), "name", [], false),
     );
   }
-  names(arg1?: QueryBuilder): QueryBuilder {
+  names(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "names", [arg1]),
+      cloneSchema(this.getSchema(), "names", [], false),
     );
   }
-  namespace(arg1?: QueryBuilder): QueryBuilder {
+  namespace(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "namespace", [arg1]),
+      cloneSchema(this.getSchema(), "namespace", [], false),
     );
   }
-  national(arg1?: QueryBuilder): QueryBuilder {
+  national(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "national", [arg1]),
+      cloneSchema(this.getSchema(), "national", [], false),
     );
   }
-  natural(arg1?: QueryBuilder): QueryBuilder {
+  natural(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "natural", [arg1]),
+      cloneSchema(this.getSchema(), "natural", [], false),
     );
   }
-  nchar(arg1?: QueryBuilder): QueryBuilder {
+  nchar(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nchar", [arg1]),
+      cloneSchema(this.getSchema(), "nchar", [], false),
     );
   }
-  nclob(arg1?: QueryBuilder): QueryBuilder {
+  nclob(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nclob", [arg1]),
+      cloneSchema(this.getSchema(), "nclob", [], false),
     );
   }
-  nested(arg1?: QueryBuilder): QueryBuilder {
+  nested(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nested", [arg1]),
+      cloneSchema(this.getSchema(), "nested", [], false),
     );
   }
-  nesting(arg1?: QueryBuilder): QueryBuilder {
+  nesting(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nesting", [arg1]),
+      cloneSchema(this.getSchema(), "nesting", [], false),
     );
   }
-  new(arg1?: QueryBuilder): QueryBuilder {
+  new(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "new", [arg1]),
+      cloneSchema(this.getSchema(), "new", [], false),
     );
   }
-  next(arg1?: QueryBuilder): QueryBuilder {
+  next(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "next", [arg1]),
+      cloneSchema(this.getSchema(), "next", [], false),
     );
   }
-  nfc(arg1?: QueryBuilder): QueryBuilder {
+  nfc(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nfc", [arg1]),
+      cloneSchema(this.getSchema(), "nfc", [], false),
     );
   }
-  nfd(arg1?: QueryBuilder): QueryBuilder {
+  nfd(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nfd", [arg1]),
+      cloneSchema(this.getSchema(), "nfd", [], false),
     );
   }
-  nfkc(arg1?: QueryBuilder): QueryBuilder {
+  nfkc(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nfkc", [arg1]),
+      cloneSchema(this.getSchema(), "nfkc", [], false),
     );
   }
-  nfkd(arg1?: QueryBuilder): QueryBuilder {
+  nfkd(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nfkd", [arg1]),
+      cloneSchema(this.getSchema(), "nfkd", [], false),
     );
   }
-  nil(arg1?: QueryBuilder): QueryBuilder {
+  nil(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nil", [arg1]),
+      cloneSchema(this.getSchema(), "nil", [], false),
     );
   }
-  no(arg1?: QueryBuilder): QueryBuilder {
+  no(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "no", [arg1]),
+      cloneSchema(this.getSchema(), "no", [], false),
     );
   }
-  none(arg1?: QueryBuilder): QueryBuilder {
+  none(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "none", [arg1]),
+      cloneSchema(this.getSchema(), "none", [], false),
     );
   }
-  normalize(arg1?: QueryBuilder): QueryBuilder {
+  normalize(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "normalize", [arg1]),
+      cloneSchema(this.getSchema(), "normalize", [], false),
     );
   }
-  normalized(arg1?: QueryBuilder): QueryBuilder {
+  normalized(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "normalized", [arg1]),
+      cloneSchema(this.getSchema(), "normalized", [], false),
     );
   }
-  not(arg1?: QueryBuilder): QueryBuilder {
+  not(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "not", [arg1]),
+      cloneSchema(this.getSchema(), "not", [], false),
     );
   }
-  nothing(arg1?: QueryBuilder): QueryBuilder {
+  nothing(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nothing", [arg1]),
+      cloneSchema(this.getSchema(), "nothing", [], false),
     );
   }
-  notify(arg1?: QueryBuilder): QueryBuilder {
+  notify(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "notify", [arg1]),
+      cloneSchema(this.getSchema(), "notify", [], false),
     );
   }
-  notnull(arg1?: QueryBuilder): QueryBuilder {
+  notnull(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "notnull", [arg1]),
+      cloneSchema(this.getSchema(), "notnull", [], false),
     );
   }
-  nowait(arg1?: QueryBuilder): QueryBuilder {
+  nowait(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nowait", [arg1]),
+      cloneSchema(this.getSchema(), "nowait", [], false),
     );
   }
-  nthValue(arg1?: QueryBuilder): QueryBuilder {
+  nthValue(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nthValue", [arg1]),
+      cloneSchema(this.getSchema(), "nthValue", [], false),
     );
   }
-  ntile(arg1?: QueryBuilder): QueryBuilder {
+  ntile(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ntile", [arg1]),
+      cloneSchema(this.getSchema(), "ntile", [], false),
     );
   }
-  null(arg1?: QueryBuilder): QueryBuilder {
+  null(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "null", [arg1]),
+      cloneSchema(this.getSchema(), "null", [], false),
     );
   }
-  nullable(arg1?: QueryBuilder): QueryBuilder {
+  nullable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nullable", [arg1]),
+      cloneSchema(this.getSchema(), "nullable", [], false),
     );
   }
-  nullif(arg1?: QueryBuilder): QueryBuilder {
+  nullif(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nullif", [arg1]),
+      cloneSchema(this.getSchema(), "nullif", [], false),
     );
   }
-  nulls(arg1?: QueryBuilder): QueryBuilder {
+  nulls(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nulls", [arg1]),
+      cloneSchema(this.getSchema(), "nulls", [], false),
     );
   }
-  nullOrdering(arg1?: QueryBuilder): QueryBuilder {
+  nullOrdering(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "nullOrdering", [arg1]),
+      cloneSchema(this.getSchema(), "nullOrdering", [], false),
     );
   }
-  number(arg1?: QueryBuilder): QueryBuilder {
+  number(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "number", [arg1]),
+      cloneSchema(this.getSchema(), "number", [], false),
     );
   }
-  numeric(arg1?: QueryBuilder): QueryBuilder {
+  numeric(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "numeric", [arg1]),
+      cloneSchema(this.getSchema(), "numeric", [], false),
     );
   }
-  object(arg1?: QueryBuilder): QueryBuilder {
+  object(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "object", [arg1]),
+      cloneSchema(this.getSchema(), "object", [], false),
     );
   }
-  objects(arg1?: QueryBuilder): QueryBuilder {
+  objects(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "objects", [arg1]),
+      cloneSchema(this.getSchema(), "objects", [], false),
     );
   }
-  occurrence(arg1?: QueryBuilder): QueryBuilder {
+  occurrence(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "occurrence", [arg1]),
+      cloneSchema(this.getSchema(), "occurrence", [], false),
     );
   }
-  occurrencesRegex(arg1?: QueryBuilder): QueryBuilder {
+  occurrencesRegex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "occurrencesRegex", [arg1]),
+      cloneSchema(this.getSchema(), "occurrencesRegex", [], false),
     );
   }
-  octets(arg1?: QueryBuilder): QueryBuilder {
+  octets(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "octets", [arg1]),
+      cloneSchema(this.getSchema(), "octets", [], false),
     );
   }
-  octetLength(arg1?: QueryBuilder): QueryBuilder {
+  octetLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "octetLength", [arg1]),
+      cloneSchema(this.getSchema(), "octetLength", [], false),
     );
   }
-  of(arg1?: QueryBuilder): QueryBuilder {
+  of(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "of", [arg1]),
+      cloneSchema(this.getSchema(), "of", [], false),
     );
   }
-  off(arg1?: QueryBuilder): QueryBuilder {
+  off(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "off", [arg1]),
+      cloneSchema(this.getSchema(), "off", [], false),
     );
   }
-  offset(arg1?: QueryBuilder): QueryBuilder {
+  offset(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "offset", [arg1]),
+      cloneSchema(this.getSchema(), "offset", [], false),
     );
   }
-  oids(arg1?: QueryBuilder): QueryBuilder {
+  oids(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "oids", [arg1]),
+      cloneSchema(this.getSchema(), "oids", [], false),
     );
   }
-  old(arg1?: QueryBuilder): QueryBuilder {
+  old(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "old", [arg1]),
+      cloneSchema(this.getSchema(), "old", [], false),
     );
   }
-  omit(arg1?: QueryBuilder): QueryBuilder {
+  omit(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "omit", [arg1]),
+      cloneSchema(this.getSchema(), "omit", [], false),
     );
   }
-  on(arg1?: QueryBuilder): QueryBuilder {
+  on(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "on", [arg1]),
+      cloneSchema(this.getSchema(), "on", [], false),
     );
   }
-  one(arg1?: QueryBuilder): QueryBuilder {
+  one(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "one", [arg1]),
+      cloneSchema(this.getSchema(), "one", [], false),
     );
   }
-  only(arg1?: QueryBuilder): QueryBuilder {
+  only(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "only", [arg1]),
+      cloneSchema(this.getSchema(), "only", [], false),
     );
   }
-  open(arg1?: QueryBuilder): QueryBuilder {
+  open(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "open", [arg1]),
+      cloneSchema(this.getSchema(), "open", [], false),
     );
   }
-  operator(arg1?: QueryBuilder): QueryBuilder {
+  operator(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "operator", [arg1]),
+      cloneSchema(this.getSchema(), "operator", [], false),
     );
   }
-  option(arg1?: QueryBuilder): QueryBuilder {
+  option(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "option", [arg1]),
+      cloneSchema(this.getSchema(), "option", [], false),
     );
   }
-  options(arg1?: QueryBuilder): QueryBuilder {
+  options(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "options", [arg1]),
+      cloneSchema(this.getSchema(), "options", [], false),
     );
   }
-  or(arg1?: QueryBuilder): QueryBuilder {
+  or(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "or", [arg1]),
+      cloneSchema(this.getSchema(), "or", [], false),
     );
   }
-  order(arg1?: QueryBuilder): QueryBuilder {
+  order(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "order", [arg1]),
+      cloneSchema(this.getSchema(), "order", [], false),
     );
   }
-  ordering(arg1?: QueryBuilder): QueryBuilder {
+  ordering(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ordering", [arg1]),
+      cloneSchema(this.getSchema(), "ordering", [], false),
     );
   }
-  ordinality(arg1?: QueryBuilder): QueryBuilder {
+  ordinality(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ordinality", [arg1]),
+      cloneSchema(this.getSchema(), "ordinality", [], false),
     );
   }
-  others(arg1?: QueryBuilder): QueryBuilder {
+  others(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "others", [arg1]),
+      cloneSchema(this.getSchema(), "others", [], false),
     );
   }
-  out(arg1?: QueryBuilder): QueryBuilder {
+  out(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "out", [arg1]),
+      cloneSchema(this.getSchema(), "out", [], false),
     );
   }
-  outer(arg1?: QueryBuilder): QueryBuilder {
+  outer(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "outer", [arg1]),
+      cloneSchema(this.getSchema(), "outer", [], false),
     );
   }
-  output(arg1?: QueryBuilder): QueryBuilder {
+  output(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "output", [arg1]),
+      cloneSchema(this.getSchema(), "output", [], false),
     );
   }
-  over(arg1?: QueryBuilder): QueryBuilder {
+  over(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "over", [arg1]),
+      cloneSchema(this.getSchema(), "over", [], false),
     );
   }
-  overflow(arg1?: QueryBuilder): QueryBuilder {
+  overflow(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "overflow", [arg1]),
+      cloneSchema(this.getSchema(), "overflow", [], false),
     );
   }
-  overlaps(arg1?: QueryBuilder): QueryBuilder {
+  overlaps(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "overlaps", [arg1]),
+      cloneSchema(this.getSchema(), "overlaps", [], false),
     );
   }
-  overlay(arg1?: QueryBuilder): QueryBuilder {
+  overlay(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "overlay", [arg1]),
+      cloneSchema(this.getSchema(), "overlay", [], false),
     );
   }
-  overriding(arg1?: QueryBuilder): QueryBuilder {
+  overriding(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "overriding", [arg1]),
+      cloneSchema(this.getSchema(), "overriding", [], false),
     );
   }
-  owned(arg1?: QueryBuilder): QueryBuilder {
+  owned(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "owned", [arg1]),
+      cloneSchema(this.getSchema(), "owned", [], false),
     );
   }
-  owner(arg1?: QueryBuilder): QueryBuilder {
+  owner(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "owner", [arg1]),
+      cloneSchema(this.getSchema(), "owner", [], false),
     );
   }
-  p(arg1?: QueryBuilder): QueryBuilder {
+  p(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "p", [arg1]),
+      cloneSchema(this.getSchema(), "p", [], false),
     );
   }
-  pad(arg1?: QueryBuilder): QueryBuilder {
+  pad(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pad", [arg1]),
+      cloneSchema(this.getSchema(), "pad", [], false),
     );
   }
-  parallel(arg1?: QueryBuilder): QueryBuilder {
+  parallel(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parallel", [arg1]),
+      cloneSchema(this.getSchema(), "parallel", [], false),
     );
   }
-  parameter(arg1?: QueryBuilder): QueryBuilder {
+  parameter(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameter", [arg1]),
+      cloneSchema(this.getSchema(), "parameter", [], false),
     );
   }
-  parameterMode(arg1?: QueryBuilder): QueryBuilder {
+  parameterMode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterMode", [arg1]),
+      cloneSchema(this.getSchema(), "parameterMode", [], false),
     );
   }
-  parameterName(arg1?: QueryBuilder): QueryBuilder {
+  parameterName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterName", [arg1]),
+      cloneSchema(this.getSchema(), "parameterName", [], false),
     );
   }
-  parameterOrdinalPosition(arg1?: QueryBuilder): QueryBuilder {
+  parameterOrdinalPosition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterOrdinalPosition", [arg1]),
+      cloneSchema(this.getSchema(), "parameterOrdinalPosition", [], false),
     );
   }
-  parameterSpecificCatalog(arg1?: QueryBuilder): QueryBuilder {
+  parameterSpecificCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterSpecificCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "parameterSpecificCatalog", [], false),
     );
   }
-  parameterSpecificName(arg1?: QueryBuilder): QueryBuilder {
+  parameterSpecificName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterSpecificName", [arg1]),
+      cloneSchema(this.getSchema(), "parameterSpecificName", [], false),
     );
   }
-  parameterSpecificSchema(arg1?: QueryBuilder): QueryBuilder {
+  parameterSpecificSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parameterSpecificSchema", [arg1]),
+      cloneSchema(this.getSchema(), "parameterSpecificSchema", [], false),
     );
   }
-  parser(arg1?: QueryBuilder): QueryBuilder {
+  parser(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "parser", [arg1]),
+      cloneSchema(this.getSchema(), "parser", [], false),
     );
   }
-  partial(arg1?: QueryBuilder): QueryBuilder {
+  partial(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "partial", [arg1]),
+      cloneSchema(this.getSchema(), "partial", [], false),
     );
   }
-  partition(arg1?: QueryBuilder): QueryBuilder {
+  partition(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "partition", [arg1]),
+      cloneSchema(this.getSchema(), "partition", [], false),
     );
   }
-  pascal(arg1?: QueryBuilder): QueryBuilder {
+  pascal(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pascal", [arg1]),
+      cloneSchema(this.getSchema(), "pascal", [], false),
     );
   }
-  pass(arg1?: QueryBuilder): QueryBuilder {
+  pass(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pass", [arg1]),
+      cloneSchema(this.getSchema(), "pass", [], false),
     );
   }
-  passing(arg1?: QueryBuilder): QueryBuilder {
+  passing(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "passing", [arg1]),
+      cloneSchema(this.getSchema(), "passing", [], false),
     );
   }
-  passthrough(arg1?: QueryBuilder): QueryBuilder {
+  passthrough(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "passthrough", [arg1]),
+      cloneSchema(this.getSchema(), "passthrough", [], false),
     );
   }
-  password(arg1?: QueryBuilder): QueryBuilder {
+  password(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "password", [arg1]),
+      cloneSchema(this.getSchema(), "password", [], false),
     );
   }
-  past(arg1?: QueryBuilder): QueryBuilder {
+  past(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "past", [arg1]),
+      cloneSchema(this.getSchema(), "past", [], false),
     );
   }
-  path(arg1?: QueryBuilder): QueryBuilder {
+  path(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "path", [arg1]),
+      cloneSchema(this.getSchema(), "path", [], false),
     );
   }
-  pattern(arg1?: QueryBuilder): QueryBuilder {
+  pattern(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pattern", [arg1]),
+      cloneSchema(this.getSchema(), "pattern", [], false),
     );
   }
-  per(arg1?: QueryBuilder): QueryBuilder {
+  per(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "per", [arg1]),
+      cloneSchema(this.getSchema(), "per", [], false),
     );
   }
-  percent(arg1?: QueryBuilder): QueryBuilder {
+  percent(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "percent", [arg1]),
+      cloneSchema(this.getSchema(), "percent", [], false),
     );
   }
-  percentileCont(arg1?: QueryBuilder): QueryBuilder {
+  percentileCont(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "percentileCont", [arg1]),
+      cloneSchema(this.getSchema(), "percentileCont", [], false),
     );
   }
-  percentileDisc(arg1?: QueryBuilder): QueryBuilder {
+  percentileDisc(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "percentileDisc", [arg1]),
+      cloneSchema(this.getSchema(), "percentileDisc", [], false),
     );
   }
-  percentRank(arg1?: QueryBuilder): QueryBuilder {
+  percentRank(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "percentRank", [arg1]),
+      cloneSchema(this.getSchema(), "percentRank", [], false),
     );
   }
-  period(arg1?: QueryBuilder): QueryBuilder {
+  period(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "period", [arg1]),
+      cloneSchema(this.getSchema(), "period", [], false),
     );
   }
-  permission(arg1?: QueryBuilder): QueryBuilder {
+  permission(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "permission", [arg1]),
+      cloneSchema(this.getSchema(), "permission", [], false),
     );
   }
-  permute(arg1?: QueryBuilder): QueryBuilder {
+  permute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "permute", [arg1]),
+      cloneSchema(this.getSchema(), "permute", [], false),
     );
   }
-  pipe(arg1?: QueryBuilder): QueryBuilder {
+  pipe(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pipe", [arg1]),
+      cloneSchema(this.getSchema(), "pipe", [], false),
     );
   }
-  placing(arg1?: QueryBuilder): QueryBuilder {
+  placing(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "placing", [arg1]),
+      cloneSchema(this.getSchema(), "placing", [], false),
     );
   }
-  plan(arg1?: QueryBuilder): QueryBuilder {
+  plan(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "plan", [arg1]),
+      cloneSchema(this.getSchema(), "plan", [], false),
     );
   }
-  plans(arg1?: QueryBuilder): QueryBuilder {
+  plans(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "plans", [arg1]),
+      cloneSchema(this.getSchema(), "plans", [], false),
     );
   }
-  pli(arg1?: QueryBuilder): QueryBuilder {
+  pli(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "pli", [arg1]),
+      cloneSchema(this.getSchema(), "pli", [], false),
     );
   }
-  policy(arg1?: QueryBuilder): QueryBuilder {
+  policy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "policy", [arg1]),
+      cloneSchema(this.getSchema(), "policy", [], false),
     );
   }
-  portion(arg1?: QueryBuilder): QueryBuilder {
+  portion(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "portion", [arg1]),
+      cloneSchema(this.getSchema(), "portion", [], false),
     );
   }
-  position(arg1?: QueryBuilder): QueryBuilder {
+  position(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "position", [arg1]),
+      cloneSchema(this.getSchema(), "position", [], false),
     );
   }
-  positionRegex(arg1?: QueryBuilder): QueryBuilder {
+  positionRegex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "positionRegex", [arg1]),
+      cloneSchema(this.getSchema(), "positionRegex", [], false),
     );
   }
-  power(arg1?: QueryBuilder): QueryBuilder {
+  power(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "power", [arg1]),
+      cloneSchema(this.getSchema(), "power", [], false),
     );
   }
-  precedes(arg1?: QueryBuilder): QueryBuilder {
+  precedes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "precedes", [arg1]),
+      cloneSchema(this.getSchema(), "precedes", [], false),
     );
   }
-  preceding(arg1?: QueryBuilder): QueryBuilder {
+  preceding(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "preceding", [arg1]),
+      cloneSchema(this.getSchema(), "preceding", [], false),
     );
   }
-  precision(arg1?: QueryBuilder): QueryBuilder {
+  precision(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "precision", [arg1]),
+      cloneSchema(this.getSchema(), "precision", [], false),
     );
   }
-  prepare(arg1?: QueryBuilder): QueryBuilder {
+  prepare(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "prepare", [arg1]),
+      cloneSchema(this.getSchema(), "prepare", [], false),
     );
   }
-  prepared(arg1?: QueryBuilder): QueryBuilder {
+  prepared(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "prepared", [arg1]),
+      cloneSchema(this.getSchema(), "prepared", [], false),
     );
   }
-  preserve(arg1?: QueryBuilder): QueryBuilder {
+  preserve(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "preserve", [arg1]),
+      cloneSchema(this.getSchema(), "preserve", [], false),
     );
   }
-  prev(arg1?: QueryBuilder): QueryBuilder {
+  prev(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "prev", [arg1]),
+      cloneSchema(this.getSchema(), "prev", [], false),
     );
   }
-  primary(arg1?: QueryBuilder): QueryBuilder {
+  primary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "primary", [arg1]),
+      cloneSchema(this.getSchema(), "primary", [], false),
     );
   }
-  prior(arg1?: QueryBuilder): QueryBuilder {
+  prior(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "prior", [arg1]),
+      cloneSchema(this.getSchema(), "prior", [], false),
     );
   }
-  private(arg1?: QueryBuilder): QueryBuilder {
+  private(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "private", [arg1]),
+      cloneSchema(this.getSchema(), "private", [], false),
     );
   }
-  privileges(arg1?: QueryBuilder): QueryBuilder {
+  privileges(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "privileges", [arg1]),
+      cloneSchema(this.getSchema(), "privileges", [], false),
     );
   }
-  procedural(arg1?: QueryBuilder): QueryBuilder {
+  procedural(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "procedural", [arg1]),
+      cloneSchema(this.getSchema(), "procedural", [], false),
     );
   }
-  procedure(arg1?: QueryBuilder): QueryBuilder {
+  procedure(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "procedure", [arg1]),
+      cloneSchema(this.getSchema(), "procedure", [], false),
     );
   }
-  procedures(arg1?: QueryBuilder): QueryBuilder {
+  procedures(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "procedures", [arg1]),
+      cloneSchema(this.getSchema(), "procedures", [], false),
     );
   }
-  program(arg1?: QueryBuilder): QueryBuilder {
+  program(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "program", [arg1]),
+      cloneSchema(this.getSchema(), "program", [], false),
     );
   }
-  prune(arg1?: QueryBuilder): QueryBuilder {
+  prune(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "prune", [arg1]),
+      cloneSchema(this.getSchema(), "prune", [], false),
     );
   }
-  ptf(arg1?: QueryBuilder): QueryBuilder {
+  ptf(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ptf", [arg1]),
+      cloneSchema(this.getSchema(), "ptf", [], false),
     );
   }
-  public(arg1?: QueryBuilder): QueryBuilder {
+  public(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "public", [arg1]),
+      cloneSchema(this.getSchema(), "public", [], false),
     );
   }
-  publication(arg1?: QueryBuilder): QueryBuilder {
+  publication(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "publication", [arg1]),
+      cloneSchema(this.getSchema(), "publication", [], false),
     );
   }
-  quote(arg1?: QueryBuilder): QueryBuilder {
+  quote(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "quote", [arg1]),
+      cloneSchema(this.getSchema(), "quote", [], false),
     );
   }
-  quotes(arg1?: QueryBuilder): QueryBuilder {
+  quotes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "quotes", [arg1]),
+      cloneSchema(this.getSchema(), "quotes", [], false),
     );
   }
-  range(arg1?: QueryBuilder): QueryBuilder {
+  range(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "range", [arg1]),
+      cloneSchema(this.getSchema(), "range", [], false),
     );
   }
-  rank(arg1?: QueryBuilder): QueryBuilder {
+  rank(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rank", [arg1]),
+      cloneSchema(this.getSchema(), "rank", [], false),
     );
   }
-  read(arg1?: QueryBuilder): QueryBuilder {
+  read(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "read", [arg1]),
+      cloneSchema(this.getSchema(), "read", [], false),
     );
   }
-  reads(arg1?: QueryBuilder): QueryBuilder {
+  reads(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "reads", [arg1]),
+      cloneSchema(this.getSchema(), "reads", [], false),
     );
   }
-  real(arg1?: QueryBuilder): QueryBuilder {
+  real(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "real", [arg1]),
+      cloneSchema(this.getSchema(), "real", [], false),
     );
   }
-  reassign(arg1?: QueryBuilder): QueryBuilder {
+  reassign(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "reassign", [arg1]),
+      cloneSchema(this.getSchema(), "reassign", [], false),
     );
   }
-  recovery(arg1?: QueryBuilder): QueryBuilder {
+  recovery(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "recovery", [arg1]),
+      cloneSchema(this.getSchema(), "recovery", [], false),
     );
   }
-  recursive(arg1?: QueryBuilder): QueryBuilder {
+  recursive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "recursive", [arg1]),
+      cloneSchema(this.getSchema(), "recursive", [], false),
     );
   }
-  ref(arg1?: QueryBuilder): QueryBuilder {
+  ref(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ref", [arg1]),
+      cloneSchema(this.getSchema(), "ref", [], false),
     );
   }
-  references(arg1?: QueryBuilder): QueryBuilder {
+  references(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "references", [arg1]),
+      cloneSchema(this.getSchema(), "references", [], false),
     );
   }
-  referencing(arg1?: QueryBuilder): QueryBuilder {
+  referencing(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "referencing", [arg1]),
+      cloneSchema(this.getSchema(), "referencing", [], false),
     );
   }
-  refresh(arg1?: QueryBuilder): QueryBuilder {
+  refresh(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "refresh", [arg1]),
+      cloneSchema(this.getSchema(), "refresh", [], false),
     );
   }
-  regrAvgx(arg1?: QueryBuilder): QueryBuilder {
+  regrAvgx(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrAvgx", [arg1]),
+      cloneSchema(this.getSchema(), "regrAvgx", [], false),
     );
   }
-  regrAvgy(arg1?: QueryBuilder): QueryBuilder {
+  regrAvgy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrAvgy", [arg1]),
+      cloneSchema(this.getSchema(), "regrAvgy", [], false),
     );
   }
-  regrCount(arg1?: QueryBuilder): QueryBuilder {
+  regrCount(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrCount", [arg1]),
+      cloneSchema(this.getSchema(), "regrCount", [], false),
     );
   }
-  regrIntercept(arg1?: QueryBuilder): QueryBuilder {
+  regrIntercept(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrIntercept", [arg1]),
+      cloneSchema(this.getSchema(), "regrIntercept", [], false),
     );
   }
-  regrR2(arg1?: QueryBuilder): QueryBuilder {
+  regrR2(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrR2", [arg1]),
+      cloneSchema(this.getSchema(), "regrR2", [], false),
     );
   }
-  regrSlope(arg1?: QueryBuilder): QueryBuilder {
+  regrSlope(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrSlope", [arg1]),
+      cloneSchema(this.getSchema(), "regrSlope", [], false),
     );
   }
-  regrSxx(arg1?: QueryBuilder): QueryBuilder {
+  regrSxx(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrSxx", [arg1]),
+      cloneSchema(this.getSchema(), "regrSxx", [], false),
     );
   }
-  regrSxy(arg1?: QueryBuilder): QueryBuilder {
+  regrSxy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrSxy", [arg1]),
+      cloneSchema(this.getSchema(), "regrSxy", [], false),
     );
   }
-  regrSyy(arg1?: QueryBuilder): QueryBuilder {
+  regrSyy(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "regrSyy", [arg1]),
+      cloneSchema(this.getSchema(), "regrSyy", [], false),
     );
   }
-  reindex(arg1?: QueryBuilder): QueryBuilder {
+  reindex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "reindex", [arg1]),
+      cloneSchema(this.getSchema(), "reindex", [], false),
     );
   }
-  relative(arg1?: QueryBuilder): QueryBuilder {
+  relative(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "relative", [arg1]),
+      cloneSchema(this.getSchema(), "relative", [], false),
     );
   }
-  release(arg1?: QueryBuilder): QueryBuilder {
+  release(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "release", [arg1]),
+      cloneSchema(this.getSchema(), "release", [], false),
     );
   }
-  rename(arg1?: QueryBuilder): QueryBuilder {
+  rename(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rename", [arg1]),
+      cloneSchema(this.getSchema(), "rename", [], false),
     );
   }
-  repeatable(arg1?: QueryBuilder): QueryBuilder {
+  repeatable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "repeatable", [arg1]),
+      cloneSchema(this.getSchema(), "repeatable", [], false),
     );
   }
-  replace(arg1?: QueryBuilder): QueryBuilder {
+  replace(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "replace", [arg1]),
+      cloneSchema(this.getSchema(), "replace", [], false),
     );
   }
-  replica(arg1?: QueryBuilder): QueryBuilder {
+  replica(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "replica", [arg1]),
+      cloneSchema(this.getSchema(), "replica", [], false),
     );
   }
-  requiring(arg1?: QueryBuilder): QueryBuilder {
+  requiring(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "requiring", [arg1]),
+      cloneSchema(this.getSchema(), "requiring", [], false),
     );
   }
-  reset(arg1?: QueryBuilder): QueryBuilder {
+  reset(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "reset", [arg1]),
+      cloneSchema(this.getSchema(), "reset", [], false),
     );
   }
-  respect(arg1?: QueryBuilder): QueryBuilder {
+  respect(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "respect", [arg1]),
+      cloneSchema(this.getSchema(), "respect", [], false),
     );
   }
-  restart(arg1?: QueryBuilder): QueryBuilder {
+  restart(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "restart", [arg1]),
+      cloneSchema(this.getSchema(), "restart", [], false),
     );
   }
-  restore(arg1?: QueryBuilder): QueryBuilder {
+  restore(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "restore", [arg1]),
+      cloneSchema(this.getSchema(), "restore", [], false),
     );
   }
-  restrict(arg1?: QueryBuilder): QueryBuilder {
+  restrict(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "restrict", [arg1]),
+      cloneSchema(this.getSchema(), "restrict", [], false),
     );
   }
-  result(arg1?: QueryBuilder): QueryBuilder {
+  result(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "result", [arg1]),
+      cloneSchema(this.getSchema(), "result", [], false),
     );
   }
-  return(arg1?: QueryBuilder): QueryBuilder {
+  return(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "return", [arg1]),
+      cloneSchema(this.getSchema(), "return", [], false),
     );
   }
-  returnedCardinality(arg1?: QueryBuilder): QueryBuilder {
+  returnedCardinality(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returnedCardinality", [arg1]),
+      cloneSchema(this.getSchema(), "returnedCardinality", [], false),
     );
   }
-  returnedLength(arg1?: QueryBuilder): QueryBuilder {
+  returnedLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returnedLength", [arg1]),
+      cloneSchema(this.getSchema(), "returnedLength", [], false),
     );
   }
-  returnedOctetLength(arg1?: QueryBuilder): QueryBuilder {
+  returnedOctetLength(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returnedOctetLength", [arg1]),
+      cloneSchema(this.getSchema(), "returnedOctetLength", [], false),
     );
   }
-  returnedSqlstate(arg1?: QueryBuilder): QueryBuilder {
+  returnedSqlstate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returnedSqlstate", [arg1]),
+      cloneSchema(this.getSchema(), "returnedSqlstate", [], false),
     );
   }
-  returning(arg1?: QueryBuilder): QueryBuilder {
+  returning(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returning", [arg1]),
+      cloneSchema(this.getSchema(), "returning", [], false),
     );
   }
-  returns(arg1?: QueryBuilder): QueryBuilder {
+  returns(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "returns", [arg1]),
+      cloneSchema(this.getSchema(), "returns", [], false),
     );
   }
-  revoke(arg1?: QueryBuilder): QueryBuilder {
+  revoke(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "revoke", [arg1]),
+      cloneSchema(this.getSchema(), "revoke", [], false),
     );
   }
-  right(arg1?: QueryBuilder): QueryBuilder {
+  right(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "right", [arg1]),
+      cloneSchema(this.getSchema(), "right", [], false),
     );
   }
-  role(arg1?: QueryBuilder): QueryBuilder {
+  role(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "role", [arg1]),
+      cloneSchema(this.getSchema(), "role", [], false),
     );
   }
-  rollback(arg1?: QueryBuilder): QueryBuilder {
+  rollback(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rollback", [arg1]),
+      cloneSchema(this.getSchema(), "rollback", [], false),
     );
   }
-  rollup(arg1?: QueryBuilder): QueryBuilder {
+  rollup(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rollup", [arg1]),
+      cloneSchema(this.getSchema(), "rollup", [], false),
     );
   }
-  routine(arg1?: QueryBuilder): QueryBuilder {
+  routine(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "routine", [arg1]),
+      cloneSchema(this.getSchema(), "routine", [], false),
     );
   }
-  routines(arg1?: QueryBuilder): QueryBuilder {
+  routines(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "routines", [arg1]),
+      cloneSchema(this.getSchema(), "routines", [], false),
     );
   }
-  routineCatalog(arg1?: QueryBuilder): QueryBuilder {
+  routineCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "routineCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "routineCatalog", [], false),
     );
   }
-  routineName(arg1?: QueryBuilder): QueryBuilder {
+  routineName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "routineName", [arg1]),
+      cloneSchema(this.getSchema(), "routineName", [], false),
     );
   }
-  routineSchema(arg1?: QueryBuilder): QueryBuilder {
+  routineSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "routineSchema", [arg1]),
+      cloneSchema(this.getSchema(), "routineSchema", [], false),
     );
   }
-  row(arg1?: QueryBuilder): QueryBuilder {
+  row(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "row", [arg1]),
+      cloneSchema(this.getSchema(), "row", [], false),
     );
   }
-  rows(arg1?: QueryBuilder): QueryBuilder {
+  rows(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rows", [arg1]),
+      cloneSchema(this.getSchema(), "rows", [], false),
     );
   }
-  rowCount(arg1?: QueryBuilder): QueryBuilder {
+  rowCount(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rowCount", [arg1]),
+      cloneSchema(this.getSchema(), "rowCount", [], false),
     );
   }
-  rowNumber(arg1?: QueryBuilder): QueryBuilder {
+  rowNumber(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rowNumber", [arg1]),
+      cloneSchema(this.getSchema(), "rowNumber", [], false),
     );
   }
-  rpad(arg1?: QueryBuilder): QueryBuilder {
+  rpad(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rpad", [arg1]),
+      cloneSchema(this.getSchema(), "rpad", [], false),
     );
   }
-  rtrim(arg1?: QueryBuilder): QueryBuilder {
+  rtrim(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rtrim", [arg1]),
+      cloneSchema(this.getSchema(), "rtrim", [], false),
     );
   }
-  rule(arg1?: QueryBuilder): QueryBuilder {
+  rule(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "rule", [arg1]),
+      cloneSchema(this.getSchema(), "rule", [], false),
     );
   }
-  running(arg1?: QueryBuilder): QueryBuilder {
+  running(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "running", [arg1]),
+      cloneSchema(this.getSchema(), "running", [], false),
     );
   }
-  savepoint(arg1?: QueryBuilder): QueryBuilder {
+  savepoint(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "savepoint", [arg1]),
+      cloneSchema(this.getSchema(), "savepoint", [], false),
     );
   }
-  scalar(arg1?: QueryBuilder): QueryBuilder {
+  scalar(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scalar", [arg1]),
+      cloneSchema(this.getSchema(), "scalar", [], false),
     );
   }
-  scale(arg1?: QueryBuilder): QueryBuilder {
+  scale(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scale", [arg1]),
+      cloneSchema(this.getSchema(), "scale", [], false),
     );
   }
-  schema(arg1?: QueryBuilder): QueryBuilder {
+  schema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "schema", [arg1]),
+      cloneSchema(this.getSchema(), "schema", [], false),
     );
   }
-  schemas(arg1?: QueryBuilder): QueryBuilder {
+  schemas(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "schemas", [arg1]),
+      cloneSchema(this.getSchema(), "schemas", [], false),
     );
   }
-  schemaName(arg1?: QueryBuilder): QueryBuilder {
+  schemaName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "schemaName", [arg1]),
+      cloneSchema(this.getSchema(), "schemaName", [], false),
     );
   }
-  scope(arg1?: QueryBuilder): QueryBuilder {
+  scope(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scope", [arg1]),
+      cloneSchema(this.getSchema(), "scope", [], false),
     );
   }
-  scopeCatalog(arg1?: QueryBuilder): QueryBuilder {
+  scopeCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scopeCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "scopeCatalog", [], false),
     );
   }
-  scopeName(arg1?: QueryBuilder): QueryBuilder {
+  scopeName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scopeName", [arg1]),
+      cloneSchema(this.getSchema(), "scopeName", [], false),
     );
   }
-  scopeSchema(arg1?: QueryBuilder): QueryBuilder {
+  scopeSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scopeSchema", [arg1]),
+      cloneSchema(this.getSchema(), "scopeSchema", [], false),
     );
   }
-  scroll(arg1?: QueryBuilder): QueryBuilder {
+  scroll(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "scroll", [arg1]),
+      cloneSchema(this.getSchema(), "scroll", [], false),
     );
   }
-  search(arg1?: QueryBuilder): QueryBuilder {
+  search(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "search", [arg1]),
+      cloneSchema(this.getSchema(), "search", [], false),
     );
   }
-  second(arg1?: QueryBuilder): QueryBuilder {
+  second(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "second", [arg1]),
+      cloneSchema(this.getSchema(), "second", [], false),
     );
   }
-  section(arg1?: QueryBuilder): QueryBuilder {
+  section(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "section", [arg1]),
+      cloneSchema(this.getSchema(), "section", [], false),
     );
   }
-  security(arg1?: QueryBuilder): QueryBuilder {
+  security(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "security", [arg1]),
+      cloneSchema(this.getSchema(), "security", [], false),
     );
   }
-  seek(arg1?: QueryBuilder): QueryBuilder {
+  seek(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "seek", [arg1]),
+      cloneSchema(this.getSchema(), "seek", [], false),
     );
   }
-  select(arg1?: QueryBuilder): QueryBuilder {
+  select(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "select", [arg1]),
+      cloneSchema(this.getSchema(), "select", [], false),
     );
   }
-  selective(arg1?: QueryBuilder): QueryBuilder {
+  selective(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "selective", [arg1]),
+      cloneSchema(this.getSchema(), "selective", [], false),
     );
   }
-  self(arg1?: QueryBuilder): QueryBuilder {
+  self(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "self", [arg1]),
+      cloneSchema(this.getSchema(), "self", [], false),
     );
   }
-  semantics(arg1?: QueryBuilder): QueryBuilder {
+  semantics(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "semantics", [arg1]),
+      cloneSchema(this.getSchema(), "semantics", [], false),
     );
   }
-  sensitive(arg1?: QueryBuilder): QueryBuilder {
+  sensitive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sensitive", [arg1]),
+      cloneSchema(this.getSchema(), "sensitive", [], false),
     );
   }
-  sequence(arg1?: QueryBuilder): QueryBuilder {
+  sequence(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sequence", [arg1]),
+      cloneSchema(this.getSchema(), "sequence", [], false),
     );
   }
-  sequences(arg1?: QueryBuilder): QueryBuilder {
+  sequences(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sequences", [arg1]),
+      cloneSchema(this.getSchema(), "sequences", [], false),
     );
   }
-  serializable(arg1?: QueryBuilder): QueryBuilder {
+  serializable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "serializable", [arg1]),
+      cloneSchema(this.getSchema(), "serializable", [], false),
     );
   }
-  server(arg1?: QueryBuilder): QueryBuilder {
+  server(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "server", [arg1]),
+      cloneSchema(this.getSchema(), "server", [], false),
     );
   }
-  serverName(arg1?: QueryBuilder): QueryBuilder {
+  serverName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "serverName", [arg1]),
+      cloneSchema(this.getSchema(), "serverName", [], false),
     );
   }
-  session(arg1?: QueryBuilder): QueryBuilder {
+  session(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "session", [arg1]),
+      cloneSchema(this.getSchema(), "session", [], false),
     );
   }
-  sessionUser(arg1?: QueryBuilder): QueryBuilder {
+  sessionUser(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sessionUser", [arg1]),
+      cloneSchema(this.getSchema(), "sessionUser", [], false),
     );
   }
-  set(arg1?: QueryBuilder): QueryBuilder {
+  set(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "set", [arg1]),
+      cloneSchema(this.getSchema(), "set", [], false),
     );
   }
-  setof(arg1?: QueryBuilder): QueryBuilder {
+  setof(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "setof", [arg1]),
+      cloneSchema(this.getSchema(), "setof", [], false),
     );
   }
-  sets(arg1?: QueryBuilder): QueryBuilder {
+  sets(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sets", [arg1]),
+      cloneSchema(this.getSchema(), "sets", [], false),
     );
   }
-  share(arg1?: QueryBuilder): QueryBuilder {
+  share(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "share", [arg1]),
+      cloneSchema(this.getSchema(), "share", [], false),
     );
   }
-  show(arg1?: QueryBuilder): QueryBuilder {
+  show(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "show", [arg1]),
+      cloneSchema(this.getSchema(), "show", [], false),
     );
   }
-  similar(arg1?: QueryBuilder): QueryBuilder {
+  similar(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "similar", [arg1]),
+      cloneSchema(this.getSchema(), "similar", [], false),
     );
   }
-  simple(arg1?: QueryBuilder): QueryBuilder {
+  simple(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "simple", [arg1]),
+      cloneSchema(this.getSchema(), "simple", [], false),
     );
   }
-  sin(arg1?: QueryBuilder): QueryBuilder {
+  sin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sin", [arg1]),
+      cloneSchema(this.getSchema(), "sin", [], false),
     );
   }
-  sinh(arg1?: QueryBuilder): QueryBuilder {
+  sinh(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sinh", [arg1]),
+      cloneSchema(this.getSchema(), "sinh", [], false),
     );
   }
-  size(arg1?: QueryBuilder): QueryBuilder {
+  size(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "size", [arg1]),
+      cloneSchema(this.getSchema(), "size", [], false),
     );
   }
-  skip(arg1?: QueryBuilder): QueryBuilder {
+  skip(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "skip", [arg1]),
+      cloneSchema(this.getSchema(), "skip", [], false),
     );
   }
-  smallint(arg1?: QueryBuilder): QueryBuilder {
+  smallint(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "smallint", [arg1]),
+      cloneSchema(this.getSchema(), "smallint", [], false),
     );
   }
-  snapshot(arg1?: QueryBuilder): QueryBuilder {
+  snapshot(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "snapshot", [arg1]),
+      cloneSchema(this.getSchema(), "snapshot", [], false),
     );
   }
-  some(arg1?: QueryBuilder): QueryBuilder {
+  some(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "some", [arg1]),
+      cloneSchema(this.getSchema(), "some", [], false),
     );
   }
-  sortDirection(arg1?: QueryBuilder): QueryBuilder {
+  sortDirection(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sortDirection", [arg1]),
+      cloneSchema(this.getSchema(), "sortDirection", [], false),
     );
   }
-  source(arg1?: QueryBuilder): QueryBuilder {
+  source(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "source", [arg1]),
+      cloneSchema(this.getSchema(), "source", [], false),
     );
   }
-  space(arg1?: QueryBuilder): QueryBuilder {
+  space(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "space", [arg1]),
+      cloneSchema(this.getSchema(), "space", [], false),
     );
   }
-  specific(arg1?: QueryBuilder): QueryBuilder {
+  specific(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "specific", [arg1]),
+      cloneSchema(this.getSchema(), "specific", [], false),
     );
   }
-  specifictype(arg1?: QueryBuilder): QueryBuilder {
+  specifictype(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "specifictype", [arg1]),
+      cloneSchema(this.getSchema(), "specifictype", [], false),
     );
   }
-  specificName(arg1?: QueryBuilder): QueryBuilder {
+  specificName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "specificName", [arg1]),
+      cloneSchema(this.getSchema(), "specificName", [], false),
     );
   }
-  sql(arg1?: QueryBuilder): QueryBuilder {
+  sql(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sql", [arg1]),
+      cloneSchema(this.getSchema(), "sql", [], false),
     );
   }
-  sqlcode(arg1?: QueryBuilder): QueryBuilder {
+  sqlcode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqlcode", [arg1]),
+      cloneSchema(this.getSchema(), "sqlcode", [], false),
     );
   }
-  sqlerror(arg1?: QueryBuilder): QueryBuilder {
+  sqlerror(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqlerror", [arg1]),
+      cloneSchema(this.getSchema(), "sqlerror", [], false),
     );
   }
-  sqlexception(arg1?: QueryBuilder): QueryBuilder {
+  sqlexception(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqlexception", [arg1]),
+      cloneSchema(this.getSchema(), "sqlexception", [], false),
     );
   }
-  sqlstate(arg1?: QueryBuilder): QueryBuilder {
+  sqlstate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqlstate", [arg1]),
+      cloneSchema(this.getSchema(), "sqlstate", [], false),
     );
   }
-  sqlwarning(arg1?: QueryBuilder): QueryBuilder {
+  sqlwarning(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqlwarning", [arg1]),
+      cloneSchema(this.getSchema(), "sqlwarning", [], false),
     );
   }
-  sqrt(arg1?: QueryBuilder): QueryBuilder {
+  sqrt(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sqrt", [arg1]),
+      cloneSchema(this.getSchema(), "sqrt", [], false),
     );
   }
-  stable(arg1?: QueryBuilder): QueryBuilder {
+  stable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stable", [arg1]),
+      cloneSchema(this.getSchema(), "stable", [], false),
     );
   }
-  standalone(arg1?: QueryBuilder): QueryBuilder {
+  standalone(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "standalone", [arg1]),
+      cloneSchema(this.getSchema(), "standalone", [], false),
     );
   }
-  start(arg1?: QueryBuilder): QueryBuilder {
+  start(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "start", [arg1]),
+      cloneSchema(this.getSchema(), "start", [], false),
     );
   }
-  state(arg1?: QueryBuilder): QueryBuilder {
+  state(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "state", [arg1]),
+      cloneSchema(this.getSchema(), "state", [], false),
     );
   }
-  statement(arg1?: QueryBuilder): QueryBuilder {
+  statement(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "statement", [arg1]),
+      cloneSchema(this.getSchema(), "statement", [], false),
     );
   }
-  static(arg1?: QueryBuilder): QueryBuilder {
+  static(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "static", [arg1]),
+      cloneSchema(this.getSchema(), "static", [], false),
     );
   }
-  statistics(arg1?: QueryBuilder): QueryBuilder {
+  statistics(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "statistics", [arg1]),
+      cloneSchema(this.getSchema(), "statistics", [], false),
     );
   }
-  stddevPop(arg1?: QueryBuilder): QueryBuilder {
+  stddevPop(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stddevPop", [arg1]),
+      cloneSchema(this.getSchema(), "stddevPop", [], false),
     );
   }
-  stddevSamp(arg1?: QueryBuilder): QueryBuilder {
+  stddevSamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stddevSamp", [arg1]),
+      cloneSchema(this.getSchema(), "stddevSamp", [], false),
     );
   }
-  stdin(arg1?: QueryBuilder): QueryBuilder {
+  stdin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stdin", [arg1]),
+      cloneSchema(this.getSchema(), "stdin", [], false),
     );
   }
-  stdout(arg1?: QueryBuilder): QueryBuilder {
+  stdout(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stdout", [arg1]),
+      cloneSchema(this.getSchema(), "stdout", [], false),
     );
   }
-  storage(arg1?: QueryBuilder): QueryBuilder {
+  storage(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "storage", [arg1]),
+      cloneSchema(this.getSchema(), "storage", [], false),
     );
   }
-  stored(arg1?: QueryBuilder): QueryBuilder {
+  stored(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "stored", [arg1]),
+      cloneSchema(this.getSchema(), "stored", [], false),
     );
   }
-  strict(arg1?: QueryBuilder): QueryBuilder {
+  strict(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "strict", [arg1]),
+      cloneSchema(this.getSchema(), "strict", [], false),
     );
   }
-  string(arg1?: QueryBuilder): QueryBuilder {
+  string(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "string", [arg1]),
+      cloneSchema(this.getSchema(), "string", [], false),
     );
   }
-  strip(arg1?: QueryBuilder): QueryBuilder {
+  strip(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "strip", [arg1]),
+      cloneSchema(this.getSchema(), "strip", [], false),
     );
   }
-  structure(arg1?: QueryBuilder): QueryBuilder {
+  structure(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "structure", [arg1]),
+      cloneSchema(this.getSchema(), "structure", [], false),
     );
   }
-  style(arg1?: QueryBuilder): QueryBuilder {
+  style(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "style", [arg1]),
+      cloneSchema(this.getSchema(), "style", [], false),
     );
   }
-  subclassOrigin(arg1?: QueryBuilder): QueryBuilder {
+  subclassOrigin(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "subclassOrigin", [arg1]),
+      cloneSchema(this.getSchema(), "subclassOrigin", [], false),
     );
   }
-  submultiset(arg1?: QueryBuilder): QueryBuilder {
+  submultiset(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "submultiset", [arg1]),
+      cloneSchema(this.getSchema(), "submultiset", [], false),
     );
   }
-  subscription(arg1?: QueryBuilder): QueryBuilder {
+  subscription(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "subscription", [arg1]),
+      cloneSchema(this.getSchema(), "subscription", [], false),
     );
   }
-  subset(arg1?: QueryBuilder): QueryBuilder {
+  subset(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "subset", [arg1]),
+      cloneSchema(this.getSchema(), "subset", [], false),
     );
   }
-  substring(arg1?: QueryBuilder): QueryBuilder {
+  substring(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "substring", [arg1]),
+      cloneSchema(this.getSchema(), "substring", [], false),
     );
   }
-  substringRegex(arg1?: QueryBuilder): QueryBuilder {
+  substringRegex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "substringRegex", [arg1]),
+      cloneSchema(this.getSchema(), "substringRegex", [], false),
     );
   }
-  succeeds(arg1?: QueryBuilder): QueryBuilder {
+  succeeds(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "succeeds", [arg1]),
+      cloneSchema(this.getSchema(), "succeeds", [], false),
     );
   }
-  sum(arg1?: QueryBuilder): QueryBuilder {
+  sum(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sum", [arg1]),
+      cloneSchema(this.getSchema(), "sum", [], false),
     );
   }
-  support(arg1?: QueryBuilder): QueryBuilder {
+  support(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "support", [arg1]),
+      cloneSchema(this.getSchema(), "support", [], false),
     );
   }
-  symmetric(arg1?: QueryBuilder): QueryBuilder {
+  symmetric(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "symmetric", [arg1]),
+      cloneSchema(this.getSchema(), "symmetric", [], false),
     );
   }
-  sysid(arg1?: QueryBuilder): QueryBuilder {
+  sysid(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "sysid", [arg1]),
+      cloneSchema(this.getSchema(), "sysid", [], false),
     );
   }
-  system(arg1?: QueryBuilder): QueryBuilder {
+  system(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "system", [arg1]),
+      cloneSchema(this.getSchema(), "system", [], false),
     );
   }
-  systemTime(arg1?: QueryBuilder): QueryBuilder {
+  systemTime(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "systemTime", [arg1]),
+      cloneSchema(this.getSchema(), "systemTime", [], false),
     );
   }
-  systemUser(arg1?: QueryBuilder): QueryBuilder {
+  systemUser(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "systemUser", [arg1]),
+      cloneSchema(this.getSchema(), "systemUser", [], false),
     );
   }
-  t(arg1?: QueryBuilder): QueryBuilder {
+  t(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "t", [arg1]),
+      cloneSchema(this.getSchema(), "t", [], false),
     );
   }
-  table(arg1?: QueryBuilder): QueryBuilder {
+  table(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "table", [arg1]),
+      cloneSchema(this.getSchema(), "table", [], false),
     );
   }
-  tables(arg1?: QueryBuilder): QueryBuilder {
+  tables(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tables", [arg1]),
+      cloneSchema(this.getSchema(), "tables", [], false),
     );
   }
-  tablesample(arg1?: QueryBuilder): QueryBuilder {
+  tablesample(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tablesample", [arg1]),
+      cloneSchema(this.getSchema(), "tablesample", [], false),
     );
   }
-  tablespace(arg1?: QueryBuilder): QueryBuilder {
+  tablespace(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tablespace", [arg1]),
+      cloneSchema(this.getSchema(), "tablespace", [], false),
     );
   }
-  tableName(arg1?: QueryBuilder): QueryBuilder {
+  tableName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tableName", [arg1]),
+      cloneSchema(this.getSchema(), "tableName", [], false),
     );
   }
-  tan(arg1?: QueryBuilder): QueryBuilder {
+  tan(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tan", [arg1]),
+      cloneSchema(this.getSchema(), "tan", [], false),
     );
   }
-  tanh(arg1?: QueryBuilder): QueryBuilder {
+  tanh(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "tanh", [arg1]),
+      cloneSchema(this.getSchema(), "tanh", [], false),
     );
   }
-  target(arg1?: QueryBuilder): QueryBuilder {
+  target(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "target", [arg1]),
+      cloneSchema(this.getSchema(), "target", [], false),
     );
   }
-  temp(arg1?: QueryBuilder): QueryBuilder {
+  temp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "temp", [arg1]),
+      cloneSchema(this.getSchema(), "temp", [], false),
     );
   }
-  template(arg1?: QueryBuilder): QueryBuilder {
+  template(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "template", [arg1]),
+      cloneSchema(this.getSchema(), "template", [], false),
     );
   }
-  temporary(arg1?: QueryBuilder): QueryBuilder {
+  temporary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "temporary", [arg1]),
+      cloneSchema(this.getSchema(), "temporary", [], false),
     );
   }
-  text(arg1?: QueryBuilder): QueryBuilder {
+  text(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "text", [arg1]),
+      cloneSchema(this.getSchema(), "text", [], false),
     );
   }
-  then(arg1?: QueryBuilder): QueryBuilder {
+  then(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "then", [arg1]),
+      cloneSchema(this.getSchema(), "then", [], false),
     );
   }
-  through(arg1?: QueryBuilder): QueryBuilder {
+  through(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "through", [arg1]),
+      cloneSchema(this.getSchema(), "through", [], false),
     );
   }
-  ties(arg1?: QueryBuilder): QueryBuilder {
+  ties(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "ties", [arg1]),
+      cloneSchema(this.getSchema(), "ties", [], false),
     );
   }
-  time(arg1?: QueryBuilder): QueryBuilder {
+  time(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "time", [arg1]),
+      cloneSchema(this.getSchema(), "time", [], false),
     );
   }
-  timestamp(arg1?: QueryBuilder): QueryBuilder {
+  timestamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "timestamp", [arg1]),
+      cloneSchema(this.getSchema(), "timestamp", [], false),
     );
   }
-  timezoneHour(arg1?: QueryBuilder): QueryBuilder {
+  timezoneHour(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "timezoneHour", [arg1]),
+      cloneSchema(this.getSchema(), "timezoneHour", [], false),
     );
   }
-  timezoneMinute(arg1?: QueryBuilder): QueryBuilder {
+  timezoneMinute(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "timezoneMinute", [arg1]),
+      cloneSchema(this.getSchema(), "timezoneMinute", [], false),
     );
   }
-  to(arg1?: QueryBuilder): QueryBuilder {
+  to(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "to", [arg1]),
+      cloneSchema(this.getSchema(), "to", [], false),
     );
   }
-  token(arg1?: QueryBuilder): QueryBuilder {
+  token(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "token", [arg1]),
+      cloneSchema(this.getSchema(), "token", [], false),
     );
   }
-  topLevelCount(arg1?: QueryBuilder): QueryBuilder {
+  topLevelCount(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "topLevelCount", [arg1]),
+      cloneSchema(this.getSchema(), "topLevelCount", [], false),
     );
   }
-  trailing(arg1?: QueryBuilder): QueryBuilder {
+  trailing(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "trailing", [arg1]),
+      cloneSchema(this.getSchema(), "trailing", [], false),
     );
   }
-  transaction(arg1?: QueryBuilder): QueryBuilder {
+  transaction(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transaction", [arg1]),
+      cloneSchema(this.getSchema(), "transaction", [], false),
     );
   }
-  transactionsCommitted(arg1?: QueryBuilder): QueryBuilder {
+  transactionsCommitted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transactionsCommitted", [arg1]),
+      cloneSchema(this.getSchema(), "transactionsCommitted", [], false),
     );
   }
-  transactionsRolledBack(arg1?: QueryBuilder): QueryBuilder {
+  transactionsRolledBack(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transactionsRolledBack", [arg1]),
+      cloneSchema(this.getSchema(), "transactionsRolledBack", [], false),
     );
   }
-  transactionActive(arg1?: QueryBuilder): QueryBuilder {
+  transactionActive(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transactionActive", [arg1]),
+      cloneSchema(this.getSchema(), "transactionActive", [], false),
     );
   }
-  transform(arg1?: QueryBuilder): QueryBuilder {
+  transform(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transform", [arg1]),
+      cloneSchema(this.getSchema(), "transform", [], false),
     );
   }
-  transforms(arg1?: QueryBuilder): QueryBuilder {
+  transforms(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "transforms", [arg1]),
+      cloneSchema(this.getSchema(), "transforms", [], false),
     );
   }
-  translate(arg1?: QueryBuilder): QueryBuilder {
+  translate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "translate", [arg1]),
+      cloneSchema(this.getSchema(), "translate", [], false),
     );
   }
-  translateRegex(arg1?: QueryBuilder): QueryBuilder {
+  translateRegex(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "translateRegex", [arg1]),
+      cloneSchema(this.getSchema(), "translateRegex", [], false),
     );
   }
-  translation(arg1?: QueryBuilder): QueryBuilder {
+  translation(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "translation", [arg1]),
+      cloneSchema(this.getSchema(), "translation", [], false),
     );
   }
-  treat(arg1?: QueryBuilder): QueryBuilder {
+  treat(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "treat", [arg1]),
+      cloneSchema(this.getSchema(), "treat", [], false),
     );
   }
-  trigger(arg1?: QueryBuilder): QueryBuilder {
+  trigger(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "trigger", [arg1]),
+      cloneSchema(this.getSchema(), "trigger", [], false),
     );
   }
-  triggerCatalog(arg1?: QueryBuilder): QueryBuilder {
+  triggerCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "triggerCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "triggerCatalog", [], false),
     );
   }
-  triggerName(arg1?: QueryBuilder): QueryBuilder {
+  triggerName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "triggerName", [arg1]),
+      cloneSchema(this.getSchema(), "triggerName", [], false),
     );
   }
-  triggerSchema(arg1?: QueryBuilder): QueryBuilder {
+  triggerSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "triggerSchema", [arg1]),
+      cloneSchema(this.getSchema(), "triggerSchema", [], false),
     );
   }
-  trim(arg1?: QueryBuilder): QueryBuilder {
+  trim(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "trim", [arg1]),
+      cloneSchema(this.getSchema(), "trim", [], false),
     );
   }
-  trimArray(arg1?: QueryBuilder): QueryBuilder {
+  trimArray(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "trimArray", [arg1]),
+      cloneSchema(this.getSchema(), "trimArray", [], false),
     );
   }
-  true(arg1?: QueryBuilder): QueryBuilder {
+  true(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "true", [arg1]),
+      cloneSchema(this.getSchema(), "true", [], false),
     );
   }
-  truncate(arg1?: QueryBuilder): QueryBuilder {
+  truncate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "truncate", [arg1]),
+      cloneSchema(this.getSchema(), "truncate", [], false),
     );
   }
-  trusted(arg1?: QueryBuilder): QueryBuilder {
+  trusted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "trusted", [arg1]),
+      cloneSchema(this.getSchema(), "trusted", [], false),
     );
   }
-  type(arg1?: QueryBuilder): QueryBuilder {
+  type(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "type", [arg1]),
+      cloneSchema(this.getSchema(), "type", [], false),
     );
   }
-  types(arg1?: QueryBuilder): QueryBuilder {
+  types(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "types", [arg1]),
+      cloneSchema(this.getSchema(), "types", [], false),
     );
   }
-  uescape(arg1?: QueryBuilder): QueryBuilder {
+  uescape(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "uescape", [arg1]),
+      cloneSchema(this.getSchema(), "uescape", [], false),
     );
   }
-  unbounded(arg1?: QueryBuilder): QueryBuilder {
+  unbounded(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unbounded", [arg1]),
+      cloneSchema(this.getSchema(), "unbounded", [], false),
     );
   }
-  uncommitted(arg1?: QueryBuilder): QueryBuilder {
+  uncommitted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "uncommitted", [arg1]),
+      cloneSchema(this.getSchema(), "uncommitted", [], false),
     );
   }
-  unconditional(arg1?: QueryBuilder): QueryBuilder {
+  unconditional(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unconditional", [arg1]),
+      cloneSchema(this.getSchema(), "unconditional", [], false),
     );
   }
-  under(arg1?: QueryBuilder): QueryBuilder {
+  under(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "under", [arg1]),
+      cloneSchema(this.getSchema(), "under", [], false),
     );
   }
-  unencrypted(arg1?: QueryBuilder): QueryBuilder {
+  unencrypted(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unencrypted", [arg1]),
+      cloneSchema(this.getSchema(), "unencrypted", [], false),
     );
   }
-  union(arg1?: QueryBuilder): QueryBuilder {
+  union(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "union", [arg1]),
+      cloneSchema(this.getSchema(), "union", [], false),
     );
   }
-  unique(arg1?: QueryBuilder): QueryBuilder {
+  unique(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unique", [arg1]),
+      cloneSchema(this.getSchema(), "unique", [], false),
     );
   }
-  unknown(arg1?: QueryBuilder): QueryBuilder {
+  unknown(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unknown", [arg1]),
+      cloneSchema(this.getSchema(), "unknown", [], false),
     );
   }
-  unlink(arg1?: QueryBuilder): QueryBuilder {
+  unlink(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unlink", [arg1]),
+      cloneSchema(this.getSchema(), "unlink", [], false),
     );
   }
-  unlisten(arg1?: QueryBuilder): QueryBuilder {
+  unlisten(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unlisten", [arg1]),
+      cloneSchema(this.getSchema(), "unlisten", [], false),
     );
   }
-  unlogged(arg1?: QueryBuilder): QueryBuilder {
+  unlogged(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unlogged", [arg1]),
+      cloneSchema(this.getSchema(), "unlogged", [], false),
     );
   }
-  unmatched(arg1?: QueryBuilder): QueryBuilder {
+  unmatched(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unmatched", [arg1]),
+      cloneSchema(this.getSchema(), "unmatched", [], false),
     );
   }
-  unnamed(arg1?: QueryBuilder): QueryBuilder {
+  unnamed(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unnamed", [arg1]),
+      cloneSchema(this.getSchema(), "unnamed", [], false),
     );
   }
-  unnest(arg1?: QueryBuilder): QueryBuilder {
+  unnest(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "unnest", [arg1]),
+      cloneSchema(this.getSchema(), "unnest", [], false),
     );
   }
-  until(arg1?: QueryBuilder): QueryBuilder {
+  until(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "until", [arg1]),
+      cloneSchema(this.getSchema(), "until", [], false),
     );
   }
-  untyped(arg1?: QueryBuilder): QueryBuilder {
+  untyped(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "untyped", [arg1]),
+      cloneSchema(this.getSchema(), "untyped", [], false),
     );
   }
-  update(arg1?: QueryBuilder): QueryBuilder {
+  update(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "update", [arg1]),
+      cloneSchema(this.getSchema(), "update", [], false),
     );
   }
-  upper(arg1?: QueryBuilder): QueryBuilder {
+  upper(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "upper", [arg1]),
+      cloneSchema(this.getSchema(), "upper", [], false),
     );
   }
-  uri(arg1?: QueryBuilder): QueryBuilder {
+  uri(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "uri", [arg1]),
+      cloneSchema(this.getSchema(), "uri", [], false),
     );
   }
-  usage(arg1?: QueryBuilder): QueryBuilder {
+  usage(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "usage", [arg1]),
+      cloneSchema(this.getSchema(), "usage", [], false),
     );
   }
-  user(arg1?: QueryBuilder): QueryBuilder {
+  user(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "user", [arg1]),
+      cloneSchema(this.getSchema(), "user", [], false),
     );
   }
-  userDefinedTypeCatalog(arg1?: QueryBuilder): QueryBuilder {
+  userDefinedTypeCatalog(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "userDefinedTypeCatalog", [arg1]),
+      cloneSchema(this.getSchema(), "userDefinedTypeCatalog", [], false),
     );
   }
-  userDefinedTypeCode(arg1?: QueryBuilder): QueryBuilder {
+  userDefinedTypeCode(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "userDefinedTypeCode", [arg1]),
+      cloneSchema(this.getSchema(), "userDefinedTypeCode", [], false),
     );
   }
-  userDefinedTypeName(arg1?: QueryBuilder): QueryBuilder {
+  userDefinedTypeName(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "userDefinedTypeName", [arg1]),
+      cloneSchema(this.getSchema(), "userDefinedTypeName", [], false),
     );
   }
-  userDefinedTypeSchema(arg1?: QueryBuilder): QueryBuilder {
+  userDefinedTypeSchema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "userDefinedTypeSchema", [arg1]),
+      cloneSchema(this.getSchema(), "userDefinedTypeSchema", [], false),
     );
   }
-  using(arg1?: QueryBuilder): QueryBuilder {
+  using(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "using", [arg1]),
+      cloneSchema(this.getSchema(), "using", [], false),
     );
   }
-  utf16(arg1?: QueryBuilder): QueryBuilder {
+  utf16(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "utf16", [arg1]),
+      cloneSchema(this.getSchema(), "utf16", [], false),
     );
   }
-  utf32(arg1?: QueryBuilder): QueryBuilder {
+  utf32(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "utf32", [arg1]),
+      cloneSchema(this.getSchema(), "utf32", [], false),
     );
   }
-  utf8(arg1?: QueryBuilder): QueryBuilder {
+  utf8(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "utf8", [arg1]),
+      cloneSchema(this.getSchema(), "utf8", [], false),
     );
   }
-  vacuum(arg1?: QueryBuilder): QueryBuilder {
+  vacuum(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "vacuum", [arg1]),
+      cloneSchema(this.getSchema(), "vacuum", [], false),
     );
   }
-  valid(arg1?: QueryBuilder): QueryBuilder {
+  valid(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "valid", [arg1]),
+      cloneSchema(this.getSchema(), "valid", [], false),
     );
   }
-  validate(arg1?: QueryBuilder): QueryBuilder {
+  validate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "validate", [arg1]),
+      cloneSchema(this.getSchema(), "validate", [], false),
     );
   }
-  validator(arg1?: QueryBuilder): QueryBuilder {
+  validator(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "validator", [arg1]),
+      cloneSchema(this.getSchema(), "validator", [], false),
     );
   }
-  value(arg1?: QueryBuilder): QueryBuilder {
+  value(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "value", [arg1]),
+      cloneSchema(this.getSchema(), "value", [], false),
     );
   }
-  values(arg1?: QueryBuilder): QueryBuilder {
+  values(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "values", [arg1]),
+      cloneSchema(this.getSchema(), "values", [], false),
     );
   }
-  valueOf(arg1?: QueryBuilder): QueryBuilder {
+  valueOf(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "valueOf", [arg1]),
+      cloneSchema(this.getSchema(), "valueOf", [], false),
     );
   }
-  varbinary(arg1?: QueryBuilder): QueryBuilder {
+  varbinary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "varbinary", [arg1]),
+      cloneSchema(this.getSchema(), "varbinary", [], false),
     );
   }
-  varchar(arg1?: QueryBuilder): QueryBuilder {
+  varchar(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "varchar", [arg1]),
+      cloneSchema(this.getSchema(), "varchar", [], false),
     );
   }
-  variadic(arg1?: QueryBuilder): QueryBuilder {
+  variadic(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "variadic", [arg1]),
+      cloneSchema(this.getSchema(), "variadic", [], false),
     );
   }
-  varying(arg1?: QueryBuilder): QueryBuilder {
+  varying(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "varying", [arg1]),
+      cloneSchema(this.getSchema(), "varying", [], false),
     );
   }
-  varPop(arg1?: QueryBuilder): QueryBuilder {
+  varPop(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "varPop", [arg1]),
+      cloneSchema(this.getSchema(), "varPop", [], false),
     );
   }
-  varSamp(arg1?: QueryBuilder): QueryBuilder {
+  varSamp(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "varSamp", [arg1]),
+      cloneSchema(this.getSchema(), "varSamp", [], false),
     );
   }
-  verbose(arg1?: QueryBuilder): QueryBuilder {
+  verbose(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "verbose", [arg1]),
+      cloneSchema(this.getSchema(), "verbose", [], false),
     );
   }
-  version(arg1?: QueryBuilder): QueryBuilder {
+  version(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "version", [arg1]),
+      cloneSchema(this.getSchema(), "version", [], false),
     );
   }
-  versioning(arg1?: QueryBuilder): QueryBuilder {
+  versioning(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "versioning", [arg1]),
+      cloneSchema(this.getSchema(), "versioning", [], false),
     );
   }
-  view(arg1?: QueryBuilder): QueryBuilder {
+  view(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "view", [arg1]),
+      cloneSchema(this.getSchema(), "view", [], false),
     );
   }
-  views(arg1?: QueryBuilder): QueryBuilder {
+  views(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "views", [arg1]),
+      cloneSchema(this.getSchema(), "views", [], false),
     );
   }
-  virtual(arg1?: QueryBuilder): QueryBuilder {
+  virtual(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "virtual", [arg1]),
+      cloneSchema(this.getSchema(), "virtual", [], false),
     );
   }
-  volatile(arg1?: QueryBuilder): QueryBuilder {
+  volatile(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "volatile", [arg1]),
+      cloneSchema(this.getSchema(), "volatile", [], false),
     );
   }
-  when(arg1?: QueryBuilder): QueryBuilder {
+  when(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "when", [arg1]),
+      cloneSchema(this.getSchema(), "when", [], false),
     );
   }
-  whenever(arg1?: QueryBuilder): QueryBuilder {
+  whenever(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "whenever", [arg1]),
+      cloneSchema(this.getSchema(), "whenever", [], false),
     );
   }
-  where(arg1?: QueryBuilder): QueryBuilder {
+  where(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "where", [arg1]),
+      cloneSchema(this.getSchema(), "where", [], false),
     );
   }
-  whitespace(arg1?: QueryBuilder): QueryBuilder {
+  whitespace(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "whitespace", [arg1]),
+      cloneSchema(this.getSchema(), "whitespace", [], false),
     );
   }
-  widthBucket(arg1?: QueryBuilder): QueryBuilder {
+  widthBucket(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "widthBucket", [arg1]),
+      cloneSchema(this.getSchema(), "widthBucket", [], false),
     );
   }
-  window(arg1?: QueryBuilder): QueryBuilder {
+  window(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "window", [arg1]),
+      cloneSchema(this.getSchema(), "window", [], false),
     );
   }
-  with(arg1?: QueryBuilder): QueryBuilder {
+  with(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "with", [arg1]),
+      cloneSchema(this.getSchema(), "with", [], false),
     );
   }
-  within(arg1?: QueryBuilder): QueryBuilder {
+  within(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "within", [arg1]),
+      cloneSchema(this.getSchema(), "within", [], false),
     );
   }
-  without(arg1?: QueryBuilder): QueryBuilder {
+  without(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "without", [arg1]),
+      cloneSchema(this.getSchema(), "without", [], false),
     );
   }
-  work(arg1?: QueryBuilder): QueryBuilder {
+  work(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "work", [arg1]),
+      cloneSchema(this.getSchema(), "work", [], false),
     );
   }
-  wrapper(arg1?: QueryBuilder): QueryBuilder {
+  wrapper(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "wrapper", [arg1]),
+      cloneSchema(this.getSchema(), "wrapper", [], false),
     );
   }
-  write(arg1?: QueryBuilder): QueryBuilder {
+  write(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "write", [arg1]),
+      cloneSchema(this.getSchema(), "write", [], false),
     );
   }
-  xml(arg1?: QueryBuilder): QueryBuilder {
+  xml(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xml", [arg1]),
+      cloneSchema(this.getSchema(), "xml", [], false),
     );
   }
-  xmlagg(arg1?: QueryBuilder): QueryBuilder {
+  xmlagg(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlagg", [arg1]),
+      cloneSchema(this.getSchema(), "xmlagg", [], false),
     );
   }
-  xmlattributes(arg1?: QueryBuilder): QueryBuilder {
+  xmlattributes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlattributes", [arg1]),
+      cloneSchema(this.getSchema(), "xmlattributes", [], false),
     );
   }
-  xmlbinary(arg1?: QueryBuilder): QueryBuilder {
+  xmlbinary(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlbinary", [arg1]),
+      cloneSchema(this.getSchema(), "xmlbinary", [], false),
     );
   }
-  xmlcast(arg1?: QueryBuilder): QueryBuilder {
+  xmlcast(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlcast", [arg1]),
+      cloneSchema(this.getSchema(), "xmlcast", [], false),
     );
   }
-  xmlcomment(arg1?: QueryBuilder): QueryBuilder {
+  xmlcomment(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlcomment", [arg1]),
+      cloneSchema(this.getSchema(), "xmlcomment", [], false),
     );
   }
-  xmlconcat(arg1?: QueryBuilder): QueryBuilder {
+  xmlconcat(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlconcat", [arg1]),
+      cloneSchema(this.getSchema(), "xmlconcat", [], false),
     );
   }
-  xmldeclaration(arg1?: QueryBuilder): QueryBuilder {
+  xmldeclaration(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmldeclaration", [arg1]),
+      cloneSchema(this.getSchema(), "xmldeclaration", [], false),
     );
   }
-  xmldocument(arg1?: QueryBuilder): QueryBuilder {
+  xmldocument(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmldocument", [arg1]),
+      cloneSchema(this.getSchema(), "xmldocument", [], false),
     );
   }
-  xmlelement(arg1?: QueryBuilder): QueryBuilder {
+  xmlelement(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlelement", [arg1]),
+      cloneSchema(this.getSchema(), "xmlelement", [], false),
     );
   }
-  xmlexists(arg1?: QueryBuilder): QueryBuilder {
+  xmlexists(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlexists", [arg1]),
+      cloneSchema(this.getSchema(), "xmlexists", [], false),
     );
   }
-  xmlforest(arg1?: QueryBuilder): QueryBuilder {
+  xmlforest(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlforest", [arg1]),
+      cloneSchema(this.getSchema(), "xmlforest", [], false),
     );
   }
-  xmliterate(arg1?: QueryBuilder): QueryBuilder {
+  xmliterate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmliterate", [arg1]),
+      cloneSchema(this.getSchema(), "xmliterate", [], false),
     );
   }
-  xmlnamespaces(arg1?: QueryBuilder): QueryBuilder {
+  xmlnamespaces(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlnamespaces", [arg1]),
+      cloneSchema(this.getSchema(), "xmlnamespaces", [], false),
     );
   }
-  xmlparse(arg1?: QueryBuilder): QueryBuilder {
+  xmlparse(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlparse", [arg1]),
+      cloneSchema(this.getSchema(), "xmlparse", [], false),
     );
   }
-  xmlpi(arg1?: QueryBuilder): QueryBuilder {
+  xmlpi(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlpi", [arg1]),
+      cloneSchema(this.getSchema(), "xmlpi", [], false),
     );
   }
-  xmlquery(arg1?: QueryBuilder): QueryBuilder {
+  xmlquery(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlquery", [arg1]),
+      cloneSchema(this.getSchema(), "xmlquery", [], false),
     );
   }
-  xmlroot(arg1?: QueryBuilder): QueryBuilder {
+  xmlroot(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlroot", [arg1]),
+      cloneSchema(this.getSchema(), "xmlroot", [], false),
     );
   }
-  xmlschema(arg1?: QueryBuilder): QueryBuilder {
+  xmlschema(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlschema", [arg1]),
+      cloneSchema(this.getSchema(), "xmlschema", [], false),
     );
   }
-  xmlserialize(arg1?: QueryBuilder): QueryBuilder {
+  xmlserialize(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlserialize", [arg1]),
+      cloneSchema(this.getSchema(), "xmlserialize", [], false),
     );
   }
-  xmltable(arg1?: QueryBuilder): QueryBuilder {
+  xmltable(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmltable", [arg1]),
+      cloneSchema(this.getSchema(), "xmltable", [], false),
     );
   }
-  xmltext(arg1?: QueryBuilder): QueryBuilder {
+  xmltext(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmltext", [arg1]),
+      cloneSchema(this.getSchema(), "xmltext", [], false),
     );
   }
-  xmlvalidate(arg1?: QueryBuilder): QueryBuilder {
+  xmlvalidate(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "xmlvalidate", [arg1]),
+      cloneSchema(this.getSchema(), "xmlvalidate", [], false),
     );
   }
-  year(arg1?: QueryBuilder): QueryBuilder {
+  year(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "year", [arg1]),
+      cloneSchema(this.getSchema(), "year", [], false),
     );
   }
-  yes(arg1?: QueryBuilder): QueryBuilder {
+  yes(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "yes", [arg1]),
+      cloneSchema(this.getSchema(), "yes", [], false),
     );
   }
-  zone(arg1?: QueryBuilder): QueryBuilder {
+  zone(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "zone", [arg1]),
+      cloneSchema(this.getSchema(), "zone", [], false),
+    );
+  }
+  insertinto(
+    table?: QueryBuilder,
+    values?:
+      | { [key: string]: QueryBuilder }
+      | { [key: string]: QueryBuilder }[],
+  ): QueryBuilder {
+    return new QueryBuilder().initFromStructure<QueryBuilder>(
+      cloneSchema(this.getSchema(), "insertinto", [table, values], false),
+    );
+  }
+  raw(
+    strings: TemplateStringsArray,
+    ...args: (string | number)[]
+  ): QueryBuilder {
+    return new QueryBuilder().initFromStructure<QueryBuilder>(
+      cloneSchema(this.getSchema(), "raw", [strings, ...args], true),
     );
   }
 }

@@ -12,6 +12,7 @@ export type FunctionType = {
         name: string,
         arguments: ArgumentType[]
         return: StructureCallType | ThisType,
+        isTemplateLiteral: boolean
     }
 }
 
@@ -42,28 +43,39 @@ export type StructureCallType = {
 
 export type StructType = {
     struct: {
-        string: "string"
+        string: {
+            value: string | null
+        }
     } | {
-        number: "number"
+        number: {
+            value: number | null
+        }
     } | {
-        boolean: "boolean"
-    } | {
-        null: "null"
+        boolean: {
+            value: boolean | null
+        }
     } | {
         object: {
             values: {
-                [key: string]: StructType
-            }
+                key: string | null,
+                value: StructType['struct']
+                prdefined: boolean
+                optional: boolean
+            }[]
         }
     } | {
         array: {
-            value: StructType
+            values: (StructType['struct'])[]
         }
-    } | StructureCallType | {
+    } | {
+        null: {
+            value: null
+        }
+    } | {
         union: {
-            values: StructType[]
+            values: (StructType['struct'])[]
         }
-    }
+    } | StructureCallType
 }
 
 export type ArgumentType = {
