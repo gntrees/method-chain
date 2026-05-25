@@ -1,25 +1,91 @@
-export type LanguageType =
-    | "typescript"
-    | "javascript"
+
 
 type StringType = {
     string: {
-        value: string
+        value: {
+            array: StringType['string']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: StringType['string']['value']
+            }[]
+        } | {
+            single: string
+        }
     }
 }
 type NumberType = {
     number: {
-        value: number
+        value: {
+            array: NumberType['number']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: NumberType['number']['value']
+            }[]
+        } | {
+            single: number
+        }
     }
 }
 type BooleanType = {
     boolean: {
-        value: boolean
+        value: {
+            array: BooleanType['boolean']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: BooleanType['boolean']['value']
+            }[]
+        } | {
+            single: boolean
+        }
     }
 }
 type NullType = {
     null: {
-        value: null
+        value: {
+            array: NullType['null']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: NullType['null']['value']
+            }[]
+        } | {
+            single: null
+        }
+    }
+}
+type ObjectType = {
+    object: {
+        value: {
+            array: ObjectType['object']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: ObjectType['object']['value']
+            }[]
+        } | {
+            single: {
+                [key:string]: StructType['struct']
+            }
+        }
+    }
+}
+
+type StructureType = {
+    structure: {
+        name: string,
+        value: {
+            array: StructureType['structure']['value'][]
+        } | {
+            map: {
+                key: string,
+                value: StructureType['structure']['value']
+            }[]
+        } | {
+            single: ChainType
+        }
     }
 }
 
@@ -29,13 +95,6 @@ type ArrayType = {
     }
 }
 
-type ObjectType = {
-    object: {
-        value: {
-            [key: string]: StringType | NumberType | BooleanType | NullType | ArrayType | ObjectType | ChainType
-        }
-    }
-}
 
 type FunctionCallType = {
     functionCall: {
@@ -61,7 +120,13 @@ type ChainType = {
 type InitFunctionType = {
     name: string,
     variableName: string,
-    importString: Partial<Record<LanguageType, string>>;
+    importString: string,
+}
+
+type UnionType = {
+    union: {
+        values: (StructType['struct'])[]
+    }
 }
 
 type SchemaType = {
@@ -72,94 +137,14 @@ type SchemaType = {
 }
 
 type StructType = {
-    struct: {
-        string: {
-            value: {
-                array : string[]
-            } | {
-                map : {
-                    key: string,
-                    value: string
-                }
-            } | {
-                single : string
-            }
-        }
-    } | {
-        number: {
-            value: {
-                array : number[]
-            } | {
-                map : {
-                    key: string,
-                    value: number
-                }
-            } | {
-                single : number
-            }
-        }
-    } | {
-        boolean: {
-            value: {
-                array : boolean[]
-            } | {
-                map : {
-                    key: string,
-                    value: boolean
-                }
-            } | {
-                single : boolean
-            }
-        }
-    } | {
-        null: {
-            value: {
-                array : null[]
-            } | {
-                map : {
-                    key: string,
-                    value: null
-                }
-            } | {
-                single : null
-            }
-        }
-    } | {
-        union: {
-            values: (StructType['struct'])[]
-        }
-    } | {
-        object: {
-            value: {
-                key: string,
-                value: {
-                    array : StructType['struct']
-                } | {
-                    map : {
-                        key: string,
-                        value: StructType['struct']
-                    }
-                } | {
-                    single : StructType['struct']
-                }
-            }
-        }
-    } | {
-        structureCall: {
-            name: string,
-            value: {
-                array : SchemaType[]
-            } | {
-                map : {
-                    key: string,
-                    value: SchemaType
-                }
-            } | {
-                single : SchemaType
-            }
-        }
-    }
+    struct: StringType | NumberType | BooleanType | NullType | UnionType | ObjectType | StructureType
 }
+
+// type StructType2 = {
+//     struct : {
+//         string:
+//     }
+// }
 
 export type {
     SchemaType,
@@ -171,4 +156,8 @@ export type {
     NumberType,
     BooleanType,
     NullType,
+    StructureType,
+    UnionType,
+    StructType,
+    ChainType,
 }

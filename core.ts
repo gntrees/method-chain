@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { exists, mkdir, rm } from "node:fs/promises";
 import type { ConfigType, ProjectType, StructType, StructureCallType, ThisType } from "./core.types";
 import { normalizeName, prettierContent } from "./utils";
+import type { StringType, NumberType, BooleanType, NullType, ObjectType, StructureType } from "./base-types/typescript";
 
 const baseTypesContent = {
     typescript: readFileSync("./base-types/typescript.ts", { encoding: "utf-8" }),
@@ -11,30 +12,28 @@ const baseTypesContent = {
 export async function generateProject(project: ProjectType, config: ConfigType) {
     const stringifyStruct = (struct: StructType['struct']): string => {
         if ("string" in struct) {
-            return "string";
+            return "string"
         } else if ("number" in struct) {
-            return "number";
+            return "number"
         } else if ("boolean" in struct) {
-            return "boolean";
+            return "boolean"
         } else if ("null" in struct) {
-            return "null";
+            return "null"
         } else if ("object" in struct) {
-            const properties = struct.object.values.map((item) => {
-                if (item.key === null && item.value !== null) {
-                    return `[key: string]: ${stringifyStruct(item.value)}`;
-                } else if (item.key !== null && item.value !== null) {
-                    return `${item.key}: ${stringifyStruct(item.value)}`;
-                } else throw new Error("Object properties must have a key or a value");
-            }).join('; ');
+            const properties = Object.entries(struct.object).map(([key, val]) => `${key}: ${stringifyStruct(val)}`).join('; ');
             return `{ ${properties} }`;
+        } else if ("map" in struct) {
+            const nested = stringifyStruct(struct.map.type);
+            return `{ [key: string]: ${nested} }`;
         } else if ("array" in struct) {
-            const arrayTypes = struct.array.values.map(item => stringifyStruct(item)).join(' | ');
-            return `(${arrayTypes})[]`;
-        } else if ("structureCall" in struct) {
-            return normalizeName(struct.structureCall.name, "pascal");
+            const nested = stringifyStruct(struct.array.type);
+            return `(${nested})[]`;
         } else if ("union" in struct) {
-            return struct.union.values.map(value => stringifyStruct(value)).join(' | ');
-        } else {
+            const types = struct.union.types.map(type => stringifyStruct(type)).join(' | ');
+            return `(${types})`;
+        } else if ("structureCall" in struct) {
+            return normalizeName(findStructureInDefinitions(struct.structureCall.name, project.project.definitions), "pascal");
+        } else {            
             throw new Error("Unknown struct type");
         }
     }
@@ -113,7 +112,7 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                     ).filter((i) => i !== false),
                 ]
             })
-            const schemaVariableName = "schema"+normalizeName(definition.structure.name,"pascal")
+            const schemaVariableName = "schema" + normalizeName(definition.structure.name, "pascal")
             definitionContent += `
                 import type { SchemaType } from "./types.ts";
                 import { cloneSchema } from "./utils.ts";\n
@@ -127,7 +126,7 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                                 initFunction: {
                                     name: "${definition.structure.name}",
                                     variableName: "${"s" + (index + 1)}",
-                                    importString: {}
+                                    importString: ""
                                 },
                             }
                         }
@@ -166,16 +165,16 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                     definitionContent += `${normalizeName(func.customFunction.name, "camel")}(...args: Parameters<typeof ${normalizeName(func.customFunction.name, "camel")}>): ReturnType<typeof ${normalizeName(func.customFunction.name, "camel")}> {\nreturn ${normalizeName(func.customFunction.name, "camel")}.apply(this, args);\n}\n`;
                 } else if ("function" in func) {
                     if (func.function.isTemplateLiteral && func.function.arguments.length !== 1) throw new Error("Template literal functions must have one argument");
-                    const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: ('+func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
-                        +')[]'] :
-                    func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.optional ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`)
+                    const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: (' + func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
+                        + ')[]'] :
+                        func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.optional ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`)
                     const argsString = args.join(', ');
-                    definitionContent += `${normalizeName(func.function.name, "camel")}(${argsString}): ${stringifyStructureCall(func.function.return,"pascal")} {
+                    definitionContent += `${normalizeName(func.function.name, "camel")}(${argsString}): ${stringifyStructureCall(func.function.return, "pascal")} {
                     ${"this" in func.function.return ? `
-                        this.${schemaVariableName} = cloneSchema(this.${schemaVariableName}, "${normalizeName(func.function.name,"camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral});
+                        this.${schemaVariableName} = cloneSchema(this.${schemaVariableName}, "${normalizeName(func.function.name, "camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral});
                         return this;` :
                             "structureCall" in func.function.return ? `return (new ${stringifyStructureCall(func.function.return, "pascal")}())
-                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(cloneSchema(this.getSchema(),"${normalizeName(func.function.name,"camel")}", [${func.function.isTemplateLiteral ? 'strings, ...args' : func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
+                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(cloneSchema(this.getSchema(),"${normalizeName(func.function.name, "camel")}", [${func.function.isTemplateLiteral ? 'strings, ...args' : func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
                     }\n`;
                 } else {
                     throw new Error("Unknown function type");
@@ -201,18 +200,17 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             let definitionContent = "";
             if ("structureCall" in initFunction.return) {
                 importedStructures.push({
-                    file: stringifyStructureCall(initFunction.return,"kebab"),
-                    entity: [stringifyStructureCall(initFunction.return,"pascal")],
+                    file: stringifyStructureCall(initFunction.return, "kebab"),
+                    entity: [stringifyStructureCall(initFunction.return, "pascal")],
                 })
                 definitionContent += `export function ${normalizeName(initFunction.name, "camel")}(${initFunction.withVariableName ? "variableName?: string" : ""
                     }) {
-                    const structure = new ${stringifyStructureCall(initFunction.return,"pascal")}();
+                    const structure = new ${stringifyStructureCall(initFunction.return, "pascal")}();
                     structure.initFromInitFunction({
                         name: "${initFunction.name}",
                         variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.initFunction.variableName"},
-                        importString: {
-                            ${Object.entries(initFunction.importString).map(([lang, imp]) => `${lang}: \`${imp}\``).join(',\n')}
-                        }
+                        importString: ${"\`" + (initFunction.importString['typescript'] ?? initFunction.importString['javascript']) + "\`"}
+                        
                     })
                     return structure;
                 }\n`;
@@ -276,12 +274,11 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             } else if (typeof arg === "boolean") {
                 return { boolean: { value: arg } };
             } else if (arg === null) {
-                return { null: { value: arg } };${
-                project.project.definitions.map(definition => 
-                    `} else if (arg instanceof ${normalizeName(definition.structure.name, "pascal")}) {
+                return { null: { value: arg } };${project.project.definitions.map(definition =>
+            `} else if (arg instanceof ${normalizeName(definition.structure.name, "pascal")}) {
                         return arg.getSchema().schema.chain
                      `
-                 ).join('')
+        ).join('')
             }} else if (Array.isArray(arg)) {
                 const normalizedItems = arg.map((item) => normalizeArgument(item));
                 if (normalizedItems.length === 0) {

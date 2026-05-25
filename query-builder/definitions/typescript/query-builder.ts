@@ -13,7 +13,7 @@ export class QueryBuilder {
           initFunction: {
             name: "query-builder",
             variableName: "s1",
-            importString: {},
+            importString: "",
           },
         },
       },
@@ -1712,9 +1712,7 @@ export class QueryBuilder {
   }
   insert(
     table?: QueryBuilder,
-    values?:
-      | { [key: string]: QueryBuilder }
-      | { [key: string]: QueryBuilder }[],
+    values?: QueryBuilder | QueryBuilder[],
   ): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
       cloneSchema(this.getSchema(), "insert", [table, values], false),
@@ -4260,14 +4258,9 @@ export class QueryBuilder {
       cloneSchema(this.getSchema(), "zone", [], false),
     );
   }
-  insertinto(
-    table?: QueryBuilder,
-    values?:
-      | { [key: string]: QueryBuilder }
-      | { [key: string]: QueryBuilder }[],
-  ): QueryBuilder {
+  insertInto(table?: QueryBuilder, cols?: QueryBuilder[]): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      cloneSchema(this.getSchema(), "insertinto", [table, values], false),
+      cloneSchema(this.getSchema(), "insertInto", [table, cols], false),
     );
   }
   raw(

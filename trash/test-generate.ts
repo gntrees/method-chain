@@ -47,17 +47,17 @@ const functions: FunctionType[] = [
                         struct: {
                             struct: {
                                 union: {
-                                    values: [
+                                    types: [
                                         {
                                             string: {
-                                                value: null
+                                                type: "string"
                                             }
                                         },
                                         {
                                             number: {
-                                                value: null
+                                                type: "number"
                                             }
-                                        }
+                                        },
                                     ]
                                 }
                             }

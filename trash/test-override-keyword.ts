@@ -1,83 +1,66 @@
 import type { FunctionType, StructType } from "../core.types";
 
-const structAlias = {
-    "number": {
+const structTypes = {
+    string : (): StructType['struct'] => ({
+        string : {
+            type: "string"
+        }
+    }),
+    number : (): StructType['struct'] => ({
         number: {
-            value: null
+            type: "number"
         }
-    } as StructType['struct'],
-    "string": {
-        string: {
-            value: null
-        }
-    } as StructType['struct'],
-    "boolean": {
+    }),
+    boolean : (): StructType['struct'] => ({
         boolean: {
-            value: null
+            type: "boolean"
         }
-    } as StructType['struct'],
-    "null": {
+    }),
+    null : (): StructType['struct'] => ({
         null: {
-            value: null
-        }
-    } as StructType['struct'],
-    "query-builder": {
-        structureCall: {
-            name: "query-builder"
-        }
-    } as StructType['struct'],
-    "object": (
-        values: {
-            key: string,
-            value: StructType['struct'],
-            optional: boolean,
-        }[]
-    ): Extract<StructType['struct'], { object: any }> => {
-        return {
-            object: {
-                values: values.map(({ key, value, optional }) => ({
-                    key,
-                    value,
-                    optional,
-                    prdefined: true
-                }))
-            }
-        }
-    },
-    "map": (value: StructType['struct']): Extract<StructType['struct'], { object: any }> => ({
-        object: {
-            values: [
-                {
-                    key: null,
-                    value: value,
-                    optional: true,
-                    prdefined: false
-                }
-            ]
+            type: "null"
         }
     }),
-    "array": (value: StructType['struct']): StructType['struct'] => ({
+    array : (type: StructType['struct']): StructType['struct'] => ({
         array: {
-            values: [value]
+            type
         }
     }),
-    "union": (values: StructType['struct'][]): StructType['struct'] => ({
+    union : (types: StructType['struct'][]) => ({
         union: {
-            values
+            types: types
         }
     }),
-    "arguments": (name: string, optional: boolean, struct: StructType): FunctionType['function']['arguments'][number] => ({
+    object : (values: { [key: string]: StructType['struct'] }): StructType['struct'] => ({
+        object: {
+            ...Object.entries(values).reduce((acc, [key, value]) => {
+                acc[key] = value;
+                return acc;
+            }, {} as { [key: string]: StructType['struct'] })
+        }
+    }),
+    map : (type: StructType['struct']): StructType['struct'] => ({
+        map: {
+            type
+        }
+    }),
+    arguments : (name: string, optional: boolean, struct: StructType): FunctionType['function']['arguments'][number] => ({
         argument: {
             name,
             optional,
             struct
         }
     }),
-    "struct": (struct: StructType['struct']): StructType => ({
+    struct: (struct: StructType['struct']): StructType => ({
         struct
+    }),
+    queryBuilder: (): StructType['struct'] => ({
+        structureCall: {
+            name: "query-builder",
+        }
     })
-    
 }
+
 function buildFunctionType(name: string, args: FunctionType['function']['arguments']): FunctionType {
     return {
         function: {
@@ -96,21 +79,18 @@ export const keywordOverrides: {
     [key: string]: FunctionType
 } = {
     "INSERT": buildFunctionType("insert", [
-        structAlias["arguments"]("table", true, structAlias['struct'](structAlias["query-builder"])),
-        structAlias["arguments"]("values", true, structAlias['struct'](structAlias["union"]([
-            structAlias["map"](structAlias["query-builder"]),
-            structAlias["array"](structAlias["map"](structAlias["query-builder"]))
+        structTypes.arguments("table", true, structTypes.struct(structTypes.queryBuilder())),
+        structTypes.arguments("values", true, structTypes.struct(structTypes.union([
+            structTypes.queryBuilder(),
+            structTypes.array(structTypes.queryBuilder())
         ]))),
     ]),
 }
 export const newKeywords: {
     [key: string]: FunctionType
 } = {
-    "INSERT_INTO": buildFunctionType("insertInto", [
-        structAlias["arguments"]("table", true, structAlias['struct'](structAlias["query-builder"])),
-        structAlias["arguments"]("values", true, structAlias['struct'](structAlias["union"]([
-            structAlias["map"](structAlias["query-builder"]),
-            structAlias["array"](structAlias["map"](structAlias["query-builder"]))
-        ]))),
+    "INSERT_INTO": buildFunctionType("insert-into", [
+        structTypes.arguments("table", true, structTypes.struct(structTypes.queryBuilder())),
+        structTypes.arguments("cols", true, structTypes.struct(structTypes.array(structTypes.queryBuilder()))), 
     ])
 }

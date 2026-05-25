@@ -1,5 +1,5 @@
 import prettier from "prettier";
-import type { LanguageType } from "./base-types/typescript";
+import type { LanguageType } from "./core.types";
 
 export function normalizeName(name: string, target: "camel" | "pascal" | "snake" | "kebab") {
     switch (target) {

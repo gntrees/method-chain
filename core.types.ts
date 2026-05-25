@@ -1,4 +1,4 @@
-import type { LanguageType } from "./base-types/typescript"
+// import type { StructType } from "./base-types/typescript"
 
 export type CustomFunctionType = {
     customFunction: {
@@ -35,47 +35,46 @@ export type VariableType = {
     }
 }
 
+export type StructType = {
+    struct: {
+        array: {
+            type: StructType['struct']
+        }
+    } | {
+        object: {
+            [key: string]: StructType['struct']
+        }
+    } | {
+        string: {
+            type: "string"
+        }
+    } | {
+        number: {
+            type: "number"
+        }
+    } | {
+        boolean: {
+            type: "boolean"
+        }
+    } | {
+        null: {
+            type: "null"
+        }
+    } | {
+        union: {
+            types: StructType['struct'][]
+        }
+    } | {
+        map: {
+            type: StructType['struct']
+        }
+    } | StructureCallType
+}
+
 export type StructureCallType = {
     structureCall: {
         name: string,
     }
-}
-
-export type StructType = {
-    struct: {
-        string: {
-            value: string | null
-        }
-    } | {
-        number: {
-            value: number | null
-        }
-    } | {
-        boolean: {
-            value: boolean | null
-        }
-    } | {
-        object: {
-            values: {
-                key: string | null,
-                value: StructType['struct']
-                prdefined: boolean
-                optional: boolean
-            }[]
-        }
-    } | {
-        array: {
-            values: (StructType['struct'])[]
-        }
-    } | {
-        null: {
-            value: null
-        }
-    } | {
-        union: {
-            values: (StructType['struct'])[]
-        }
-    } | StructureCallType
 }
 
 export type ArgumentType = {
@@ -113,3 +112,11 @@ export type ConfigType = {
     languages: LanguageType[]
     folderName: string
 }
+
+export type LanguageType =
+    | "typescript"
+    | "javascript"
+
+// export type {
+//     StructType,
+// }

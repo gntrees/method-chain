@@ -8,9 +8,7 @@ export function sqlBuilder(variableName?: string) {
     variableName:
       variableName ||
       structure.getSchema().schema.chain.chain.initFunction.variableName,
-    importString: {
-      typescript: `import { sqlBuilder } from "./query-builder/definitions/typescript/sql-builder.ts";`,
-    },
+    importString: `import { sqlBuilder } from "./query-builder/definitions/typescript/sql-builder.ts";`,
   });
   return structure;
 }
