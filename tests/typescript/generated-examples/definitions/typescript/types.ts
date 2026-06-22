@@ -1,6 +1,7 @@
 // Auto-generated types file
 import type { SchemaType, FunctionCallType } from "./base-types.ts";
-import { QueryBuilder } from "./query-builder.ts";
+import { TypeConverter } from "./type-converter.ts";
+import { StringFormatter } from "./string-formatter.ts";
 
 type ArgObject = {
   [key: string]: ArgType;
@@ -12,7 +13,8 @@ type ArgArray =
   | null[]
   | ArgObject[]
   | ArgArray[]
-  | QueryBuilder[];
+  | TypeConverter[]
+  | StringFormatter[];
 export type ArgType =
   | string
   | number
@@ -21,5 +23,6 @@ export type ArgType =
   | undefined
   | ArgObject
   | ArgArray
-  | QueryBuilder
+  | TypeConverter
+  | StringFormatter
   | TemplateStringsArray;

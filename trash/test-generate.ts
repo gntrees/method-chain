@@ -1,6 +1,6 @@
 import { generateProject } from "../core";
 import type { FunctionType } from "../core.types";
-import keywordsJSON from '../query-builder/keywords.json' assert { type: 'json' };
+import keywordsJSON from '../query-builder/keywords.json' with { type: 'json' };
 import { keywordOverrides, newKeywords } from "./test-override-keyword";
 
 const keyword = keywordsJSON['keywords'].map((keyword: { KEY_WORD: string }) => keyword.KEY_WORD);
@@ -15,8 +15,21 @@ function filterKeywords(keywords: string[]): string[] {
 }
 
 function overrideKeyword(keywords: string[]): FunctionType[] {
-    return keywords.map(kw => {
+    const additionalKeywords: FunctionType[]= []
+    const keywordsFinal =  keywords.map(kw => {
         if (keywordOverrides[kw]) {
+            additionalKeywords.push({
+            function: {
+                name: kw+"_",
+                arguments: [],
+                return: {
+                    structureCall: {
+                        name: "query-builder"
+                    }
+                },
+                isTemplateLiteral: false
+            }
+        })
             return keywordOverrides[kw];
         } else return {
             function: {
@@ -31,6 +44,7 @@ function overrideKeyword(keywords: string[]): FunctionType[] {
             }
         }
     })
+    return [...keywordsFinal, ...additionalKeywords];
 }
 
 const functions: FunctionType[] = [
@@ -43,7 +57,6 @@ const functions: FunctionType[] = [
                 {
                     argument: {
                         name: "arg1",
-                        optional: false,
                         struct: {
                             struct: {
                                 union: {

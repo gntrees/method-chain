@@ -1,37 +1,38 @@
-import type { FunctionType, StructType } from "../core.types";
+import type { StructType } from "../base/typescript/base-types";
+import type { ArgumentType, FunctionType } from "../core.types";
 
-const structTypes = {
-    string : (): StructType['struct'] => ({
-        string : {
+const st = {
+    string: (): StructType['struct'] => ({
+        string: {
             type: "string"
         }
     }),
-    number : (): StructType['struct'] => ({
+    number: (): StructType['struct'] => ({
         number: {
             type: "number"
         }
     }),
-    boolean : (): StructType['struct'] => ({
+    boolean: (): StructType['struct'] => ({
         boolean: {
             type: "boolean"
         }
     }),
-    null : (): StructType['struct'] => ({
+    null: (): StructType['struct'] => ({
         null: {
             type: "null"
         }
     }),
-    array : (type: StructType['struct']): StructType['struct'] => ({
+    array: (type: StructType['struct']): StructType['struct'] => ({
         array: {
             type
         }
     }),
-    union : (types: StructType['struct'][]) => ({
+    union: (types: StructType['struct'][]) => ({
         union: {
             types: types
         }
     }),
-    object : (values: { [key: string]: StructType['struct'] }): StructType['struct'] => ({
+    object: (values: { [key: string]: StructType['struct'] }): StructType['struct'] => ({
         object: {
             ...Object.entries(values).reduce((acc, [key, value]) => {
                 acc[key] = value;
@@ -39,30 +40,37 @@ const structTypes = {
             }, {} as { [key: string]: StructType['struct'] })
         }
     }),
-    map : (type: StructType['struct']): StructType['struct'] => ({
+    map: (type: StructType['struct']): StructType['struct'] => ({
         map: {
             type
         }
     }),
-    arguments : (name: string, optional: boolean, struct: StructType): FunctionType['function']['arguments'][number] => ({
+    argument: (name: string, struct: StructType['struct'][]): FunctionType['function']['arguments'][number] => ({
         argument: {
             name,
-            optional,
-            struct
+            struct: {
+                struct: {
+                    union: {
+                        types: [
+                            ...struct,
+                            st.null()
+                        ]
+                    }
+                }
+            },
+            default: {
+                null: {
+                    value: null
+                }
+            }
         }
-    }),
-    struct: (struct: StructType['struct']): StructType => ({
-        struct
     }),
     queryBuilder: (): StructType['struct'] => ({
         structureCall: {
             name: "query-builder",
         }
-    })
-}
-
-function buildFunctionType(name: string, args: FunctionType['function']['arguments']): FunctionType {
-    return {
+    }),
+    function: (name: string, args: FunctionType['function']['arguments']): FunctionType => ({
         function: {
             name,
             arguments: args,
@@ -73,24 +81,53 @@ function buildFunctionType(name: string, args: FunctionType['function']['argumen
             },
             isTemplateLiteral: false
         }
-    }
+    }),
+    statement: (): StructType['struct'] => ({
+        union: {
+            types: [
+                {
+                    structureCall: {
+                        name: "query-builder"
+                    }
+                },
+                {
+                    string: {
+                        type: "string"
+                    }
+                },
+                {
+                    number: {
+                        type: "number"
+                    }
+                },
+                {
+                    boolean: {
+                        type: "boolean"
+                    }
+                },
+                {
+                    null: {
+                        type: "null"
+                    }
+                }
+            ]
+        }
+    }),
 }
+
 export const keywordOverrides: {
     [key: string]: FunctionType
 } = {
-    "INSERT": buildFunctionType("insert", [
-        structTypes.arguments("table", true, structTypes.struct(structTypes.queryBuilder())),
-        structTypes.arguments("values", true, structTypes.struct(structTypes.union([
-            structTypes.queryBuilder(),
-            structTypes.array(structTypes.queryBuilder())
-        ]))),
+    "INSERT": st.function("insert", [
+        st.argument("table", [st.statement()]),
+        st.argument("values", [
+            st.map(st.statement()),
+            st.array(st.map(st.statement()))
+        ])
     ]),
 }
 export const newKeywords: {
     [key: string]: FunctionType
 } = {
-    "INSERT_INTO": buildFunctionType("insert-into", [
-        structTypes.arguments("table", true, structTypes.struct(structTypes.queryBuilder())),
-        structTypes.arguments("cols", true, structTypes.struct(structTypes.array(structTypes.queryBuilder()))), 
-    ])
+    
 }

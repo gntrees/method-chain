@@ -1,22 +1,38 @@
 import prettier from "prettier";
 import type { LanguageType } from "./core.types";
 
-export function normalizeName(name: string, target: "camel" | "pascal" | "snake" | "kebab") {
+export function normalizeName(name: string, target: "camel" | "pascal" | "snake" | "kebab", excludeFirstLastUnderscore: boolean = false): string {
+    let result: string;
     switch (target) {
         case "camel": {
-            return name.split(/[-_\s]+/).map(i=>i.toLowerCase()).map((part, index) => index === 0 ? part.toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1)).join('');
+            result = name.split(/[-_\s]+/).map(i => i.toLowerCase()).map((part, index) => index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)).join('');
+            break;
         }
         case "pascal": {
-            return name.split(/[-_\s]+/).map(i=>i.toLowerCase()).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+            result = name.split(/[-_\s]+/).map(i => i.toLowerCase()).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+            break;
         }
         case "snake": {
-            return name.split(/[-_\s]+/).map(i=>i.toLowerCase()).map(part => part.toLowerCase()).join('_');
+            result = name.split(/[-_\s]+/).map(i => i.toLowerCase()).join('_');
+            break;
         }
         case "kebab": {
-            return name.split(/[-_\s]+/).map(i=>i.toLowerCase()).map(part => part.toLowerCase()).join('-');
+            result = name.split(/[-_\s]+/).map(i => i.toLowerCase()).join('-');
+            break;
         }
         default:
-            return name;
+            result = name;
+    }
+    if (excludeFirstLastUnderscore) {
+        if (name.startsWith('_')) {
+            result = '_' + result
+        }
+        if (name.endsWith('_')) {
+            result = result + '_';
+        }
+        return result;
+    } else {
+        return result;
     }
 }
 

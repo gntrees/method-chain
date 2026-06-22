@@ -1,12 +1,32 @@
 import { write } from "bun";
 import { readFileSync } from "node:fs";
 import { exists, mkdir, rm } from "node:fs/promises";
-import type { ConfigType, ProjectType, StructType, StructureCallType, ThisType } from "./core.types";
+import type { ConfigType, ProjectType } from "./core.types";
 import { normalizeName, prettierContent } from "./utils";
-import type { StringType, NumberType, BooleanType, NullType, ObjectType, StructureType } from "./base-types/typescript";
+import type { ArgumentValue, StructType, StructureCallType } from "./base/typescript/base-types";
 
 const baseTypesContent = {
-    typescript: readFileSync("./base-types/typescript.ts", { encoding: "utf-8" }),
+    typescript: readFileSync("./base/typescript/base-types.ts", { encoding: "utf-8" }),
+}
+const baseUtilsContent = {
+    typescript: readFileSync("./base/typescript/base-utils.ts", { encoding: "utf-8" }),
+}
+
+function extractDefaultValue(defaultVal: ArgumentValue): any {
+    if ("string" in defaultVal) return defaultVal.string.value;
+    if ("number" in defaultVal) return defaultVal.number.value;
+    if ("boolean" in defaultVal) return defaultVal.boolean.value;
+    if ("null" in defaultVal) return defaultVal.null.value;
+    if ("array" in defaultVal) return defaultVal.array.value.map(extractDefaultValue);
+    if ("object" in defaultVal) {
+        const obj: any = {};
+        for (const [key, val] of Object.entries(defaultVal.object.value)) {
+            obj[key] = extractDefaultValue(val);
+        }
+        return obj;
+    }
+    if ("chain" in defaultVal) return defaultVal;
+    throw new Error("Unknown default value type");
 }
 
 export async function generateProject(project: ProjectType, config: ConfigType) {
@@ -33,15 +53,13 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             return `(${types})`;
         } else if ("structureCall" in struct) {
             return normalizeName(findStructureInDefinitions(struct.structureCall.name, project.project.definitions), "pascal");
-        } else {            
+        } else {
             throw new Error("Unknown struct type");
         }
     }
-    const stringifyStructureCall = (structureCall: StructureCallType | ThisType, targetCase: Parameters<typeof normalizeName>[1]): string => {
+    const stringifyStructureCall = (structureCall: StructureCallType, targetCase: Parameters<typeof normalizeName>[1]): string => {
         if ("structureCall" in structureCall) {
             return normalizeName(findStructureInDefinitions(structureCall.structureCall.name, project.project.definitions), targetCase);
-        } else if ("this" in structureCall) {
-            return "this";
         } else {
             throw new Error("Unknown structure call type");
         }
@@ -114,8 +132,8 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             })
             const schemaVariableName = "schema" + normalizeName(definition.structure.name, "pascal")
             definitionContent += `
-                import type { SchemaType } from "./types.ts";
-                import { cloneSchema } from "./utils.ts";\n
+                import type { SchemaType } from "./base-types.ts";
+                import { createSchema } from "./base-utils.ts";\n
                 export class ${normalizeName(definition.structure.name, "pascal")} {\n 
                 private ${schemaVariableName}: SchemaType = {
                     schema: {
@@ -133,9 +151,11 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                     }
                 }
                 getSchema(
-                    exportName?: string
+                    exportName?: string,
+                    importString?: string
                 ): SchemaType {
                     if (exportName) { this.${schemaVariableName}.schema.exportName = exportName }
+                    if (importString) { this.${schemaVariableName}.schema.chain.chain.initFunction.importString = importString }
                     return this.${schemaVariableName};
                 }
                 initFromStructure<T>(schema: SchemaType) {
@@ -151,9 +171,7 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                 if ("customVariable" in variable) {
                     definitionContent += `${normalizeName(variable.customVariable.name, "camel")}: typeof ${normalizeName(variable.customVariable.name, "camel")};\n`;
                 } else if ("variable" in variable) {
-                    if ("this" in variable.variable.value) {
-                        definitionContent += `${normalizeName(variable.variable.name, "camel")}: this;\n`;
-                    } else if ("structureCall" in variable.variable.value) {
+                    if ("structureCall" in variable.variable.value) {
                         definitionContent += `${normalizeName(variable.variable.name, "camel")}: ${normalizeName(variable.variable.value.structureCall.name, "pascal")};\n`;
                     } else {
                         throw new Error("Unknown variable value type");
@@ -164,17 +182,18 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                 if ("customFunction" in func) {
                     definitionContent += `${normalizeName(func.customFunction.name, "camel")}(...args: Parameters<typeof ${normalizeName(func.customFunction.name, "camel")}>): ReturnType<typeof ${normalizeName(func.customFunction.name, "camel")}> {\nreturn ${normalizeName(func.customFunction.name, "camel")}.apply(this, args);\n}\n`;
                 } else if ("function" in func) {
-                    if (func.function.isTemplateLiteral && func.function.arguments.length !== 1) throw new Error("Template literal functions must have one argument");
+                    if (func.function.isTemplateLiteral && (func.function.arguments.length !== 1 || !func.function.arguments[0])) throw new Error("Template literal functions must have one argument");
                     const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: (' + func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
                         + ')[]'] :
-                        func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.optional ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`)
+                        func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}: ${stringifyStruct(arg.argument.struct.struct)}${arg.argument.default !== undefined ? ` = ${JSON.stringify(extractDefaultValue(arg.argument.default))}` : ""}`);
                     const argsString = args.join(', ');
-                    definitionContent += `${normalizeName(func.function.name, "camel")}(${argsString}): ${stringifyStructureCall(func.function.return, "pascal")} {
-                    ${"this" in func.function.return ? `
-                        this.${schemaVariableName} = cloneSchema(this.${schemaVariableName}, "${normalizeName(func.function.name, "camel")}", [${func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral});
-                        return this;` :
-                            "structureCall" in func.function.return ? `return (new ${stringifyStructureCall(func.function.return, "pascal")}())
-                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(cloneSchema(this.getSchema(),"${normalizeName(func.function.name, "camel")}", [${func.function.isTemplateLiteral ? 'strings, ...args' : func.function.arguments.map(arg => normalizeName(arg.argument.name, "camel")).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
+                    definitionContent += `${normalizeName(func.function.name, "camel", true)}(${argsString}): ${stringifyStructureCall(func.function.return, "pascal")} {
+                    ${"structureCall" in func.function.return ? `return (new ${stringifyStructureCall(func.function.return, "pascal")}())
+                                .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(createSchema(this.getSchema(),"${normalizeName(func.function.name, "camel")}", [${func.function.isTemplateLiteral && func.function.arguments[0] ? 
+                                    `{ arg: strings, struct: { string: { type: 'string' } } }, ...args.map(arg => { return { arg: arg, struct: ${JSON.stringify(func.function.arguments[0].argument.struct.struct)} as ${JSON.stringify(func.function.arguments[0].argument.struct.struct)}}})`
+                                     : func.function.arguments.map(arg => {
+                                    return `{ arg: ${normalizeName(arg.argument.name, "camel")}, struct: ${JSON.stringify(arg.argument.struct.struct)}${arg.argument.default !== undefined ? `, default: ${JSON.stringify(arg.argument.default)}` : ''} }`
+                                }).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
                     }\n`;
                 } else {
                     throw new Error("Unknown function type");
@@ -243,19 +262,19 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                 content: implementationContent,
             }
         });
-        // UTILS CONTENT
+        // TYPES CONTENT
         const structureTypeOrName = project.project.definitions.map(definition => normalizeName(definition.structure.name, "pascal")).join(' | ');
         const structureImports = project.project.definitions.map(definition => `import { ${normalizeName(definition.structure.name, "pascal")} } from "./${normalizeName(definition.structure.name, "kebab")}.ts";`).join('\n');
-        const utilsContent = `
-        // Auto-generated utils file
-        import type { SchemaType, FunctionCallType } from './types.ts'
+        const typesContent = `
+        // Auto-generated types file
+        import type { SchemaType, FunctionCallType } from './base-types.ts'
         ${structureImports}\n
 
         type ArgObject = {
             [key: string]: ArgType
         };
         type ArgArray = string[] | number[] | boolean[] | null[] | ArgObject[] | ArgArray[] | ${project.project.definitions.map(definition => normalizeName(definition.structure.name, "pascal")).join('[] | ')}[];
-        type ArgType =
+        export type ArgType =
             | string
             | number
             | boolean
@@ -265,95 +284,24 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             | ArgArray
             | ${structureTypeOrName}
             | TemplateStringsArray;
-
-        function normalizeArgument(arg: ArgType): FunctionCallType['functionCall']['arguments'][number] {
-            if (typeof arg === "string") {
-                return { string: { value: arg } };
-            } else if (typeof arg === "number") {
-                return { number: { value: arg } };
-            } else if (typeof arg === "boolean") {
-                return { boolean: { value: arg } };
-            } else if (arg === null) {
-                return { null: { value: arg } };${project.project.definitions.map(definition =>
+        `
+        // UTILS CONTENT
+        const utilsContent = `
+        // Auto-generated utils file
+        import type { ArgType } from "./types.ts";
+        import type { ArgumentValue } from "./base-types.ts";
+        ${structureImports}\n
+        export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
+            if (typeof arg !== "object") {
+                throw new Error("Expected an object argument for structure calls, but got " + typeof arg);
+            ${project.project.definitions.map(definition =>
             `} else if (arg instanceof ${normalizeName(definition.structure.name, "pascal")}) {
                         return arg.getSchema().schema.chain
                      `
         ).join('')
-            }} else if (Array.isArray(arg)) {
-                const normalizedItems = arg.map((item) => normalizeArgument(item));
-                if (normalizedItems.length === 0) {
-                  return { array: { value: [] } };
-                } 
-                const first = normalizedItems[0];
-                if (first == undefined) throw new Error("Unexpected undefined value in array");
-                if ("string" in first && normalizedItems.every((it) => "string" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("number" in first && normalizedItems.every((it) => "number" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("boolean" in first && normalizedItems.every((it) => "boolean" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("null" in first && normalizedItems.every((it) => "null" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("array" in first && normalizedItems.every((it) => "array" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("object" in first && normalizedItems.every((it) => "object" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else if ("chain" in first && normalizedItems.every((it) => "chain" in it)) {
-                  return { array: { value: normalizedItems } };
-                } else {
-                  throw new Error("Array items must all be of the same argument type");
-                }
-            } else if (typeof arg === "object" && arg.constructor === Object) {
-                return { object: { value: Object.fromEntries(Object.entries(arg).map(([key, value]) => [key, normalizeArgument(value)])) } };
-            } else if (arg === undefined) {
-                throw new Error("Undefined is not a valid argument value");
-            } else {
-                throw new Error("Invalid argument type");
-            }
-        }
-
-        export function cloneSchema(
-            oldSchema: SchemaType,
-            functionName:string,
-            functionArgs: ArgType[],
-            isTemplateLiteral: boolean
-        ):SchemaType {
-            const newSchema = {
-                schema: {
-                    ...oldSchema.schema,
-                    chain: {
-                        chain: {
-                            values: [...oldSchema.schema.chain.chain.values],
-                            initFunction: oldSchema.schema.chain.chain.initFunction,
-                        }
-                    }
-                }
-            };
-            const normalizedArgs = functionArgs.map(arg => arg === undefined ? arg : normalizeArgument(arg)).filter(arg => arg !== undefined);
-            let args = normalizedArgs
-            if (isTemplateLiteral) {
-                const strings = functionArgs[0] as unknown as TemplateStringsArray;
-                const expressions = functionArgs.slice(1);
-                const normalizedTemplateLiteralArgs: FunctionCallType['functionCall']['arguments'] = strings.reduce((acc, str, index) => {
-                    if (str) {
-                        acc.push({ string: { value: str } });
-                    }
-                    if (index < expressions.length) {
-                        const expr = expressions[index];
-                        acc.push(normalizeArgument(expr));
-                    }
-                    return acc;
-                }, [] as FunctionCallType['functionCall']['arguments']);
-                args = normalizedTemplateLiteralArgs;
-            }
-            newSchema.schema.chain.chain.values.push({
-                functionCall: {
-                    name: functionName ,
-                    arguments: args,
-                    isTemplateLiteral: isTemplateLiteral,
-                }
-            })
-            return newSchema;
+            }} else {
+                throw new Error("Unknown structure call argument type");
+             }
         }
         `;
         return {
@@ -361,6 +309,7 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             definitions: definitionsContent,
             implementations: implementationContent,
             utils: utilsContent,
+            types: typesContent,
         }
     }))
 
@@ -373,11 +322,15 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
             recursive: true
         });
 
-        // write types.ts. get from base-types/typescript.ts
-        await write(`./${config.folderName}/definitions/${content.language}/types.ts`, baseTypesContent.typescript);
+        // write base-types.ts. get from base-types/typescript.ts
+        await write(`./${config.folderName}/definitions/${content.language}/base-types.ts`, baseTypesContent.typescript);
+        // write types.ts
+        await write(`./${config.folderName}/definitions/${content.language}/types.ts`, await prettierContent(content.types, content.language));
 
         // write utils.ts
         await write(`./${config.folderName}/definitions/${content.language}/utils.ts`, await prettierContent(content.utils, content.language));
+        // write base-utils.ts. get from base-types/utils.ts
+        await write(`./${config.folderName}/definitions/${content.language}/base-utils.ts`, baseUtilsContent.typescript);
 
         // write definition files
         await Promise.all(content.definitions.map(async (definition, index) => {

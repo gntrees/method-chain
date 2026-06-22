@@ -1,4 +1,4 @@
-import type { FunctionCallType, InitFunctionType, LanguageType, SchemaType } from "./base-types/typescript";
+import type { ArgumentType, ArgumentValue, InitFunctionType, LanguageType, SchemaType } from "./base/typescript/base-types";
 import { normalizeName, prettierContent } from "./utils";
 
 export async function convert(schema: SchemaType, target: LanguageType) {
@@ -12,8 +12,8 @@ export async function convert(schema: SchemaType, target: LanguageType) {
             for (const value of chain.chain.values) {
                 if ("functionCall" in value) {
                     for (const arg of value.functionCall.arguments) {
-                        if ("chain" in arg) {
-                            initFunctions.push(...findInitFunctionsRecursively(arg));
+                        if ("chain" in arg.argument) {
+                            initFunctions.push(...findInitFunctionsRecursively(arg.argument));
                         }
                     }
                 }
@@ -24,13 +24,13 @@ export async function convert(schema: SchemaType, target: LanguageType) {
             schema.schema.chain.chain.initFunction,
             ...findInitFunctionsRecursively(schema.schema.chain)
         ]        
-        const content = `${initFunctions.map(initFunction => initFunction.importString[target] ?? "").filter((v:string, i, a)=>{
+        const content = `${initFunctions.map(initFunction => initFunction.importString ?? "").filter((v:string, i, a)=>{
             return v && a.indexOf(v) === i;
         }).join("\n")}
 
         ${initFunctions.filter((v, i, a) => a.findIndex(initFunction => initFunction.variableName === v.variableName) === i)
             .map(initFunction => {
-            return `const ${normalizeName(initFunction.variableName, "camel")} = ${normalizeName(initFunction.name, "camel")}()`;
+            return `const ${normalizeName(initFunction.variableName, "camel")} = ${normalizeName(initFunction.name, "camel")}("${normalizeName(initFunction.variableName, "camel")}")`
         }).join("\n")}
         export const ${normalizeName(schema.schema.exportName, "camel")} = ${chainContent ? normalizeName(schema.schema.chain.chain.initFunction.variableName, "camel") : ""}${chainContent}
     `
@@ -40,34 +40,40 @@ export async function convert(schema: SchemaType, target: LanguageType) {
 }
 
 function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageType, variableName: string): string {
-    const normalizeArgument = (arg: FunctionCallType['functionCall']['arguments'][number]): string => {
-        if ("string" in arg) {
-            return JSON.stringify(arg.string.value);
+    const normalizeArgumentValue = (val: ArgumentValue): string => {
+        if ("string" in val) {
+            return JSON.stringify(val.string.value);
         }
-        if ("number" in arg) {
-            return arg.number.value.toString();
+        if ("number" in val) {
+            return val.number.value.toString();
         }
-        if ("boolean" in arg) {
-            return arg.boolean.value.toString();
+        if ("boolean" in val) {
+            return val.boolean.value.toString();
         }
-        if ("null" in arg) {
+        if ("null" in val) {
             return "null";
         }
-        if ("chain" in arg) {
-            const chainContent = normalizeChain(arg, target, variableName);
-            return chainContent ? `${arg.chain.initFunction.variableName}${chainContent}` : "";
+        if ("chain" in val) {
+            const chainContent = normalizeChain(val, target, variableName);
+            return chainContent ? `${val.chain.initFunction.variableName}${chainContent}` : "";
         }
-        if ("object" in arg) {
-            const entries = Object.entries(arg.object.value).map(([key, value]) => {
-                return `${JSON.stringify(key)}: ${normalizeArgument(value)}`;
+        if ("object" in val) {
+            const entries = Object.entries(val.object.value).map(([key, value]) => {
+                return `${JSON.stringify(key)}: ${normalizeArgumentValue(value)}`;
             });
             return `{ ${entries.join(", ")} }`;
         }
-        if ("array" in arg) {
-            const items = arg.array.value.map(item => normalizeArgument(item)).join(", ");
+        if ("array" in val) {
+            const items = val.array.value.map(item => normalizeArgumentValue(item)).join(", ");
             return `[${items}]`;
         }
         throw new Error("Unsupported argument type");
+    }
+    const normalizeArgument = (arg: ArgumentType): string | null => {
+        if (arg.default !== null && JSON.stringify(arg.argument) === JSON.stringify(arg.default)) {
+            return null;
+        }
+        return normalizeArgumentValue(arg.argument);
     }
     if (target == "typescript" || target == "javascript") {
         return chain.chain.values.map(value => {
@@ -75,16 +81,14 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
                 let args: string;
                 if (value.functionCall.isTemplateLiteral) {
                     args = value.functionCall.arguments.map(arg => {
-                        if ("string" in arg) {
-                            return arg.string.value;
+                        if ("string" in arg.argument) {
+                            return arg.argument.string.value;
                         }
-                        else return '${' + normalizeArgument(arg) + '}';
+                        else return '${' + normalizeArgumentValue(arg.argument) + '}';
                     }).join("")
-                } else [
-                    args = value.functionCall.arguments.map(arg => {
-                        return normalizeArgument(arg);
-                    }).join(", ")
-                ]
+                } else {
+                    args = value.functionCall.arguments.map(arg => normalizeArgument(arg)).filter(s => s !== null).join(", ")
+                }
                 return `.${normalizeName(value.functionCall.name, "camel")}${value.functionCall.isTemplateLiteral ? `\`${args}\`` : `(${args})`}`;
             }
             if ("propertyCall" in value) {
