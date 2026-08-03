@@ -1,0 +1,11 @@
+# Menjalankan seluruh proses: kompilasi lalu eksekusi program
+run: build
+    ./hello
+
+# Melakukan kompilasi kode C menjadi file aplikasi
+build:
+    gcc test.c -o hello
+
+# Menghapus file hasil kompilasi (bersih-bersih)
+clean:
+    rm -f hello
