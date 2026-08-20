@@ -1,5 +1,6 @@
 // Auto-generated definition for type-converter
 import {} from "./type-converter";
+import { StringFormatter } from "./string-formatter";
 import type { SchemaType } from "./base-types.ts";
 import { createSchema } from "./base-utils.ts";
 
@@ -78,6 +79,79 @@ export class TypeConverter {
           {
             arg: formatter,
             struct: { structureCall: { name: "string-formatter" } },
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  unify(value: string | number): TypeConverter {
+    return new TypeConverter().initFromStructure<TypeConverter>(
+      createSchema(
+        this.getSchema(),
+        "unify",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  { string: { type: "string" } },
+                  { number: { type: "number" } },
+                ],
+              },
+            },
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  interpolate(
+    strings: TemplateStringsArray,
+    ...args: (string | number)[]
+  ): TypeConverter {
+    return new TypeConverter().initFromStructure<TypeConverter>(
+      createSchema(
+        this.getSchema(),
+        "interpolate",
+        [
+          { arg: strings, struct: { string: { type: "string" } } },
+          ...args.map((arg) => {
+            return {
+              arg: arg,
+              struct: {
+                union: {
+                  types: [
+                    { string: { type: "string" } },
+                    { number: { type: "number" } },
+                  ],
+                },
+              } as {
+                union: {
+                  types: [
+                    { string: { type: "string" } },
+                    { number: { type: "number" } },
+                  ];
+                };
+              },
+            };
+          }),
+        ],
+        true,
+      ),
+    );
+  }
+  label(value: string = "default"): TypeConverter {
+    return new TypeConverter().initFromStructure<TypeConverter>(
+      createSchema(
+        this.getSchema(),
+        "label",
+        [
+          {
+            arg: value,
+            struct: { string: { type: "string" } },
+            default: { string: { value: "default" } },
           },
         ],
         false,

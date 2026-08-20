@@ -49,4 +49,77 @@ export class StringFormatter {
       ),
     );
   }
+  unify(value: string | number): StringFormatter {
+    return new StringFormatter().initFromStructure<StringFormatter>(
+      createSchema(
+        this.getSchema(),
+        "unify",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  { string: { type: "string" } },
+                  { number: { type: "number" } },
+                ],
+              },
+            },
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  interpolate(
+    strings: TemplateStringsArray,
+    ...args: (string | number)[]
+  ): StringFormatter {
+    return new StringFormatter().initFromStructure<StringFormatter>(
+      createSchema(
+        this.getSchema(),
+        "interpolate",
+        [
+          { arg: strings, struct: { string: { type: "string" } } },
+          ...args.map((arg) => {
+            return {
+              arg: arg,
+              struct: {
+                union: {
+                  types: [
+                    { string: { type: "string" } },
+                    { number: { type: "number" } },
+                  ],
+                },
+              } as {
+                union: {
+                  types: [
+                    { string: { type: "string" } },
+                    { number: { type: "number" } },
+                  ];
+                };
+              },
+            };
+          }),
+        ],
+        true,
+      ),
+    );
+  }
+  label(value: string = "default"): StringFormatter {
+    return new StringFormatter().initFromStructure<StringFormatter>(
+      createSchema(
+        this.getSchema(),
+        "label",
+        [
+          {
+            arg: value,
+            struct: { string: { type: "string" } },
+            default: { string: { value: "default" } },
+          },
+        ],
+        false,
+      ),
+    );
+  }
 }

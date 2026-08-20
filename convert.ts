@@ -80,9 +80,12 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
             if ("functionCall" in value) {
                 let args: string;
                 if (value.functionCall.isTemplateLiteral) {
-                    args = value.functionCall.arguments.map(arg => {
-                        if ("string" in arg.argument) {
-                            return arg.argument.string.value;
+                    args = value.functionCall.arguments.map((arg, index) => {
+                        if (index % 2 === 0) {
+                            if ("string" in arg.argument) {
+                                return arg.argument.string.value;
+                            }
+                            throw new Error("Template literal string parts must be string");
                         }
                         else return '${' + normalizeArgumentValue(arg.argument) + '}';
                     }).join("")

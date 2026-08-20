@@ -61,6 +61,64 @@ export const exampleProject: ProjectType = {
                                 isTemplateLiteral: false,
                             }
                         },
+                        {
+                            function: {
+                                name: "unify",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: {
+                                            struct: {
+                                                union: {
+                                                    types: [
+                                                        { string: { type: "string" } },
+                                                        { number: { type: "number" } },
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    }
+                                }],
+                                return: { structureCall: { name: "type-converter" } },
+                                isTemplateLiteral: false,
+                            }
+                        },
+                        {
+                            function: {
+                                name: "interpolate",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: {
+                                            struct: {
+                                                union: {
+                                                    types: [
+                                                        { string: { type: "string" } },
+                                                        { number: { type: "number" } },
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    }
+                                }],
+                                return: { structureCall: { name: "type-converter" } },
+                                isTemplateLiteral: true,
+                            }
+                        },
+                        {
+                            function: {
+                                name: "label",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: { struct: { string: { type: "string" } } },
+                                        default: { string: { value: "default" } },
+                                    }
+                                }],
+                                return: { structureCall: { name: "type-converter" } },
+                                isTemplateLiteral: false,
+                            }
+                        },
                     ],
                 }
             },
@@ -77,6 +135,64 @@ export const exampleProject: ProjectType = {
                                     argument: {
                                         name: "val",
                                         struct: { struct: { string: { type: "string" } } },
+                                    }
+                                }],
+                                return: { structureCall: { name: "string-formatter" } },
+                                isTemplateLiteral: false,
+                            }
+                        },
+                        {
+                            function: {
+                                name: "unify",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: {
+                                            struct: {
+                                                union: {
+                                                    types: [
+                                                        { string: { type: "string" } },
+                                                        { number: { type: "number" } },
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    }
+                                }],
+                                return: { structureCall: { name: "string-formatter" } },
+                                isTemplateLiteral: false,
+                            }
+                        },
+                        {
+                            function: {
+                                name: "interpolate",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: {
+                                            struct: {
+                                                union: {
+                                                    types: [
+                                                        { string: { type: "string" } },
+                                                        { number: { type: "number" } },
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    }
+                                }],
+                                return: { structureCall: { name: "string-formatter" } },
+                                isTemplateLiteral: true,
+                            }
+                        },
+                        {
+                            function: {
+                                name: "label",
+                                arguments: [{
+                                    argument: {
+                                        name: "value",
+                                        struct: { struct: { string: { type: "string" } } },
+                                        default: { string: { value: "default" } },
                                     }
                                 }],
                                 return: { structureCall: { name: "string-formatter" } },

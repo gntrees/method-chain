@@ -100,42 +100,6 @@ generateProject(
                         functions: functions,
                     }
                 },
-                // {
-                //     structure: {
-                //         name: "query-instance",
-                //         exportName: "schema",
-                //         variables: [],
-                //         functions: [
-                //             ...filterKeywords(keyword).map((kw: string):FunctionType => {
-                //                 return {
-                //                     function:{
-                //                         name: kw,
-                //                         arguments:[
-                //                             {
-                //                                 argument: {
-                //                                     name: "arg1",
-                //                                     optional: true,
-                //                                     struct: {
-                //                                         struct:{
-                //                                             structureCall: {
-                //                                                 name: "query-builder"
-                //                                             }
-                //                                         }
-                //                                     }
-                //                                 }
-                //                             }
-                //                         ],
-                //                         return:{
-                //                             structureCall: {
-                //                                 name: "query-builder"
-                //                             }
-                //                         },
-                //                     }
-                //                 }
-                //             })
-                //         ],
-                //     }
-                // },
             ],
             initFunctions: [{
                 name: "sql-builder",

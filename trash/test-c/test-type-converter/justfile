@@ -1,11 +1,11 @@
 # Menjalankan seluruh proses: kompilasi lalu eksekusi program
 run: build
-    ./hello
+    ./demo
 
 # Melakukan kompilasi kode C menjadi file aplikasi
 build:
-    gcc test-pipe.c -o hello
+    gcc -Wall -Wextra base-utils.c dump.c cJSON.c main.c -lm -o demo
 
 # Menghapus file hasil kompilasi (bersih-bersih)
 clean:
-    rm -f hello
+    rm -f demo

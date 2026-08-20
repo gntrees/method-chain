@@ -24,8 +24,8 @@ export function createSchema(
         }
     };
     let args: ArgumentType[] = [];
-    if (isTemplateLiteral) {
-        const strings = functionArgs[0] as unknown as TemplateStringsArray;
+    if (isTemplateLiteral && functionArgs[0]) {
+        const strings = functionArgs[0].arg as unknown as TemplateStringsArray;
         const expressions = functionArgs.slice(1);
         const normalizedTemplateLiteralArgs = strings.reduce((acc, str, index) => {
             if (str) {
@@ -41,8 +41,9 @@ export function createSchema(
             return acc;
         }, [] as ArgumentType[]);
         args = normalizedTemplateLiteralArgs;
+    } else {
+        args = functionArgs.map(fa => fa.arg === undefined ? undefined : { argument: normalizeArgument(fa.arg, fa.struct), default: fa.default ?? null }).filter(a => a !== undefined);
     }
-    args = functionArgs.map(fa => fa.arg === undefined ? undefined : { argument: normalizeArgument(fa.arg, fa.struct), default: fa.default ?? null }).filter(a => a !== undefined);
     newSchema.schema.chain.chain.values.push({
         functionCall: {
             name: functionName,

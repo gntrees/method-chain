@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(just:*)",
+      "Shell(gcc:*)",
+      "Shell(./demo_asan:*)",
+      "Shell(rm:*)",
+      "Shell(./demo:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

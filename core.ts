@@ -72,6 +72,20 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
         }
         throw new Error(`Structure ${name} not found in definitions`);
     }
+    const findStructureCallsInStruct = (struct: StructType['struct'], acc: string[] = []): string[] => {
+        if ("structureCall" in struct) {
+            acc.push(struct.structureCall.name);
+        } else if ("union" in struct) {
+            struct.union.types.forEach(type => findStructureCallsInStruct(type, acc));
+        } else if ("array" in struct) {
+            findStructureCallsInStruct(struct.array.type, acc);
+        } else if ("map" in struct) {
+            findStructureCallsInStruct(struct.map.type, acc);
+        } else if ("object" in struct) {
+            Object.values(struct.object).forEach(type => findStructureCallsInStruct(type, acc));
+        }
+        return acc;
+    }
     const contents = await Promise.all(config.languages.map(async language => {
         // DEFINITION CONTENT
         const definitionsContent = project.project.definitions.map((definition, index) => {
@@ -130,6 +144,24 @@ export async function generateProject(project: ProjectType, config: ConfigType) 
                     ).filter((i) => i !== false),
                 ]
             })
+            definition.structure.functions.forEach(func => {
+                if ("function" in func) {
+                    func.function.arguments.forEach(arg => {
+                        findStructureCallsInStruct(arg.argument.struct.struct).forEach(structureName => {
+                            const structure = findStructureInDefinitions(structureName, project.project.definitions);
+                            if (
+                                !importedInplementations.some(imp => imp.file === normalizeName(structure, "kebab")) &&
+                                structureName !== definition.structure.name
+                            ) {
+                                importedInplementations.push({
+                                    file: normalizeName(structure, "kebab"),
+                                    entity: [normalizeName(structure, "pascal")],
+                                })
+                            }
+                        })
+                    });
+                }
+            });
             const schemaVariableName = "schema" + normalizeName(definition.structure.name, "pascal")
             definitionContent += `
                 import type { SchemaType } from "./base-types.ts";
