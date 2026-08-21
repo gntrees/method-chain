@@ -4,7 +4,7 @@ run: build
 
 # Melakukan kompilasi kode C menjadi file aplikasi
 build:
-    gcc -Wall -Wextra base-utils.c dump.c cJSON.c main.c -lm -o demo
+    gcc -Wall -Wextra *.c -lm -o demo
 
 # Menghapus file hasil kompilasi (bersih-bersih)
 clean:

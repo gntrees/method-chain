@@ -18,6 +18,7 @@ enum DynamicType
     D_CHAIN
 };
 
+typedef struct Builder Builder;
 typedef struct ChainType ChainType;
 typedef struct FunctionCallType FunctionCallType;
 typedef struct PropertyCallType PropertyCallType;
@@ -27,19 +28,21 @@ typedef struct ArgumentType ArgumentType;
 typedef struct InitFunctionType InitFunctionType;
 typedef struct SchemaType SchemaType;
 typedef struct MapEntry MapEntry;
+typedef struct SchemaMetaBuilder SchemaMetaBuilder;
+typedef struct StructType StructType;
+typedef struct StructKey StructKey;
+typedef struct FunctionSignature FunctionSignature;
 
 struct ArgumentValue
 {
     enum DynamicType type;
-    size_t elemSize;
     size_t count;
-    ArgumentValue (*elemToData)(const void *);
     union
     {
         long long i;
         double f;
         const char *s;
-        const void *data;
+        const void *data; /* D_MAP: const MapEntry *; D_ARRAY: const ArgumentValue * */
         const ChainType *chain;
     } as;
 };
@@ -81,6 +84,14 @@ struct FunctionCallType
 struct PropertyCallType
 {
     const char *name;
+    const Builder *builder; /* isinya Builder (referensi chain pemilik property) */
+};
+
+/* Metadata init function: variableName diisi lewat operation variableName()
+   sebagai param pertama createTypeConverter / createStringFormatter. */
+struct SchemaMetaBuilder
+{
+    const char *variableName;
 };
 
 struct ChainValue
@@ -95,6 +106,7 @@ struct ChainValue
 
 struct ChainType
 {
+    const char *typeName; /* struktur pemilik chain, untuk validasi structureCall */
     ChainValue *values;
     size_t valueCount;
     InitFunctionType initFunction;
@@ -106,6 +118,73 @@ struct SchemaType
     ChainType chain;
 };
 
+/* Hasil init functions (createTypeConverter / createStringFormatter); dipakai
+   oleh getSchema (return SchemaType). */
+struct Builder
+{
+    SchemaType schema;
+};
+
+/* ---- StructType descriptor (mirror StructType TS) ---- */
+
+enum StructKind
+{
+    S_STRING,
+    S_NUMBER,
+    S_BOOL,
+    S_NULL,
+    S_UNION,
+    S_ARRAY,
+    S_OBJECT,
+    S_MAP,
+    S_STRUCT_CALL
+};
+
+struct StructType
+{
+    enum StructKind kind;
+    union
+    {
+        struct
+        {
+            size_t count;
+            const StructType *types;
+        } unionType;
+        struct
+        {
+            const StructType *elem;
+        } array;
+        struct
+        {
+            size_t count;
+            const StructKey *keys;
+        } object;
+        struct
+        {
+            const StructType *value;
+        } map;
+        struct
+        {
+            const char *name;
+        } structureCall;
+    } as;
+};
+
+struct StructKey
+{
+    const char *key;
+    StructType type;
+};
+
+/* Registry signature fungsi per struktur (di-generate core.ts). */
+struct FunctionSignature
+{
+    const char *name;
+    int isTemplateLiteral;
+    const StructType *argumentStructs;
+    size_t argumentCount;
+};
+
 ArgumentValue v_int(long long x);
 ArgumentValue v_float(double x);
 ArgumentValue v_string(const char *s);
@@ -114,11 +193,12 @@ ArgumentValue v_null(void);
 ArgumentValue v_pass(ArgumentValue v);
 ArgumentValue v_chain(const ChainType *c);
 
-ArgumentValue elem_int(const void *p);
-ArgumentValue elem_double(const void *p);
-ArgumentValue elem_string(const void *p);
+int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount);
+int validate_properties(const SchemaType *s);
+int arg_value_equal(const ArgumentValue *a, const ArgumentValue *b);
+SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount);
 
-#define op_call(n, args, cnt, tpl) \
+#define builder_call(n, args, cnt, tpl) \
     ((ChainValue){ \
         .kind = V_FUNCTION_CALL, \
         .as.functionCall = { \
@@ -135,20 +215,10 @@ ArgumentValue elem_string(const void *p);
 #define mkarg_def(val, dflt) \
     ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt) })
 
-#define stringify(val) \
-    op_call("stringify", (ArgumentType[]){ mkarg(v(val)) }, 1, 0)
-#define numerify(val) \
-    op_call("numerify", (ArgumentType[]){ mkarg(v(val)) }, 1, 0)
-#define boolify(val) \
-    op_call("boolify", (ArgumentType[]){ mkarg(v_bool((val) ? 1 : 0)) }, 1, 0)
-#define unify(val) \
-    op_call("unify", (ArgumentType[]){ mkarg(v(val)) }, 1, 0)
-#define setNested(data) \
-    op_call("setNested", (ArgumentType[]){ mkarg(data) }, 1, 0)
-#define pipe(f) \
-    op_call("pipe", (ArgumentType[]){ mkarg(v_chain(&(f)->schema.chain)) }, 1, 0)
-#define prop(name) \
-    ((ChainValue){ .kind = V_PROPERTY_CALL, .as.propertyCall = { .name = (name) } })
+/* variableName init function (param pertama createTypeConverter /
+   createStringFormatter) */
+#define variableName(x) \
+    ((SchemaMetaBuilder){ .variableName = (x) })
 
 #define v(X) _Generic((X),                 \
     int: v_int,                            \
@@ -160,13 +230,6 @@ ArgumentValue elem_string(const void *p);
     const char *: v_string,                \
     void *: v_null,                        \
     ArgumentValue: v_pass)(X)
-
-#define ELEM_TO_DATA(X) _Generic((X),     \
-    int: elem_int,                        \
-    double: elem_double,                  \
-    char *: elem_string,                  \
-    const char *: elem_string,            \
-    default: (ArgumentValue (*)(const void *))0)
 
 #define entry(key, val) ((MapEntry){ (key), v(val) })
 
@@ -183,13 +246,21 @@ ArgumentValue elem_string(const void *p);
 #define VA_MAP_N(_1, _2, _3, _4, _5, _6, N, ...) CAT(VA_MAP_, N)
 #define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
 
-#define arr(first, ...) \
+#define BUILDER_COUNT(...) \
+    (sizeof((ChainValue[]){ __VA_ARGS__ }) / sizeof(ChainValue))
+
+#define COUNT_OF(a) \
+    (sizeof(a) / sizeof((a)[0]))
+
+/* Array = kumpulan dynamic value (ArgumentValue[]), bukan buffer elemen mentah
+   (gap 5): menghilangkan elemSize/elemToData, mendukung nested array/object/chain.
+   Compound literal polos (tanpa statement-expression) agar semua array hidup di
+   blok pemanggil dan bisa bersarang dengan aman. */
+#define arr(...) \
     ((ArgumentValue){ \
         .type = D_ARRAY, \
-        .elemSize = sizeof(first), \
-        .count = sizeof((__typeof__(first)[]){ first, __VA_ARGS__ }) / sizeof(first), \
-        .elemToData = ELEM_TO_DATA(first), \
-        .as.data = (__typeof__(first)[]){ first, __VA_ARGS__ } \
+        .count = sizeof((ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }) / sizeof(ArgumentValue), \
+        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }, \
     })
 
 #define map(first, ...) \
@@ -198,35 +269,5 @@ ArgumentValue elem_string(const void *p);
         .count = sizeof((MapEntry[]){ first, __VA_ARGS__ }) / sizeof(MapEntry), \
         .as.data = (MapEntry[]){ first, __VA_ARGS__ } \
     })
-
-/* Statement-expression GNU C (gcc) + alloca: menyaring string kosong agar
-   sama persis dengan createSchema TS yang membuang string kosong pada
-   template literal. Memory alloca hidup di frame pemanggil, sama seperti
-   compound literal lain di header ini. */
-#define interpolate(...) \
-    ({ \
-        const ArgumentValue _vals[] = { VA_MAP(v, __VA_ARGS__) }; \
-        size_t _n = sizeof(_vals) / sizeof(_vals[0]); \
-        size_t _cnt = 0; \
-        for (size_t _i = 0; _i < _n; _i++) \
-            _cnt += !(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0'); \
-        ArgumentType *_args = alloca((_cnt ? _cnt : 1) * sizeof(ArgumentType)); \
-        size_t _j = 0; \
-        for (size_t _i = 0; _i < _n; _i++) \
-            if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0')) \
-                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \
-        (ChainValue){ \
-            .kind = V_FUNCTION_CALL, \
-            .as.functionCall = { \
-                .name = "interpolate", \
-                .arguments = _args, \
-                .argumentCount = _cnt, \
-                .isTemplateLiteral = 1, \
-            } \
-        }; \
-    })
-
-#define OP_COUNT(...) \
-    (sizeof((ChainValue[]){ __VA_ARGS__ }) / sizeof(ChainValue))
 
 #endif
