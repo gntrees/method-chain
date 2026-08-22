@@ -1,6 +1,6 @@
 import { generateProject } from "./core";
 import type { ConfigType } from "./core.types";
-import { exampleConfig, exampleProject } from "../tests/data/cases/typescript/example-project";
+import { exampleConfig, exampleProject } from "../tests/example-project";
 
 const target = process.argv[2] ?? process.env.TARGET ?? "typescript";
 

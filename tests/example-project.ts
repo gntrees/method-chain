@@ -1,4 +1,4 @@
-import type { ProjectType, ConfigType } from "../../../../core/core.types";
+import type { ConfigType, ProjectType } from "../core/core.types";
 
 export const exampleProject: ProjectType = {
     project: {
