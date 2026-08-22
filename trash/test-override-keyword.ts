@@ -1,5 +1,5 @@
-import type { StructType } from "../base/typescript/base-types";
-import type { ArgumentType, FunctionType } from "../core.types";
+import type { StructType } from "../core/base/typescript/base-types";
+import type { ArgumentType, FunctionType } from "../core/core.types";
 
 const st = {
     string: (): StructType['struct'] => ({

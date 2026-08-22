@@ -1,2 +1,2 @@
-export { generateProject } from "./core";
-export { convert } from "./convert";
+export { generateProject } from "./core/core";
+export { convert } from "./core/convert/convert";

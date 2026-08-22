@@ -1,5 +1,5 @@
-import { convert } from "../convert";
-import { sqlBuilder } from "../query-builder/definitions/typescript/sql-builder";
+import { convert } from "../core/convert/convert";
+import { sqlBuilder } from "./query-builder/definitions/typescript/sql-builder";
 
 const q = sqlBuilder("q")
 

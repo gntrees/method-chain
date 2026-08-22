@@ -63,6 +63,8 @@ struct Calc schema()
         add(30));
 }
 
+
+
 int main()
 {
     struct Calc c = schema();

@@ -1,6 +1,6 @@
-import { generateProject } from "../core";
-import type { FunctionType } from "../core.types";
-import keywordsJSON from '../query-builder/keywords.json' with { type: 'json' };
+import { generateProject } from "../core/core";
+import type { FunctionType } from "../core/core.types";
+import keywordsJSON from './query-builder/keywords.json' with { type: 'json' };
 import { keywordOverrides, newKeywords } from "./test-override-keyword";
 
 const keyword = keywordsJSON['keywords'].map((keyword: { KEY_WORD: string }) => keyword.KEY_WORD);
@@ -91,6 +91,7 @@ const functions: FunctionType[] = [
 generateProject(
     {
         project: {
+            projectName: "query-builder",
             definitions: [
                 {
                     structure: {

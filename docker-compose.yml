@@ -1,0 +1,32 @@
+services:
+  generate:
+    image: oven/bun:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bun_node_modules:/app/node_modules
+    command: sh -c "bun install --frozen-lockfile && bun core/generate.ts"
+    environment:
+      TARGET: ${TARGET:-typescript}
+
+  build_image:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gntrees-method-chain:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bun_node_modules:/app/node_modules
+    command: sh -c "bun install --frozen-lockfile"
+
+  test:
+    image: gntrees-method-chain:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bun_node_modules:/app/node_modules
+    command: sh -c "bun install --frozen-lockfile && bun test tests/"
+
+volumes:
+  bun_node_modules:
