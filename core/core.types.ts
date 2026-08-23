@@ -56,12 +56,12 @@ type InitFunctionType = {
     name: string,
     withVariableName: boolean,
     return: StructureCallType,
-    importString: Partial<Record<LanguageType, string>>;
 }
 
 export type ProjectType = {
     project: {
         projectName: string
+        importPaths: Partial<Record<LanguageType, string>>
         definitions: StructureType[]
         initFunctions: InitFunctionType[]
     }

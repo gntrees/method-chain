@@ -78,24 +78,22 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
             private ${schemaVariableName}: SchemaType = {
                 schema: {
                     exportName: "${definition.structure.exportName || "schema" + (index + 1)}",
+                    importPaths: ${JSON.stringify(project.project.importPaths)},
                     chain: {
                         chain:{
                             values: [],
                             initFunction: {
                                 name: "${definition.structure.name}",
-                                variableName: "${"s" + (index + 1)}",
-                                importString: ""
+                                variableName: "${"s" + (index + 1)}"
                             },
                         }
                     }
                 }
             }
             getSchema(
-                exportName?: string,
-                importString?: string
+                exportName?: string
             ): SchemaType {
                 if (exportName) { this.${schemaVariableName}.schema.exportName = exportName }
-                if (importString) { this.${schemaVariableName}.schema.chain.chain.initFunction.importString = importString }
                 return this.${schemaVariableName};
             }
             initFromStructure<T>(schema: SchemaType) {
@@ -114,10 +112,11 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                 definitionContent += `${normalizeName(variable.customVariable.name, "camel")} = ${value};\n`;
             } else if ("variable" in variable) {
                 if ("structureCall" in variable.variable.value) {
-                    const targetName = variable.variable.value.structureCall.name;
-                    const targetType = normalizeName(targetName, "pascal");
-                    const isSelfReference = targetName === definition.structure.name;
-                    definitionContent += `${normalizeName(variable.variable.name, "camel")}: ${targetType} = ${isSelfReference ? "this" : `new ${targetType}()`};\n`;
+                    const variableName = normalizeName(variable.variable.name, "camel");
+                    const targetType = normalizeName(variable.variable.value.structureCall.name, "pascal");
+                    definitionContent += `get ${variableName}(): ${targetType} {
+                        return new ${targetType}().initFromStructure<${targetType}>(createPropertyCallSchema(this.getSchema(), "${variableName}"));
+                    }\n`;
                 } else {
                     throw new Error("Unknown variable value type");
                 }
@@ -167,9 +166,7 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                     const structure = new ${stringifyStructureCall(initFunction.return, "pascal")}();
                     structure.initFromInitFunction({
                         name: "${initFunction.name}",
-                        variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.chain.chain.initFunction.variableName"},
-                        importString: ${"\`" + (initFunction.importString['typescript'] ?? initFunction.importString['javascript']) + "\`"}
-                        
+                        variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.chain.chain.initFunction.variableName"}
                     })
                     return structure;
                 }\n`;

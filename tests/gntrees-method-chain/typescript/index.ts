@@ -89,12 +89,12 @@ type ChainType = {
 type InitFunctionType = {
   name: string;
   variableName: string;
-  importString: string;
 };
 
 type SchemaType = {
   schema: {
     exportName: string;
+    importPaths?: Partial<Record<LanguageType, string>>;
     chain: ChainType;
   };
 };
@@ -275,6 +275,26 @@ export function createSchema(
   return newSchema;
 }
 
+export function createPropertyCallSchema(
+  oldSchema: SchemaType,
+  propertyName: string,
+): SchemaType {
+  return {
+    schema: {
+      ...oldSchema.schema,
+      chain: {
+        chain: {
+          values: [
+            ...oldSchema.schema.chain.chain.values,
+            { propertyCall: { name: propertyName } },
+          ],
+          initFunction: oldSchema.schema.chain.chain.initFunction,
+        },
+      },
+    },
+  };
+}
+
 function normalizeArgument(
   arg: any,
   struct: StructType["struct"],
@@ -402,25 +422,23 @@ export class TypeConverter {
   private schemaTypeConverter: SchemaType = {
     schema: {
       exportName: "schema",
+      importPaths: {
+        typescript: "../../../gntrees-method-chain/typescript/index",
+      },
       chain: {
         chain: {
           values: [],
           initFunction: {
             name: "type-converter",
             variableName: "s1",
-            importString: "",
           },
         },
       },
     },
   };
-  getSchema(exportName?: string, importString?: string): SchemaType {
+  getSchema(exportName?: string): SchemaType {
     if (exportName) {
       this.schemaTypeConverter.schema.exportName = exportName;
-    }
-    if (importString) {
-      this.schemaTypeConverter.schema.chain.chain.initFunction.importString =
-        importString;
     }
     return this.schemaTypeConverter;
   }
@@ -434,7 +452,11 @@ export class TypeConverter {
     this.schemaTypeConverter.schema.chain.chain.initFunction = initFunction;
     return this;
   }
-  testvar: TypeConverter = this;
+  get testvar(): TypeConverter {
+    return new TypeConverter().initFromStructure<TypeConverter>(
+      createPropertyCallSchema(this.getSchema(), "testvar"),
+    );
+  }
   stringify(val: string): TypeConverter {
     return new TypeConverter().initFromStructure<TypeConverter>(
       createSchema(
@@ -577,25 +599,23 @@ export class StringFormatter {
   private schemaStringFormatter: SchemaType = {
     schema: {
       exportName: "schema",
+      importPaths: {
+        typescript: "../../../gntrees-method-chain/typescript/index",
+      },
       chain: {
         chain: {
           values: [],
           initFunction: {
             name: "string-formatter",
             variableName: "s2",
-            importString: "",
           },
         },
       },
     },
   };
-  getSchema(exportName?: string, importString?: string): SchemaType {
+  getSchema(exportName?: string): SchemaType {
     if (exportName) {
       this.schemaStringFormatter.schema.exportName = exportName;
-    }
-    if (importString) {
-      this.schemaStringFormatter.schema.chain.chain.initFunction.importString =
-        importString;
     }
     return this.schemaStringFormatter;
   }
@@ -700,25 +720,23 @@ export class QueryBuilder {
   private schemaQueryBuilder: SchemaType = {
     schema: {
       exportName: "schema",
+      importPaths: {
+        typescript: "../../../gntrees-method-chain/typescript/index",
+      },
       chain: {
         chain: {
           values: [],
           initFunction: {
             name: "query-builder",
             variableName: "s3",
-            importString: "",
           },
         },
       },
     },
   };
-  getSchema(exportName?: string, importString?: string): SchemaType {
+  getSchema(exportName?: string): SchemaType {
     if (exportName) {
       this.schemaQueryBuilder.schema.exportName = exportName;
-    }
-    if (importString) {
-      this.schemaQueryBuilder.schema.chain.chain.initFunction.importString =
-        importString;
     }
     return this.schemaQueryBuilder;
   }
@@ -2324,7 +2342,6 @@ export function createTypeConverter(variableName?: string) {
     variableName:
       variableName ||
       structure.getSchema().schema.chain.chain.initFunction.variableName,
-    importString: `import { createTypeConverter } from "../../../gntrees-method-chain/typescript/index"`,
   });
   return structure;
 }
@@ -2335,7 +2352,6 @@ export function createStringFormatter(variableName?: string) {
     variableName:
       variableName ||
       structure.getSchema().schema.chain.chain.initFunction.variableName,
-    importString: `import { createStringFormatter } from "../../../gntrees-method-chain/typescript/index"`,
   });
   return structure;
 }
@@ -2346,7 +2362,6 @@ export function queryBuilder(variableName?: string) {
     variableName:
       variableName ||
       structure.getSchema().schema.chain.chain.initFunction.variableName,
-    importString: `import { queryBuilder } from "../../../gntrees-method-chain/typescript/index"`,
   });
   return structure;
 }

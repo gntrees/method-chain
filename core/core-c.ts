@@ -250,13 +250,13 @@ function generateRegistry(definition: StructureType): string {
     return `${declarations.join("\n")}\n\nstatic const FunctionSignature ${snake}_functions[] = {\n${entries.join("\n")}\n};`;
 }
 
-function createMacro(definition: StructureType, init: InitFunctionType, index: number): string {
+function createMacro(definition: StructureType, init: InitFunctionType, index: number, importPaths: ProjectType["project"]["importPaths"]): string {
     const kebab = normalizeName(definition.structure.name, "kebab");
     const snake = normalizeName(definition.structure.name, "snake");
     const exportName = definition.structure.exportName || "schema" + (index + 1);
     const initName = init.name;
     const initMacroName = normalizeName(initName, "camel");
-    const importString = escapeCString(init.importString['c'] ?? init.importString['typescript'] ?? "");
+    const importString = escapeCString(`import { ${normalizeName(initName, "camel")} } from "${importPaths['c'] ?? importPaths['typescript'] ?? ""}"`);
     return `${doxygenComment(
         `Creates a new \`${exportName}\` builder (structure \`${kebab}\`).`,
         [
@@ -314,9 +314,8 @@ function generateCDefinitionSection(
         name: `create-${kebab}`,
         withVariableName: false,
         return: { structureCall: { name: structureName } },
-        importString: {},
     } as InitFunctionType])
-        .map(init => createMacro(definition, init, index))
+        .map(init => createMacro(definition, init, index, project.project.importPaths))
         .join("\n\n");
 
     const customVariables = definition.structure.variables

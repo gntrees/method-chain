@@ -62,6 +62,9 @@ const qbFn = (name: string, args: ArgumentType[], isTemplateLiteral = false): Fu
 export const exampleProject: ProjectType = {
     project: {
         projectName: "gntrees-method-chain",
+        importPaths: {
+            typescript: "../../../gntrees-method-chain/typescript/index",
+        },
         definitions: [
             {
                 structure: {
@@ -343,25 +346,16 @@ export const exampleProject: ProjectType = {
                 name: "create-type-converter",
                 withVariableName: true,
                 return: { structureCall: { name: "type-converter" } },
-                importString: {
-                    typescript: `import { createTypeConverter } from "../../../gntrees-method-chain/typescript/index"`,
-                },
             },
             {
                 name: "create-string-formatter",
                 withVariableName: true,
                 return: { structureCall: { name: "string-formatter" } },
-                importString: {
-                    typescript: `import { createStringFormatter } from "../../../gntrees-method-chain/typescript/index"`,
-                },
             },
             {
                 name: "query-builder",
                 withVariableName: true,
                 return: { structureCall: { name: "query-builder" } },
-                importString: {
-                    typescript: `import { queryBuilder } from "../../../gntrees-method-chain/typescript/index"`,
-                },
             },
         ],
     }

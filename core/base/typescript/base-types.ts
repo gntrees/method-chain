@@ -70,12 +70,12 @@ type ChainType = {
 type InitFunctionType = {
     name: string,
     variableName: string,
-    importString: string;
 }
 
 type SchemaType = {
     schema: {
         exportName: string,
+        importPaths?: Partial<Record<LanguageType, string>>,
         chain: ChainType,
     }
 }

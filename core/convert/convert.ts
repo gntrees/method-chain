@@ -28,9 +28,14 @@ export async function convert(schema: SchemaType, target: LanguageType) {
             schema.schema.chain.chain.initFunction,
             ...findInitFunctionsRecursively(schema.schema.chain)
         ]        
-        const content = `${initFunctions.map(initFunction => initFunction.importString ?? "").filter((v:string, i, a)=>{
-            return v && a.indexOf(v) === i;
-        }).join("\n")}
+        const importPaths = schema.schema.importPaths;
+        const importPath = importPaths?.[target] ?? importPaths?.typescript ?? importPaths?.javascript;
+        const importSymbols = [...new Set(initFunctions.map(initFunction => normalizeName(initFunction.name, "camel")))];
+        if (importSymbols.length > 0 && !importPath) {
+            throw new Error(`No import path available for language "${target}". Set project.project.importPaths in the project config.`);
+        }
+        const importsContent = importPath ? `import { ${importSymbols.join(", ")} } from "${importPath}"` : "";
+        const content = `${importsContent}
 
         ${initFunctions.filter((v, i, a) => a.findIndex(initFunction => initFunction.variableName === v.variableName) === i)
             .map(initFunction => {

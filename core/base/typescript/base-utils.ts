@@ -54,6 +54,26 @@ export function createSchema(
     return newSchema;
 }
 
+export function createPropertyCallSchema(
+    oldSchema: SchemaType,
+    propertyName: string,
+): SchemaType {
+    return {
+        schema: {
+            ...oldSchema.schema,
+            chain: {
+                chain: {
+                    values: [
+                        ...oldSchema.schema.chain.chain.values,
+                        { propertyCall: { name: propertyName } },
+                    ],
+                    initFunction: oldSchema.schema.chain.chain.initFunction,
+                },
+            },
+        },
+    };
+}
+
 function normalizeArgument(arg: any, struct: StructType['struct']): ArgumentValue {
     if ("array" in struct) {
         if (!Array.isArray(arg)) {
