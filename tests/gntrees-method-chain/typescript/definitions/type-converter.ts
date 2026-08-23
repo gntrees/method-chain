@@ -1,4 +1,5 @@
 // Auto-generated definition for type-converter
+import { TypeConverter } from "./type-converter";
 import {} from "./type-converter";
 import { StringFormatter } from "./string-formatter";
 import type { SchemaType } from "./base-types.ts";
@@ -40,6 +41,9 @@ export class TypeConverter {
     this.schemaTypeConverter.schema.chain.chain.initFunction = initFunction;
     return this;
   }
+  testvar: TypeConverter = new TypeConverter().initFromStructure<TypeConverter>(
+    createSchema(this.getSchema(), "testvar", [], false),
+  );
   stringify(val: string): TypeConverter {
     return new TypeConverter().initFromStructure<TypeConverter>(
       createSchema(
@@ -152,6 +156,22 @@ export class TypeConverter {
             arg: value,
             struct: { string: { type: "string" } },
             default: { string: { value: "default" } },
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  tags(tags: string[] = ["default"]): TypeConverter {
+    return new TypeConverter().initFromStructure<TypeConverter>(
+      createSchema(
+        this.getSchema(),
+        "tags",
+        [
+          {
+            arg: tags,
+            struct: { array: { type: { string: { type: "string" } } } },
+            default: { array: { value: [{ string: { value: "default" } }] } },
           },
         ],
         false,

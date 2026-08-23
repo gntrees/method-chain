@@ -206,12 +206,12 @@ static int validate_schema(const SchemaType *s, const FunctionSignature *functio
 
         if (fc->isTemplateLiteral)
         {
-            /* pola index genap = string, ganjil = ekspresi (union) */
+            /* tiap arg diterima jika cocok struct ekspresi ATAU bagian literal string
+               (menyamai createSchema TS yang melewatkan string part tanpa validasi). */
             for (size_t k = 0; k < fc->argumentCount; k++)
             {
-                const StructType *st = (k % 2 == 0) ? &sig->argumentStructs[0] : &sig->argumentStructs[1];
-                enum ValidateResult r = validate_value(&fc->arguments[k].argument, st);
-                if (r != V_OK)
+                enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[1]);
+                if (r != V_OK && fc->arguments[k].argument.type != D_STRING)
                 {
                     fprintf(stderr, "validate: %s arg %zu: %s\n", fc->name, k, result_msg(r));
                     errors++;

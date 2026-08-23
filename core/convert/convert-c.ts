@@ -23,7 +23,11 @@ function cString(value: string): string {
         .replace(/\t/g, "\\t")}"`;
 }
 
-function renderValue(value: JsonValue, declarations: BuilderDecl[]): string {
+function initMacro(initName: string): string {
+    return normalizeName(initName, "camel");
+}
+
+function renderValue(value: JsonValue, declarations: BuilderDecl[], inContainer = false): string {
     if ("string" in value) {
         return cString(value.string.value);
     }
@@ -31,7 +35,8 @@ function renderValue(value: JsonValue, declarations: BuilderDecl[]): string {
         return String(value.number.value);
     }
     if ("boolean" in value) {
-        return value.boolean.value ? "1" : "0";
+        const lit = value.boolean.value ? "1" : "0";
+        return inContainer ? `v_bool(${lit})` : lit;
     }
     if ("null" in value) {
         return "v_null()";
@@ -41,18 +46,46 @@ function renderValue(value: JsonValue, declarations: BuilderDecl[]): string {
         const name = normalizeName(inner.initFunction.variableName, "camel");
         declarations.push({
             name,
-            initMacro: normalizeName(inner.initFunction.name, "camel"),
+            initMacro: initMacro(inner.initFunction.name),
             variableName: inner.initFunction.variableName,
             values: renderChainValues(inner.values, declarations),
         });
-        return `&${name}`;
+        return inContainer ? `v_chain(&${name}->schema.chain)` : `&${name}`;
     }
-    throw new Error("Unsupported argument value for C: object/array not yet supported");
+    if ("array" in value) {
+        const items = (value.array.value as JsonValue[]).map(item => renderValue(item, declarations, true));
+        return items.length
+            ? `arr(${items.join(", ")})`
+            : `((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 })`;
+    }
+    if ("object" in value) {
+        const entries = Object.entries(value.object.value as Record<string, JsonValue>)
+            .map(([key, item]) => `entry(${cString(key)}, ${renderValue(item, declarations, true)})`);
+        return entries.length
+            ? `map(${entries.join(", ")})`
+            : `((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })`;
+    }
+    throw new Error("Unsupported argument value for C");
+}
+
+function renderPropertyCall(propertyCall: JsonValue, declarations: BuilderDecl[]): string {
+    const name = propertyCall.name as string;
+    const builder = propertyCall.builder as JsonValue;
+    const inner = (builder.chain as JsonValue).chain ?? builder.chain;
+    const declName = normalizeName(inner.initFunction.variableName, "camel");
+    declarations.push({
+        name: declName,
+        initMacro: initMacro(inner.initFunction.name),
+        variableName: inner.initFunction.variableName,
+        values: renderChainValues(inner.values, declarations),
+    });
+    return `(ChainValue){ .kind = V_PROPERTY_CALL, .as.propertyCall = { .name = ${cString(name)}, .builder = &${declName} } }`;
 }
 
 function renderChainValues(values: JsonValue[], declarations: BuilderDecl[]): string[] {
     return values.map((value: JsonValue) => {
         if ("functionCall" in value) return renderFunctionCall(value.functionCall, declarations);
+        if ("propertyCall" in value) return renderPropertyCall(value.propertyCall, declarations);
         throw new Error("Unsupported chain value for C");
     });
 }
@@ -60,10 +93,11 @@ function renderChainValues(values: JsonValue[], declarations: BuilderDecl[]): st
 function renderFunctionCall(functionCall: JsonValue, declarations: BuilderDecl[]): string {
     const args: JsonValue[] = functionCall.arguments ?? [];
     const first = args[0];
+    const macroName = normalizeName(functionCall.name, "camel", true);
     if (first && args.length === 1 && first.default !== null && deepEqual(first.argument, first.default)) {
-        return `${functionCall.name}_def()`;
+        return `${macroName}Def()`;
     }
-    return `${functionCall.name}(${args.map(arg => renderValue(arg.argument, declarations)).join(", ")})`;
+    return `${macroName}(${args.map(arg => renderValue(arg.argument, declarations)).join(", ")})`;
 }
 
 export function convertSchemaToC(schema: SchemaType): string {
@@ -87,7 +121,7 @@ export function convertSchemaToC(schema: SchemaType): string {
         });
     }
     const outerArgs = [`variableName(${cString(init.variableName)})`, ...outerValues];
-    lines.push(`    return ${normalizeName(init.name, "camel")}(`);
+    lines.push(`    return ${initMacro(init.name)}(`);
     outerArgs.forEach((arg, index) => {
         lines.push(`        ${arg}${index < outerArgs.length - 1 ? "," : ");"}`);
     });

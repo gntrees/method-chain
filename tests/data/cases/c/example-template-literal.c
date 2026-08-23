@@ -7,5 +7,6 @@ Builder template_literal_schema() {
     return createTypeConverter(
         variableName("c"),
         interpolate("hello ", 42, " world ", "x"),
+        interpolate(7, "!"),
         pipe(&f));
 }

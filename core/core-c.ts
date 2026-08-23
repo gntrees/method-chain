@@ -48,7 +48,26 @@ function cDefaultLiteral(def: NonNullable<ArgumentType["argument"]["default"]>):
     if ("number" in def) return def.number.value.toString();
     if ("boolean" in def) return def.boolean.value ? "1" : "0";
     if ("null" in def) return "NULL";
-    throw new Error("Unsupported default value type for C: only scalar defaults are supported");
+    if ("array" in def) {
+        const items = def.array.value.map(cDefaultContainerItem);
+        return items.length
+            ? `arr(${items.join(", ")})`
+            : `((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 })`;
+    }
+    if ("object" in def) {
+        const entries = Object.entries(def.object.value)
+            .map(([key, value]) => `entry("${escapeCString(key)}", ${cDefaultContainerItem(value)})`);
+        return entries.length
+            ? `map(${entries.join(", ")})`
+            : `((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })`;
+    }
+    if ("chain" in def) throw new Error("Chain defaults are not supported in C");
+    throw new Error("Unsupported default value type for C");
+}
+
+function cDefaultContainerItem(def: NonNullable<ArgumentType["argument"]["default"]>): string {
+    if ("boolean" in def) return `v_bool(${def.boolean.value ? "1" : "0"})`;
+    return cDefaultLiteral(def);
 }
 
 function cDefaultArgExpr(def: NonNullable<ArgumentType["argument"]["default"]>, struct: StructType['struct']): string {
@@ -56,14 +75,78 @@ function cDefaultArgExpr(def: NonNullable<ArgumentType["argument"]["default"]>, 
     return "boolean" in struct ? `v_bool(${literal})` : `v(${literal})`;
 }
 
+function cStructTypeName(struct: StructType['struct']): string {
+    if ("string" in struct) return "string";
+    if ("number" in struct) return "number";
+    if ("boolean" in struct) return "boolean";
+    if ("null" in struct) return "null";
+    if ("array" in struct) return `array<${cStructTypeName(struct.array.type)}>`;
+    if ("map" in struct) return `map<${cStructTypeName(struct.map.type)}>`;
+    if ("object" in struct) {
+        const entries = Object.entries(struct.object).map(([key, val]) => `${key}: ${cStructTypeName(val)}`).join(", ");
+        return `{ ${entries} }`;
+    }
+    if ("union" in struct) return struct.union.types.map(cStructTypeName).join(" | ");
+    if ("structureCall" in struct) return `chain<${normalizeName(struct.structureCall.name, "kebab")}>`;
+    throw new Error("Unknown struct type for C");
+}
+
+function cDefaultDoc(def: NonNullable<ArgumentType["argument"]["default"]>): string {
+    if ("string" in def) return `"${escapeCString(def.string.value)}"`;
+    if ("number" in def) return def.number.value.toString();
+    if ("boolean" in def) return def.boolean.value ? "true" : "false";
+    if ("null" in def) return "null";
+    if ("array" in def) {
+        const items = def.array.value.map(cDefaultDoc).join(", ");
+        return items ? `[ ${items} ]` : "[]";
+    }
+    if ("object" in def) {
+        const entries = Object.entries(def.object.value)
+            .map(([key, value]) => `"${escapeCString(key)}": ${cDefaultDoc(value)}`);
+        return entries.length ? `{ ${entries.join(", ")} }` : "{}";
+    }
+    if ("chain" in def) throw new Error("Chain defaults are not supported in C");
+    throw new Error("Unsupported default value type for C");
+}
+
+function doxygenComment(
+    brief: string,
+    params: { name: string, type: string, default?: string, description?: string }[],
+    returns: string,
+    details?: string,
+): string {
+    const lines = ["/**", ` * @brief ${brief}`];
+    if (details) {
+        lines.push(" *");
+        lines.push(` * ${details}`);
+    }
+    for (const param of params) {
+        const description = param.description ?? `Value of type \`${param.type}\`.`;
+        let line = ` * @param ${param.name} ${description}`;
+        if (param.default) line += ` Defaults to \`${param.default}\`.`;
+        lines.push(line);
+    }
+    lines.push(` * @return ${returns}`);
+    lines.push(" */");
+    return lines.join("\n");
+}
+
 function functionMacroBlocks(func: ModelFunction): { name: string, content: string }[] {
     const name = func.function.name;
+    const macroName = normalizeName(func.function.name, "camel", true);
     const args = func.function.arguments;
     if (func.function.isTemplateLiteral) {
+        if (args.length !== 1 || !args[0]) throw new Error("Template literal functions must have one argument");
+        const doc = doxygenComment(
+            `Appends the \`${name}\` template-literal function call to the builder chain.`,
+            [{ name: "...", type: "variadic", description: "Interpolated expression values (string literal parts are passed as literal text)." }],
+            `A \`ChainValue\` representing the \`${name}\` template-literal function call.`,
+        );
         return [{
-            name,
-            content: `#ifndef ${name}
-#define ${name}(...) \\
+            name: macroName,
+            content: `${doc}
+#ifndef ${macroName}
+#define ${macroName}(...) \\
     ({ \\
         const ArgumentValue _vals[] = { VA_MAP(v, __VA_ARGS__) }; \\
         size_t _n = sizeof(_vals) / sizeof(_vals[0]); \\
@@ -102,20 +185,34 @@ function functionMacroBlocks(func: ModelFunction): { name: string, content: stri
         return `mkarg_def(${argInner}, ${cDefaultArgExpr(arg.argument.default, struct)})`;
     }).join(", ");
     const blocks: { name: string, content: string }[] = [{
-        name,
-        content: `#ifndef ${name}
-#define ${name}(${params.join(", ")}) \\
-    builder_call("${name}", (ArgumentType[]){ ${mkargs} }, ${args.length}, 0)
+        name: macroName,
+        content: `${doxygenComment(
+            `Appends the \`${name}\` function call to the builder chain.`,
+            args.map(arg => ({
+                name: normalizeName(arg.argument.name, "camel"),
+                type: cStructTypeName(arg.argument.struct.struct),
+                default: arg.argument.default !== undefined ? cDefaultDoc(arg.argument.default) : undefined,
+            })),
+            `A \`ChainValue\` representing the \`${name}\` function call to be appended to the builder chain.`,
+        )}
+#ifndef ${macroName}
+#define ${macroName}(${params.join(", ")}) \\
+    builder_call("${name}", ((ArgumentType[]){ ${mkargs} }), ${args.length}, 0)
 #endif`,
     }];
     const singleArgWithDefault = args[0] && args[0].argument.default !== undefined && !("structureCall" in args[0].argument.struct.struct);
     if (args.length === 1 && singleArgWithDefault) {
         blocks.push({
-            name: `${name}_def`,
+            name: `${macroName}Def`,
             content: `
-#ifndef ${name}_def
-#define ${name}_def() \\
-    builder_call("${name}", (ArgumentType[]){ mkarg_def(${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}, ${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}) }, 1, 0)
+${doxygenComment(
+                `Appends the \`${name}\` function call to the builder chain using its default argument.`,
+                [],
+                `A \`ChainValue\` representing the \`${name}\` function call with the default argument.`,
+            )}
+#ifndef ${macroName}Def
+#define ${macroName}Def() \\
+    builder_call("${name}", ((ArgumentType[]){ mkarg_def(${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}, ${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}) }), 1, 0)
 #endif`,
         });
     }
@@ -153,14 +250,22 @@ function generateRegistry(definition: StructureType): string {
     return `${declarations.join("\n")}\n\nstatic const FunctionSignature ${snake}_functions[] = {\n${entries.join("\n")}\n};`;
 }
 
-function createMacro(definition: StructureType, init: InitFunctionType): string {
+function createMacro(definition: StructureType, init: InitFunctionType, index: number): string {
     const kebab = normalizeName(definition.structure.name, "kebab");
     const snake = normalizeName(definition.structure.name, "snake");
-    const pascal = normalizeName(definition.structure.name, "pascal");
-    const exportName = definition.structure.exportName || "schema";
+    const exportName = definition.structure.exportName || "schema" + (index + 1);
     const initName = init.name;
+    const initMacroName = normalizeName(initName, "camel");
     const importString = escapeCString(init.importString['c'] ?? init.importString['typescript'] ?? "");
-    return `#define create${pascal}(meta, ...) \\
+    return `${doxygenComment(
+        `Creates a new \`${exportName}\` builder (structure \`${kebab}\`).`,
+        [
+            { name: "meta", type: "SchemaMetaBuilder", description: "Metadata containing the variableName." },
+            { name: "...", type: "variadic ChainValue", description: "Chain values (function/property calls) forming the schema." },
+        ],
+        `A \`Builder\` holding the validated schema for the \`${kebab}\` structure.`,
+    )}
+#define ${initMacroName}(meta, ...) \\
     ((Builder){ \\
         .schema = validate_and_return( \\
             (SchemaType){ \\
@@ -184,6 +289,7 @@ function generateCDefinitionSection(
     definition: StructureType,
     project: ProjectType,
     usedMacros: Set<string>,
+    index: number,
 ): string {
     const structureName = definition.structure.name;
     const kebab = normalizeName(structureName, "kebab");
@@ -210,7 +316,7 @@ function generateCDefinitionSection(
         return: { structureCall: { name: structureName } },
         importString: {},
     } as InitFunctionType])
-        .map(init => createMacro(definition, init))
+        .map(init => createMacro(definition, init, index))
         .join("\n\n");
 
     const customVariables = definition.structure.variables
@@ -218,7 +324,13 @@ function generateCDefinitionSection(
         .map(variable => `extern ArgumentValue ${normalizeName(variable.customVariable.name, "snake")};`);
     const customFunctions = definition.structure.functions
         .filter(func => "customFunction" in func)
-        .map(func => `extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const ArgumentValue *arg);`);
+        .map(func => `/**
+ * @brief External implementation of the \`${func.customFunction.name}\` custom function.
+ *
+ * @param arg The argument value passed to the custom function.
+ * @return The result of the custom function as an \`ArgumentValue\`.
+ */
+extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const ArgumentValue *arg);`);
 
     const parts: string[] = [];
     if (macroSections.length) parts.push(macroSections.join("\n\n"));
@@ -250,7 +362,7 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
 
     const usedMacros = new Set<string>();
     const definitionSections = project.project.definitions
-        .map(definition => generateCDefinitionSection(definition, project, usedMacros))
+        .map((definition, index) => generateCDefinitionSection(definition, project, usedMacros, index))
         .join("\n\n");
 
     const baseTypes = stripLocalIncludes(base["base-types.h"]);

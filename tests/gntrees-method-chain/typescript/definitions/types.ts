@@ -2,6 +2,7 @@
 import type { SchemaType, FunctionCallType } from "./base-types.ts";
 import { TypeConverter } from "./type-converter.ts";
 import { StringFormatter } from "./string-formatter.ts";
+import { QueryBuilder } from "./query-builder.ts";
 
 type ArgObject = {
   [key: string]: ArgType;
@@ -14,7 +15,8 @@ type ArgArray =
   | ArgObject[]
   | ArgArray[]
   | TypeConverter[]
-  | StringFormatter[];
+  | StringFormatter[]
+  | QueryBuilder[];
 export type ArgType =
   | string
   | number
@@ -25,4 +27,5 @@ export type ArgType =
   | ArgArray
   | TypeConverter
   | StringFormatter
+  | QueryBuilder
   | TemplateStringsArray;

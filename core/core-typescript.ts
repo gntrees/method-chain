@@ -198,7 +198,7 @@ export function generateTypeScriptContent(project: ProjectType): {
                 definitionContent += `${normalizeName(variable.customVariable.name, "camel")}: typeof ${normalizeName(variable.customVariable.name, "camel")};\n`;
             } else if ("variable" in variable) {
                 if ("structureCall" in variable.variable.value) {
-                    definitionContent += `${normalizeName(variable.variable.name, "camel")}: ${normalizeName(variable.variable.value.structureCall.name, "pascal")};\n`;
+                    definitionContent += `${normalizeName(variable.variable.name, "camel")}: ${normalizeName(variable.variable.value.structureCall.name, "pascal")} = new ${normalizeName(variable.variable.value.structureCall.name, "pascal")}().initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(createSchema(this.getSchema(),"${normalizeName(variable.variable.name, "camel")}", [], false));\n`;
                 } else {
                     throw new Error("Unknown variable value type");
                 }
@@ -237,39 +237,45 @@ export function generateTypeScriptContent(project: ProjectType): {
         }
     })
     // INIT FUNCTION CONTENT
-    definitionsContent.push(...project.project.initFunctions.map(initFunction => {
+    if (project.project.initFunctions.length > 0) {
         const importedStructures: {
             file: string,
             entity: string[],
         }[] = []
         let definitionContent = "";
-        if ("structureCall" in initFunction.return) {
-            importedStructures.push({
-                file: stringifyStructureCall(initFunction.return, "kebab"),
-                entity: [stringifyStructureCall(initFunction.return, "pascal")],
-            })
-            definitionContent += `export function ${normalizeName(initFunction.name, "camel")}(${initFunction.withVariableName ? "variableName?: string" : ""
-                }) {
-                const structure = new ${stringifyStructureCall(initFunction.return, "pascal")}();
-                structure.initFromInitFunction({
-                    name: "${initFunction.name}",
-                    variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.initFunction.variableName"},
-                    importString: ${"\`" + (initFunction.importString['typescript'] ?? initFunction.importString['javascript']) + "\`"}
-                    
-                })
-                return structure;
-            }\n`;
-        } else {
-            throw new Error("Unknown init function return type");
-        }
-        definitionContent = `// Auto-generated definition for ${initFunction.name}\n` +
+        project.project.initFunctions.forEach(initFunction => {
+            if ("structureCall" in initFunction.return) {
+                const structureFile = stringifyStructureCall(initFunction.return, "kebab");
+                const structureEntity = stringifyStructureCall(initFunction.return, "pascal");
+                if (!importedStructures.some(imp => imp.file === structureFile)) {
+                    importedStructures.push({
+                        file: structureFile,
+                        entity: [structureEntity],
+                    })
+                }
+                definitionContent += `export function ${normalizeName(initFunction.name, "camel")}(${initFunction.withVariableName ? "variableName?: string" : ""
+                    }) {
+                    const structure = new ${stringifyStructureCall(initFunction.return, "pascal")}();
+                    structure.initFromInitFunction({
+                        name: "${initFunction.name}",
+                        variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.chain.chain.initFunction.variableName"},
+                        importString: ${"\`" + (initFunction.importString['typescript'] ?? initFunction.importString['javascript']) + "\`"}
+                        
+                    })
+                    return structure;
+                }\n`;
+            } else {
+                throw new Error("Unknown init function return type");
+            }
+        });
+        definitionContent = `// Auto-generated init functions\n` +
             importedStructures.map(imp => `import { ${imp.entity.join(', ')} } from './${imp.file}';\n\n`).join('') +
             definitionContent;
-        return {
-            name: initFunction.name,
+        definitionsContent.push({
+            name: "index",
             content: definitionContent,
-        }
-    }))
+        })
+    }
     // IMPLEMENTATION CONTENT
     const implementationContent = project.project.definitions.map(definition => {
         let implementationContent = "";

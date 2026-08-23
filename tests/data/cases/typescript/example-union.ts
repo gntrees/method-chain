@@ -1,5 +1,5 @@
-import { createTypeConverter } from "../../../gntrees-method-chain/typescript/definitions/create-type-converter";
-import { createStringFormatter } from "../../../gntrees-method-chain/typescript/definitions/create-string-formatter";
+import { createTypeConverter } from "../../../gntrees-method-chain/typescript/definitions/index";
+import { createStringFormatter } from "../../../gntrees-method-chain/typescript/definitions/index";
 
 const c = createTypeConverter("c");
 const f = createStringFormatter("f");

@@ -99,7 +99,7 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
                 return `.${normalizeName(value.functionCall.name, "camel")}${value.functionCall.isTemplateLiteral ? `\`${args}\`` : `(${args})`}`;
             }
             if ("propertyCall" in value) {
-                return `.${normalizeName(value.propertyCall.name, "camel")}`;
+                return `.${value.propertyCall.name}`;
             }
             throw new Error("Unsupported chain value type");
         }).join("");

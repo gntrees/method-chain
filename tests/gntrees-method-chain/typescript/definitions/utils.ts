@@ -3,6 +3,7 @@ import type { ArgType } from "./types.ts";
 import type { ArgumentValue } from "./base-types.ts";
 import { TypeConverter } from "./type-converter.ts";
 import { StringFormatter } from "./string-formatter.ts";
+import { QueryBuilder } from "./query-builder.ts";
 
 export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
   if (typeof arg !== "object") {
@@ -12,6 +13,8 @@ export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
   } else if (arg instanceof TypeConverter) {
     return arg.getSchema().schema.chain;
   } else if (arg instanceof StringFormatter) {
+    return arg.getSchema().schema.chain;
+  } else if (arg instanceof QueryBuilder) {
     return arg.getSchema().schema.chain;
   } else {
     throw new Error("Unknown structure call argument type");
