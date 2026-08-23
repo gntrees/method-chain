@@ -5,7 +5,10 @@ import type { ArrayType, BooleanType, ChainType, NullType, NumberType, ObjectTyp
 export type CustomFunctionType = {
     customFunction: {
         name: string,
-        arguments: ArgumentType[]
+        arguments: ArgumentType[],
+        body: Record<LanguageType, string>,
+        return: Record<LanguageType, string>
+
     }
 }
 
@@ -21,6 +24,7 @@ export type FunctionType = {
 export type CustomVariableType = {
     customVariable: {
         name: string,
+        value: Record<LanguageType, string>
     }
 }
 

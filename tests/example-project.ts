@@ -344,7 +344,7 @@ export const exampleProject: ProjectType = {
                 withVariableName: true,
                 return: { structureCall: { name: "type-converter" } },
                 importString: {
-                    typescript: `import { createTypeConverter } from "../../../gntrees-method-chain/typescript/definitions/index"`,
+                    typescript: `import { createTypeConverter } from "../../../gntrees-method-chain/typescript/index"`,
                 },
             },
             {
@@ -352,7 +352,7 @@ export const exampleProject: ProjectType = {
                 withVariableName: true,
                 return: { structureCall: { name: "string-formatter" } },
                 importString: {
-                    typescript: `import { createStringFormatter } from "../../../gntrees-method-chain/typescript/definitions/index"`,
+                    typescript: `import { createStringFormatter } from "../../../gntrees-method-chain/typescript/index"`,
                 },
             },
             {
@@ -360,7 +360,7 @@ export const exampleProject: ProjectType = {
                 withVariableName: true,
                 return: { structureCall: { name: "query-builder" } },
                 importString: {
-                    typescript: `import { queryBuilder } from "../../../gntrees-method-chain/typescript/definitions/index"`,
+                    typescript: `import { queryBuilder } from "../../../gntrees-method-chain/typescript/index"`,
                 },
             },
         ],

@@ -1097,7 +1097,7 @@ static const FunctionSignature type_converter_functions[] = {
                     .initFunction = { \
                         .name = "create-type-converter", \
                         .variableName = (meta).variableName, \
-                        .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/definitions/index\"", \
+                        .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }, \
                     .values = (ChainValue[]){ __VA_ARGS__ }, \
                     .valueCount = BUILDER_COUNT(__VA_ARGS__), \
@@ -1147,7 +1147,7 @@ static const FunctionSignature string_formatter_functions[] = {
                     .initFunction = { \
                         .name = "create-string-formatter", \
                         .variableName = (meta).variableName, \
-                        .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/definitions/index\"", \
+                        .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }, \
                     .values = (ChainValue[]){ __VA_ARGS__ }, \
                     .valueCount = BUILDER_COUNT(__VA_ARGS__), \
@@ -1773,7 +1773,7 @@ static const FunctionSignature query_builder_functions[] = {
                     .initFunction = { \
                         .name = "query-builder", \
                         .variableName = (meta).variableName, \
-                        .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/definitions/index\"", \
+                        .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }, \
                     .values = (ChainValue[]){ __VA_ARGS__ }, \
                     .valueCount = BUILDER_COUNT(__VA_ARGS__), \
