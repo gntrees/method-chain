@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { ArgumentValue } from "./gntrees-method-chain/typescript/index";
+import type { ArgumentValue, StructType } from "./gntrees-method-chain/typescript/index";
 import {
     QueryBuilder,
     TypeConverter,
@@ -181,6 +181,49 @@ test("template literal with undefined expression throws", () => {
     expect(() => qb().raw`a ${undefined}`).toThrow("union");
 });
 
+test("template literal with too many expressions throws", () => {
+    expect(() => (qb().raw as any)(["a"], "x", "y")).toThrow("expression");
+});
+
+test("template literal with too few expressions throws", () => {
+    expect(() => (qb().raw as any)(["a", "b", "c"], "x")).toThrow("expression");
+});
+
+test("createSchema with invalid base schema throws", () => {
+    expect(() => createSchema({} as any, "x", [], false)).toThrow("Invalid schema");
+});
+
+test("object struct key colliding with inherited property is detected as missing", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "objInherited",
+            [
+                {
+                    arg: { x: "1" },
+                    struct: {
+                        object: {
+                            toString: { string: { type: "string" } },
+                        },
+                    } as StructType["struct"],
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("Missing required key");
+});
+
+test("union error includes underlying reasons", () => {
+    try {
+        (tc().unify as any)({ a: 1 });
+        throw new Error("expected unify to throw");
+    } catch (e: any) {
+        expect(e.message).toContain("does not match any type in the union");
+        expect(e.message).toContain("Expected a string argument");
+    }
+});
+
 test("template literal records string parts and normalized expressions", () => {
     const schema = qb().raw`SELECT ${"x"} FROM ${18}`.getSchema();
     const args = (schema.schema.chain.chain.values[0] as any).functionCall.arguments;
@@ -188,6 +231,79 @@ test("template literal records string parts and normalized expressions", () => {
     expect(args[1].argument).toEqual({ string: { value: "x" } });
     expect(args[2].argument).toEqual({ string: { value: " FROM " } });
     expect(args[3].argument).toEqual({ number: { value: 18 } });
+});
+
+test("empty array in union of multiple array types is accepted", () => {
+    const schema = createSchema(
+        tc().getSchema(),
+        "emptyUnion",
+        [
+            {
+                arg: [],
+                struct: {
+                    union: {
+                        types: [
+                            { array: { type: { string: { type: "string" } } } },
+                            { array: { type: { number: { type: "number" } } } },
+                        ],
+                    },
+                },
+                provided: true,
+            },
+        ],
+        false,
+    );
+    const arg = (schema.schema.chain.chain.values[0] as any).functionCall.arguments[0];
+    expect(arg.argument).toEqual({ array: { value: [] } });
+});
+
+test("non-empty ambiguous union still throws", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "ambigUnion",
+            [
+                {
+                    arg: ["a"],
+                    struct: {
+                        union: {
+                            types: [
+                                { array: { type: { string: { type: "string" } } } },
+                                { array: { type: { string: { type: "string" } } } },
+                            ],
+                        },
+                    },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("ambiguous");
+});
+
+test("non-plain empty object in map struct throws", () => {
+    expect(() => qb().set(new Map([["a", 1]]) as any)).toThrow("plain object");
+});
+
+test("non-plain empty object in object struct throws", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "objExotic",
+            [
+                {
+                    arg: new Date(),
+                    struct: {
+                        object: {
+                            a: { string: { type: "string" } },
+                        },
+                    },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("plain object");
 });
 
 test("QueryBuilder import is usable", () => {

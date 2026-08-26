@@ -221,6 +221,7 @@ export function createSchema(
   }[],
   isTemplateLiteral: boolean,
 ): SchemaType {
+  validateSchema(oldSchema);
   const newSchema = {
     schema: {
       ...oldSchema.schema,
@@ -242,6 +243,11 @@ export function createSchema(
       throw new Error(`Expected a template strings array for ${functionName}`);
     }
     const expressions = functionArgs.slice(1);
+    if (expressions.length !== strings.length - 1) {
+      throw new Error(
+        `Template literal for ${functionName} expects ${strings.length - 1} expression(s), but got ${expressions.length}`,
+      );
+    }
     const normalizedTemplateLiteralArgs = strings.reduce((acc, str, index) => {
       if (str) {
         acc.push({ argument: { string: { value: str } }, default: null });
@@ -407,8 +413,17 @@ function normalizeArgument(
     if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
       throw new Error(`Expected an object argument, but got ${typeof arg}`);
     }
+    if (
+      Object.keys(arg).length === 0 &&
+      Object.getPrototypeOf(arg) !== Object.prototype &&
+      Object.getPrototypeOf(arg) !== null
+    ) {
+      throw new Error(
+        `Expected a plain object argument, but got ${Object.prototype.toString.call(arg)}`,
+      );
+    }
     const missingKeys = Object.keys(struct.object).filter(
-      (key) => !(key in arg),
+      (key) => !Object.prototype.hasOwnProperty.call(arg, key),
     );
     if (missingKeys.length > 0) {
       throw new Error(
@@ -449,19 +464,26 @@ function normalizeArgument(
     }
     return { null: { value: arg } };
   } else if ("union" in struct) {
+    const reasons: string[] = [];
     const normalizedUnionTypes = struct.union.types
       .map((type) => {
         try {
           return normalizeArgument(arg, type);
         } catch (e) {
+          reasons.push(e instanceof Error ? e.message : String(e));
           return null;
         }
       })
       .filter((type) => type !== null);
     if (normalizedUnionTypes.length === 0 || !normalizedUnionTypes[0]) {
-      throw new Error(`Argument does not match any type in the union`);
+      throw new Error(
+        `Argument does not match any type in the union: ${reasons.join(" | ")}`,
+      );
     }
     if (normalizedUnionTypes.length > 1) {
+      if (Array.isArray(arg) && arg.length === 0) {
+        return normalizedUnionTypes[0];
+      }
       throw new Error(
         `Argument matches multiple types in the union, which is ambiguous`,
       );
@@ -471,6 +493,15 @@ function normalizeArgument(
     if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
       throw new Error(
         `Expected an object argument for map type, but got ${typeof arg}`,
+      );
+    }
+    if (
+      Object.keys(arg).length === 0 &&
+      Object.getPrototypeOf(arg) !== Object.prototype &&
+      Object.getPrototypeOf(arg) !== null
+    ) {
+      throw new Error(
+        `Expected a plain object argument for map type, but got ${Object.prototype.toString.call(arg)}`,
       );
     }
     const normalizedMap = Object.fromEntries(

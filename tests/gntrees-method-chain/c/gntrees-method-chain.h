@@ -39,6 +39,8 @@ typedef struct MapEntry MapEntry;
 typedef struct StructType StructType;
 typedef struct StructKey StructKey;
 typedef struct FunctionSignature FunctionSignature;
+typedef struct PropertySignature PropertySignature;
+typedef struct StructureRegistry StructureRegistry;
 
 struct ArgumentValue
 {
@@ -72,6 +74,7 @@ struct ArgumentType
     ArgumentValue argument;
     int hasDefault;
     ArgumentValue def;
+    int provided;
 };
 
 enum ChainValueKind
@@ -179,6 +182,22 @@ struct FunctionSignature
     int isTemplateLiteral;
     const StructType *argumentStructs;
     size_t argumentCount;
+    const char *returnTypeName;
+};
+
+struct PropertySignature
+{
+    const char *name;
+    const char *returnTypeName;
+};
+
+struct StructureRegistry
+{
+    const char *typeName;
+    const FunctionSignature *functions;
+    size_t functionCount;
+    const PropertySignature *properties;
+    size_t propertyCount;
 };
 
 /**
@@ -232,9 +251,8 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
  */
 static Builder builder_single(const char *typeName, const ChainValue *value);
 
-static int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount);
-static int validate_properties(const SchemaType *s);
-static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount);
+static void validate_schema(const SchemaType *s, const StructureRegistry *registries, size_t registryCount);
+static SchemaType validate_and_return(SchemaType s, const StructureRegistry *registries, size_t registryCount);
 
 /**
  * @param n const char *
@@ -267,7 +285,7 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
  * @return ArgumentType
  */
 #define mkarg(val) \
-    ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0} })
+    ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0}, .provided = 1 })
 
 /**
  * @param val ArgumentValue
@@ -275,7 +293,7 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
  * @return ArgumentType
  */
 #define mkarg_def(val, dflt) \
-    ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt) })
+    ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt), .provided = 1 })
 
 /**
  * @param x const char *
@@ -424,6 +442,8 @@ static inline const char *getJSONSchema_builder(const Builder *b)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <stdarg.h>
 
 #define V(name, dtype, member, param, value) \
     static ArgumentValue name(param x) { return (ArgumentValue){.type = dtype, .as.member = (value)}; }
@@ -453,7 +473,11 @@ enum ValidateResult
     V_UNKNOWN_KEY,
     V_UNION_NO_MATCH,
     V_UNION_AMBIGUOUS,
-    V_CHAIN_TYPE
+    V_CHAIN_TYPE,
+    V_NON_FINITE,
+    V_MISSING_KEY,
+    V_DUPLICATE_KEY,
+    V_DEPTH_LIMIT
 };
 
 static const char *result_msg(enum ValidateResult r)
@@ -472,18 +496,118 @@ static const char *result_msg(enum ValidateResult r)
         return "value matches multiple union types (ambiguous)";
     case V_CHAIN_TYPE:
         return "chain type mismatch for structure call";
+    case V_NON_FINITE:
+        return "value is not a finite number";
+    case V_MISSING_KEY:
+        return "missing required object key";
+    case V_DUPLICATE_KEY:
+        return "duplicate object key";
+    case V_DEPTH_LIMIT:
+        return "value nesting too deep";
     default:
         return "ok";
     }
 }
 
+static void fail(const char *fmt, ...) __attribute__((noreturn));
+
+static void fail(const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    fputc('\n', stderr);
+    abort();
+}
+
+static char union_reasons[2048];
+static size_t union_reasons_len = 0;
+
+static void union_reason_append(const char *text)
+{
+    size_t n = strlen(text);
+    if (union_reasons_len + n + 3 >= sizeof(union_reasons))
+        return;
+    if (union_reasons_len)
+    {
+        union_reasons[union_reasons_len++] = ' ';
+        union_reasons[union_reasons_len++] = '|';
+        union_reasons[union_reasons_len++] = ' ';
+    }
+    memcpy(union_reasons + union_reasons_len, text, n);
+    union_reasons_len += n;
+    union_reasons[union_reasons_len] = '\0';
+}
+
+static const char *value_kind_name(const ArgumentValue *v)
+{
+    switch (v->type)
+    {
+    case D_INT: return "int";
+    case D_FLOAT: return "float";
+    case D_STRING: return "string";
+    case D_BOOL: return "boolean";
+    case D_NULL: return "null";
+    case D_MAP: return "object";
+    case D_ARRAY: return "array";
+    case D_CHAIN: return "structure";
+    }
+    return "unknown";
+}
+
+static void union_reason_append_branch(const StructType *st, const ArgumentValue *v, enum ValidateResult r)
+{
+    char tmp[128];
+    const char *vk = value_kind_name(v);
+    if (r == V_TYPE_MISMATCH)
+    {
+        switch (st->kind)
+        {
+        case S_STRING: snprintf(tmp, sizeof tmp, "expected string, got %s", vk); break;
+        case S_NUMBER: snprintf(tmp, sizeof tmp, "expected number, got %s", vk); break;
+        case S_BOOL: snprintf(tmp, sizeof tmp, "expected boolean, got %s", vk); break;
+        case S_NULL: snprintf(tmp, sizeof tmp, "expected null, got %s", vk); break;
+        case S_ARRAY: snprintf(tmp, sizeof tmp, v->type == D_ARRAY ? "array items must match element type" : "expected array, got %s", vk); break;
+        case S_MAP: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "map value type mismatch" : "expected map, got %s", vk); break;
+        case S_OBJECT: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "object field type mismatch" : "expected object, got %s", vk); break;
+        case S_STRUCT_CALL: snprintf(tmp, sizeof tmp, "expected structure instance, got %s", vk); break;
+        default: snprintf(tmp, sizeof tmp, "%s", result_msg(r)); break;
+        }
+    }
+    else
+    {
+        snprintf(tmp, sizeof tmp, "%s", result_msg(r));
+    }
+    union_reason_append(tmp);
+}
+
+#define MAX_VALIDATE_DEPTH 128
+static int validate_value_depth = 0;
+
+static enum ValidateResult validate_value_impl(const ArgumentValue *v, const StructType *st);
+
 static enum ValidateResult validate_value(const ArgumentValue *v, const StructType *st)
+{
+    if (++validate_value_depth > MAX_VALIDATE_DEPTH)
+    {
+        validate_value_depth--;
+        return V_DEPTH_LIMIT;
+    }
+    enum ValidateResult res = validate_value_impl(v, st);
+    validate_value_depth--;
+    return res;
+}
+
+static enum ValidateResult validate_value_impl(const ArgumentValue *v, const StructType *st)
 {
     switch (st->kind)
     {
     case S_STRING:
         return v->type == D_STRING ? V_OK : V_TYPE_MISMATCH;
     case S_NUMBER:
+        if (v->type == D_FLOAT)
+            return isfinite(v->as.f) ? V_OK : V_NON_FINITE;
         return (v->type == D_INT || v->type == D_FLOAT) ? V_OK : V_TYPE_MISMATCH;
     case S_BOOL:
         return v->type == D_BOOL ? V_OK : V_TYPE_MISMATCH;
@@ -505,6 +629,10 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
             return V_TYPE_MISMATCH;
         const MapEntry *entries = v->as.data;
         for (size_t i = 0; i < v->count; i++)
+            for (size_t j = i + 1; j < v->count; j++)
+                if (strcmp(entries[i].key, entries[j].key) == 0)
+                    return V_DUPLICATE_KEY;
+        for (size_t i = 0; i < v->count; i++)
             if (validate_value(&entries[i].value, st->as.map.value) != V_OK)
                 return V_TYPE_MISMATCH;
         return V_OK;
@@ -514,6 +642,10 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
         if (v->type != D_MAP)
             return V_TYPE_MISMATCH;
         const MapEntry *entries = v->as.data;
+        for (size_t i = 0; i < v->count; i++)
+            for (size_t j = i + 1; j < v->count; j++)
+                if (strcmp(entries[i].key, entries[j].key) == 0)
+                    return V_DUPLICATE_KEY;
         for (size_t i = 0; i < v->count; i++)
         {
             const StructKey *found = NULL;
@@ -528,22 +660,50 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
             if (validate_value(&entries[i].value, &found->type) != V_OK)
                 return V_TYPE_MISMATCH;
         }
+        for (size_t j = 0; j < st->as.object.count; j++)
+        {
+            int present = 0;
+            for (size_t i = 0; i < v->count; i++)
+                if (strcmp(st->as.object.keys[j].key, entries[i].key) == 0)
+                {
+                    present = 1;
+                    break;
+                }
+            if (!present)
+                return V_MISSING_KEY;
+        }
         return V_OK;
     }
     case S_UNION:
     {
+        size_t snapshot = union_reasons_len;
         int matches = 0;
         for (size_t i = 0; i < st->as.unionType.count; i++)
-            if (validate_value(v, &st->as.unionType.types[i]) == V_OK)
+        {
+            enum ValidateResult r = validate_value(v, &st->as.unionType.types[i]);
+            if (r == V_OK)
                 matches++;
+            else
+                union_reason_append_branch(&st->as.unionType.types[i], v, r);
+        }
         if (matches == 0)
             return V_UNION_NO_MATCH;
         if (matches > 1)
+        {
+            union_reasons_len = snapshot;
+            union_reasons[union_reasons_len] = '\0';
+            if (v->type == D_ARRAY && v->count == 0)
+                return V_OK;
             return V_UNION_AMBIGUOUS;
+        }
+        union_reasons_len = snapshot;
+        union_reasons[union_reasons_len] = '\0';
         return V_OK;
     }
     case S_STRUCT_CALL:
         if (v->type != D_CHAIN)
+            return V_TYPE_MISMATCH;
+        if (!v->as.chain)
             return V_TYPE_MISMATCH;
         if (v->as.chain->typeName && v->as.chain->typeName[0])
             return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
@@ -552,88 +712,226 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
     return V_TYPE_MISMATCH;
 }
 
-static int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount)
+static const StructureRegistry *find_structure(const StructureRegistry *registries, size_t registryCount, const char *typeName)
 {
-    int errors = 0;
-    for (size_t i = 0; i < s->chain.valueCount; i++)
-    {
-        const ChainValue *cv = &s->chain.values[i];
-        if (cv->kind != V_FUNCTION_CALL)
-            continue;
-        const FunctionCallType *fc = &cv->as.functionCall;
+    if (!typeName || !typeName[0])
+        return NULL;
+    for (size_t i = 0; i < registryCount; i++)
+        if (strcmp(registries[i].typeName, typeName) == 0)
+            return &registries[i];
+    return NULL;
+}
 
-        const FunctionSignature *sig = NULL;
-        for (size_t j = 0; j < functionCount; j++)
-            if (strcmp(functions[j].name, fc->name) == 0)
+static const FunctionSignature *find_function(const StructureRegistry *reg, const char *name)
+{
+    for (size_t i = 0; i < reg->functionCount; i++)
+        if (strcmp(reg->functions[i].name, name) == 0)
+            return &reg->functions[i];
+    return NULL;
+}
+
+static const PropertySignature *find_property(const StructureRegistry *reg, const char *name)
+{
+    for (size_t i = 0; i < reg->propertyCount; i++)
+        if (strcmp(reg->properties[i].name, name) == 0)
+            return &reg->properties[i];
+    return NULL;
+}
+
+static void validate_chain_flow(const ChainType *chain, const StructureRegistry *registries, size_t registryCount, const char *forcedStartName);
+static void validate_function_args(const FunctionCallType *fc, const FunctionSignature *sig, const StructureRegistry *registries, size_t registryCount);
+
+static int collect_structure_call_name(const StructType *st, const char **out, int *found)
+{
+    switch (st->kind)
+    {
+    case S_STRUCT_CALL:
+        if (*found == 0)
+        {
+            *out = st->as.structureCall.name;
+            *found = 1;
+            return 1;
+        }
+        return strcmp(*out, st->as.structureCall.name) == 0;
+    case S_UNION:
+        for (size_t i = 0; i < st->as.unionType.count; i++)
+            if (!collect_structure_call_name(&st->as.unionType.types[i], out, found))
+                return 0;
+        return 1;
+    case S_ARRAY:
+        return collect_structure_call_name(st->as.array.elem, out, found);
+    case S_MAP:
+        return collect_structure_call_name(st->as.map.value, out, found);
+    default:
+        return 1;
+    }
+}
+
+static void validate_sub_chain_arg(const ArgumentValue *arg, const StructType *st, const StructureRegistry *registries, size_t registryCount)
+{
+    if (arg->type != D_CHAIN || !arg->as.chain)
+        return;
+    const char *start = arg->as.chain->typeName;
+    if (!start || !start[0])
+    {
+        const char *single = NULL;
+        int found = 0;
+        if (!collect_structure_call_name(st, &single, &found) || found != 1)
+            return;
+        start = single;
+    }
+    validate_chain_flow(arg->as.chain, registries, registryCount, start);
+}
+
+static void validate_nested_chain_args(const ArgumentValue *v, const StructType *st, const StructureRegistry *registries, size_t registryCount)
+{
+    switch (st->kind)
+    {
+    case S_STRUCT_CALL:
+        if (v->type == D_CHAIN && v->as.chain)
+            validate_sub_chain_arg(v, st, registries, registryCount);
+        break;
+    case S_ARRAY:
+        if (v->type == D_ARRAY)
+        {
+            const ArgumentValue *items = v->as.data;
+            for (size_t i = 0; i < v->count; i++)
+                validate_nested_chain_args(&items[i], st->as.array.elem, registries, registryCount);
+        }
+        break;
+    case S_MAP:
+        if (v->type == D_MAP)
+        {
+            const MapEntry *e = v->as.data;
+            for (size_t i = 0; i < v->count; i++)
+                validate_nested_chain_args(&e[i].value, st->as.map.value, registries, registryCount);
+        }
+        break;
+    case S_OBJECT:
+        if (v->type == D_MAP)
+        {
+            const MapEntry *e = v->as.data;
+            for (size_t i = 0; i < v->count; i++)
+                for (size_t j = 0; j < st->as.object.count; j++)
+                    if (strcmp(st->as.object.keys[j].key, e[i].key) == 0)
+                    {
+                        validate_nested_chain_args(&e[i].value, &st->as.object.keys[j].type, registries, registryCount);
+                        break;
+                    }
+        }
+        break;
+    case S_UNION:
+        for (size_t i = 0; i < st->as.unionType.count; i++)
+            if (validate_value(v, &st->as.unionType.types[i]) == V_OK)
             {
-                sig = &functions[j];
+                validate_nested_chain_args(v, &st->as.unionType.types[i], registries, registryCount);
                 break;
             }
-        if (!sig)
-        {
-            fprintf(stderr, "validate: unknown function '%s'\n", fc->name);
-            errors++;
-            continue;
-        }
+        break;
+    default:
+        break;
+    }
+}
 
-if (fc->isTemplateLiteral)
+static void fail_value_result(const char *func, size_t k, const char *kind, enum ValidateResult r)
+{
+    if (r == V_UNION_NO_MATCH && union_reasons_len)
+        fail("validate: %s %s %zu: value does not match any union type: %s", func, kind, k, union_reasons);
+    fail("validate: %s %s %zu: %s", func, kind, k, result_msg(r));
+}
+
+static void validate_function_args(const FunctionCallType *fc, const FunctionSignature *sig, const StructureRegistry *registries, size_t registryCount)
+{
+    if (fc->isTemplateLiteral)
+    {
+        for (size_t k = 0; k < fc->argumentCount; k++)
         {
-            for (size_t k = 0; k < fc->argumentCount; k++)
+            enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[1]);
+            if (r != V_OK && fc->arguments[k].argument.type != D_STRING)
+                fail_value_result(fc->name, k, "arg", r);
+            validate_nested_chain_args(&fc->arguments[k].argument, &sig->argumentStructs[1], registries, registryCount);
+        }
+        return;
+    }
+    if (fc->argumentCount != sig->argumentCount)
+        fail("validate: %s expects %zu args, got %zu", fc->name, sig->argumentCount, fc->argumentCount);
+    for (size_t k = 0; k < fc->argumentCount; k++)
+    {
+        const StructType *st = &sig->argumentStructs[k];
+        if (!fc->arguments[k].provided && !fc->arguments[k].hasDefault)
+            fail("validate: %s argument #%zu was not provided", fc->name, k + 1);
+        enum ValidateResult r = validate_value(&fc->arguments[k].argument, st);
+        if (r != V_OK)
+            fail_value_result(fc->name, k, "arg", r);
+        if (fc->arguments[k].hasDefault)
+        {
+            enum ValidateResult rd = validate_value(&fc->arguments[k].def, st);
+            if (rd != V_OK)
+                fail_value_result(fc->name, k, "default arg", rd);
+        }
+        validate_nested_chain_args(&fc->arguments[k].argument, st, registries, registryCount);
+    }
+}
+
+#define MAX_CHAIN_DEPTH 64
+static int chain_flow_depth = 0;
+
+static void validate_chain_flow(const ChainType *chain, const StructureRegistry *registries, size_t registryCount, const char *forcedStartName)
+{
+    if (++chain_flow_depth > MAX_CHAIN_DEPTH)
+    {
+        chain_flow_depth--;
+        fail("validate: chain nesting too deep");
+    }
+    const char *start = forcedStartName && forcedStartName[0] ? forcedStartName : chain->typeName;
+    const StructureRegistry *current = find_structure(registries, registryCount, start);
+    if (!current)
+        fail("validate: unknown structure '%s'", start ? start : "(none)");
+
+    for (size_t i = 0; i < chain->valueCount; i++)
+    {
+        const ChainValue *cv = &chain->values[i];
+        if (cv->kind == V_FUNCTION_CALL)
+        {
+            const FunctionCallType *fc = &cv->as.functionCall;
+            const FunctionSignature *sig = find_function(current, fc->name);
+            if (!sig)
+                fail("validate: function '%s' is not a member of structure '%s'", fc->name, current->typeName);
+            if (fc->isTemplateLiteral != sig->isTemplateLiteral)
+                fail("validate: function '%s' template literal flag mismatch", fc->name);
+            validate_function_args(fc, sig, registries, registryCount);
+            current = find_structure(registries, registryCount, sig->returnTypeName);
+            if (!current)
+                fail("validate: function '%s' returns unknown structure '%s'", fc->name, sig->returnTypeName ? sig->returnTypeName : "(none)");
+        }
+        else if (cv->kind == V_PROPERTY_CALL)
+        {
+            const PropertyCallType *pc = &cv->as.propertyCall;
+            const PropertySignature *prop = find_property(current, pc->name);
+            if (!prop)
+                fail("validate: property '%s' is not a member of structure '%s'", pc->name, current->typeName);
+            if (pc->builder && pc->builder->schema.chain.typeName && pc->builder->schema.chain.typeName[0])
             {
-                enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[1]);
-                if (r != V_OK && fc->arguments[k].argument.type != D_STRING)
-                {
-                    fprintf(stderr, "validate: %s arg %zu: %s\n", fc->name, k, result_msg(r));
-                    errors++;
-                }
+                if (strcmp(pc->builder->schema.chain.typeName, prop->returnTypeName) != 0)
+                    fail("validate: property '%s' builder type name mismatch", pc->name);
             }
+            current = find_structure(registries, registryCount, prop->returnTypeName);
+            if (!current)
+                fail("validate: property '%s' returns unknown structure", pc->name);
         }
         else
         {
-            if (fc->argumentCount != sig->argumentCount)
-            {
-                fprintf(stderr, "validate: %s expects %zu args, got %zu\n", fc->name, sig->argumentCount, fc->argumentCount);
-                errors++;
-                continue;
-            }
-            for (size_t k = 0; k < fc->argumentCount; k++)
-            {
-                enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[k]);
-                if (r != V_OK)
-                {
-                    fprintf(stderr, "validate: %s arg %zu: %s\n", fc->name, k, result_msg(r));
-                    errors++;
-                }
-                if (fc->arguments[k].hasDefault)
-                {
-                    enum ValidateResult rd = validate_value(&fc->arguments[k].def, &sig->argumentStructs[k]);
-                    if (rd != V_OK)
-                    {
-                        fprintf(stderr, "validate: %s default arg %zu: %s\n", fc->name, k, result_msg(rd));
-                        errors++;
-                    }
-                }
-            }
+            fail("validate: unknown chain value kind");
         }
     }
-    return errors;
+    chain_flow_depth--;
 }
 
-static int validate_properties(const SchemaType *s)
+static void validate_schema(const SchemaType *s, const StructureRegistry *registries, size_t registryCount)
 {
-    int errors = 0;
-    for (size_t i = 0; i < s->chain.valueCount; i++)
-    {
-        const ChainValue *cv = &s->chain.values[i];
-        if (cv->kind != V_PROPERTY_CALL)
-            continue;
-        if (!cv->as.propertyCall.name || !cv->as.propertyCall.name[0])
-        {
-            fprintf(stderr, "validate: property without name\n");
-            errors++;
-        }
-    }
-    return errors;
+    if (!s->chain.initFunction.name || !s->chain.initFunction.name[0])
+        fail("validate: schema init function without name");
+    validate_chain_flow(&s->chain, registries, registryCount, NULL);
 }
 
 static ArgumentValue deep_copy_value(const ArgumentValue *v);
@@ -780,10 +1078,9 @@ static Builder builder_single(const char *typeName, const ChainValue *value)
     return (Builder){ .type = "function-call", .schema = { .exportName = 0, .chain = src } };
 }
 
-static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount)
+static SchemaType validate_and_return(SchemaType s, const StructureRegistry *registries, size_t registryCount)
 {
-    validate_schema(&s, functions, functionCount);
-    validate_properties(&s);
+    validate_schema(&s, registries, registryCount);
     return deep_copy_schema(&s);
 }
 
@@ -886,7 +1183,7 @@ static cJSON *jchain(const ChainType *c)
 
     cJSON *init = cJSON_CreateObject();
     cJSON_AddStringToObject(init, "name", c->initFunction.name);
-    cJSON_AddStringToObject(init, "variableName", c->initFunction.variableName);
+    cJSON_AddStringToObject(init, "variableName", c->initFunction.variableName ? c->initFunction.variableName : "");
     cJSON_AddStringToObject(init, "importString", c->initFunction.importString);
     cJSON_AddItemToObject(inner, "initFunction", init);
 
@@ -1082,7 +1379,7 @@ static const char *getJSONSchema_impl(const SchemaType *s)
         size_t _j = 0; \
         for (size_t _i = 0; _i < _n; _i++) \
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0')) \
-                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \
+                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0}, .provided = 1 }; \
         builder_single(0, &(ChainValue){ \
             .kind = V_FUNCTION_CALL, \
             .as.functionCall = { \
@@ -1132,14 +1429,18 @@ static const StructType type_converter_label_arg0 = { .kind = S_STRING };
 static const StructType type_converter_tags_arg0 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } };
 
 static const FunctionSignature type_converter_functions[] = {
-    { "stringify", 0, &type_converter_stringify_arg0, 1 },
-    { "numerify", 0, &type_converter_numerify_arg0, 1 },
-    { "boolify", 0, &type_converter_boolify_arg0, 1 },
-    { "pipe", 0, &type_converter_pipe_arg0, 1 },
-    { "unify", 0, &type_converter_unify_arg0, 1 },
-    { "interpolate", 1, type_converter_interpolate_args, 2 },
-    { "label", 0, &type_converter_label_arg0, 1 },
-    { "tags", 0, &type_converter_tags_arg0, 1 },
+    { "stringify", 0, &type_converter_stringify_arg0, 1, "type-converter" },
+    { "numerify", 0, &type_converter_numerify_arg0, 1, "type-converter" },
+    { "boolify", 0, &type_converter_boolify_arg0, 1, "type-converter" },
+    { "pipe", 0, &type_converter_pipe_arg0, 1, "type-converter" },
+    { "unify", 0, &type_converter_unify_arg0, 1, "type-converter" },
+    { "interpolate", 1, type_converter_interpolate_args, 2, "type-converter" },
+    { "label", 0, &type_converter_label_arg0, 1, "type-converter" },
+    { "tags", 0, &type_converter_tags_arg0, 1, "type-converter" },
+};
+
+static const PropertySignature type_converter_properties[] = {
+    { "testvar", "type-converter" },
 };
 
 /**
@@ -1163,7 +1464,7 @@ static const FunctionSignature type_converter_functions[] = {
                         .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }), \
             }, \
-            type_converter_functions, COUNT_OF(type_converter_functions)) \
+            gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
 
 /**
@@ -1195,10 +1496,10 @@ static const StructType string_formatter_interpolate_args[] = { { .kind = S_STRI
 static const StructType string_formatter_label_arg0 = { .kind = S_STRING };
 
 static const FunctionSignature string_formatter_functions[] = {
-    { "format", 0, &string_formatter_format_arg0, 1 },
-    { "unify", 0, &string_formatter_unify_arg0, 1 },
-    { "interpolate", 1, string_formatter_interpolate_args, 2 },
-    { "label", 0, &string_formatter_label_arg0, 1 },
+    { "format", 0, &string_formatter_format_arg0, 1, "string-formatter" },
+    { "unify", 0, &string_formatter_unify_arg0, 1, "string-formatter" },
+    { "interpolate", 1, string_formatter_interpolate_args, 2, "string-formatter" },
+    { "label", 0, &string_formatter_label_arg0, 1, "string-formatter" },
 };
 
 /**
@@ -1222,7 +1523,7 @@ static const FunctionSignature string_formatter_functions[] = {
                         .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }), \
             }, \
-            string_formatter_functions, COUNT_OF(string_formatter_functions)) \
+            gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
 
 // ==== query-builder ====
@@ -1527,7 +1828,7 @@ static const FunctionSignature string_formatter_functions[] = {
         size_t _j = 0; \
         for (size_t _i = 0; _i < _n; _i++) \
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0')) \
-                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \
+                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0}, .provided = 1 }; \
         builder_single(0, &(ChainValue){ \
             .kind = V_FUNCTION_CALL, \
             .as.functionCall = { \
@@ -1644,51 +1945,51 @@ static const StructType query_builder_col_arg0 = { .kind = S_UNION, .as.unionTyp
 static const StructType query_builder_table_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };
 
 static const FunctionSignature query_builder_functions[] = {
-    { "select", 0, &query_builder_select_arg0, 1 },
-    { "from", 0, &query_builder_from_arg0, 1 },
-    { "transaction", 0, &query_builder_transaction_arg0, 1 },
-    { "order-by", 0, &query_builder_order_by_arg0, 1 },
-    { "limit", 0, &query_builder_limit_arg0, 1 },
-    { "offset", 0, &query_builder_offset_arg0, 1 },
-    { "with", 0, query_builder_with_args, 2 },
-    { "group-by", 0, &query_builder_group_by_arg0, 1 },
-    { "having", 0, &query_builder_having_arg0, 1 },
-    { "where", 0, &query_builder_where_arg0, 1 },
-    { "update", 0, query_builder_update_args, 2 },
-    { "set", 0, &query_builder_set_arg0, 1 },
-    { "insert", 0, query_builder_insert_args, 2 },
-    { "values", 0, &query_builder_values_arg0, 1 },
-    { "returning", 0, &query_builder_returning_arg0, 1 },
-    { "on-conflict-do-nothing", 0, &query_builder_on_conflict_do_nothing_arg0, 1 },
-    { "on-conflict-do-update", 0, query_builder_on_conflict_do_update_args, 2 },
-    { "delete", 0, &query_builder_delete_arg0, 1 },
-    { "join", 0, query_builder_join_args, 2 },
-    { "left-join", 0, query_builder_left_join_args, 2 },
-    { "right-join", 0, query_builder_right_join_args, 2 },
-    { "inner-join", 0, query_builder_inner_join_args, 2 },
-    { "full-join", 0, query_builder_full_join_args, 2 },
-    { "cross-join", 0, query_builder_cross_join_args, 2 },
-    { "eq", 0, &query_builder_eq_arg0, 1 },
-    { "gt", 0, &query_builder_gt_arg0, 1 },
-    { "gte", 0, &query_builder_gte_arg0, 1 },
-    { "lt", 0, &query_builder_lt_arg0, 1 },
-    { "lte", 0, &query_builder_lte_arg0, 1 },
-    { "exists", 0, &query_builder_exists_arg0, 1 },
-    { "is-null", 0, &query_builder_is_null_arg0, 1 },
-    { "in", 0, &query_builder_in_arg0, 1 },
-    { "between", 0, query_builder_between_args, 2 },
-    { "like", 0, &query_builder_like_arg0, 1 },
-    { "ilike", 0, &query_builder_ilike_arg0, 1 },
-    { "not", 0, &query_builder_not_arg0, 1 },
-    { "and", 0, &query_builder_and_arg0, 1 },
-    { "or", 0, &query_builder_or_arg0, 1 },
-    { "op", 0, query_builder_op_args, 2 },
-    { "raw", 1, query_builder_raw_args, 2 },
-    { "asc", 0, query_builder_asc_args, 0 },
-    { "desc", 0, query_builder_desc_args, 0 },
-    { "as", 0, &query_builder_as_arg0, 1 },
-    { "col", 0, &query_builder_col_arg0, 1 },
-    { "table", 0, &query_builder_table_arg0, 1 },
+    { "select", 0, &query_builder_select_arg0, 1, "query-builder" },
+    { "from", 0, &query_builder_from_arg0, 1, "query-builder" },
+    { "transaction", 0, &query_builder_transaction_arg0, 1, "query-builder" },
+    { "order-by", 0, &query_builder_order_by_arg0, 1, "query-builder" },
+    { "limit", 0, &query_builder_limit_arg0, 1, "query-builder" },
+    { "offset", 0, &query_builder_offset_arg0, 1, "query-builder" },
+    { "with", 0, query_builder_with_args, 2, "query-builder" },
+    { "group-by", 0, &query_builder_group_by_arg0, 1, "query-builder" },
+    { "having", 0, &query_builder_having_arg0, 1, "query-builder" },
+    { "where", 0, &query_builder_where_arg0, 1, "query-builder" },
+    { "update", 0, query_builder_update_args, 2, "query-builder" },
+    { "set", 0, &query_builder_set_arg0, 1, "query-builder" },
+    { "insert", 0, query_builder_insert_args, 2, "query-builder" },
+    { "values", 0, &query_builder_values_arg0, 1, "query-builder" },
+    { "returning", 0, &query_builder_returning_arg0, 1, "query-builder" },
+    { "on-conflict-do-nothing", 0, &query_builder_on_conflict_do_nothing_arg0, 1, "query-builder" },
+    { "on-conflict-do-update", 0, query_builder_on_conflict_do_update_args, 2, "query-builder" },
+    { "delete", 0, &query_builder_delete_arg0, 1, "query-builder" },
+    { "join", 0, query_builder_join_args, 2, "query-builder" },
+    { "left-join", 0, query_builder_left_join_args, 2, "query-builder" },
+    { "right-join", 0, query_builder_right_join_args, 2, "query-builder" },
+    { "inner-join", 0, query_builder_inner_join_args, 2, "query-builder" },
+    { "full-join", 0, query_builder_full_join_args, 2, "query-builder" },
+    { "cross-join", 0, query_builder_cross_join_args, 2, "query-builder" },
+    { "eq", 0, &query_builder_eq_arg0, 1, "query-builder" },
+    { "gt", 0, &query_builder_gt_arg0, 1, "query-builder" },
+    { "gte", 0, &query_builder_gte_arg0, 1, "query-builder" },
+    { "lt", 0, &query_builder_lt_arg0, 1, "query-builder" },
+    { "lte", 0, &query_builder_lte_arg0, 1, "query-builder" },
+    { "exists", 0, &query_builder_exists_arg0, 1, "query-builder" },
+    { "is-null", 0, &query_builder_is_null_arg0, 1, "query-builder" },
+    { "in", 0, &query_builder_in_arg0, 1, "query-builder" },
+    { "between", 0, query_builder_between_args, 2, "query-builder" },
+    { "like", 0, &query_builder_like_arg0, 1, "query-builder" },
+    { "ilike", 0, &query_builder_ilike_arg0, 1, "query-builder" },
+    { "not", 0, &query_builder_not_arg0, 1, "query-builder" },
+    { "and", 0, &query_builder_and_arg0, 1, "query-builder" },
+    { "or", 0, &query_builder_or_arg0, 1, "query-builder" },
+    { "op", 0, query_builder_op_args, 2, "query-builder" },
+    { "raw", 1, query_builder_raw_args, 2, "query-builder" },
+    { "asc", 0, query_builder_asc_args, 0, "query-builder" },
+    { "desc", 0, query_builder_desc_args, 0, "query-builder" },
+    { "as", 0, &query_builder_as_arg0, 1, "query-builder" },
+    { "col", 0, &query_builder_col_arg0, 1, "query-builder" },
+    { "table", 0, &query_builder_table_arg0, 1, "query-builder" },
 };
 
 /**
@@ -1712,10 +2013,17 @@ static const FunctionSignature query_builder_functions[] = {
                         .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/index\"", \
                     }), \
             }, \
-            query_builder_functions, COUNT_OF(query_builder_functions)) \
+            gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
+
+/* ---- structure registry ---- */
+static const StructureRegistry gntrees_structures[] = {
+    { "type-converter", type_converter_functions, COUNT_OF(type_converter_functions), type_converter_properties, COUNT_OF(type_converter_properties) },
+    { "string-formatter", string_formatter_functions, COUNT_OF(string_formatter_functions), NULL, 0 },
+    { "query-builder", query_builder_functions, COUNT_OF(query_builder_functions), NULL, 0 },
+};
 
 #endif /* GN_TREES_GNTREES_METHOD_CHAIN_H */

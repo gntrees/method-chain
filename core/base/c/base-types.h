@@ -29,6 +29,8 @@ typedef struct MapEntry MapEntry;
 typedef struct StructType StructType;
 typedef struct StructKey StructKey;
 typedef struct FunctionSignature FunctionSignature;
+typedef struct PropertySignature PropertySignature;
+typedef struct StructureRegistry StructureRegistry;
 
 struct ArgumentValue
 {
@@ -62,6 +64,7 @@ struct ArgumentType
     ArgumentValue argument;
     int hasDefault;
     ArgumentValue def;
+    int provided;
 };
 
 enum ChainValueKind
@@ -169,6 +172,22 @@ struct FunctionSignature
     int isTemplateLiteral;
     const StructType *argumentStructs;
     size_t argumentCount;
+    const char *returnTypeName;
+};
+
+struct PropertySignature
+{
+    const char *name;
+    const char *returnTypeName;
+};
+
+struct StructureRegistry
+{
+    const char *typeName;
+    const FunctionSignature *functions;
+    size_t functionCount;
+    const PropertySignature *properties;
+    size_t propertyCount;
 };
 
 /**
@@ -222,9 +241,8 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
  */
 static Builder builder_single(const char *typeName, const ChainValue *value);
 
-static int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount);
-static int validate_properties(const SchemaType *s);
-static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount);
+static void validate_schema(const SchemaType *s, const StructureRegistry *registries, size_t registryCount);
+static SchemaType validate_and_return(SchemaType s, const StructureRegistry *registries, size_t registryCount);
 
 /**
  * @param n const char *
@@ -257,7 +275,7 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
  * @return ArgumentType
  */
 #define mkarg(val) \
-    ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0} })
+    ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0}, .provided = 1 })
 
 /**
  * @param val ArgumentValue
@@ -265,7 +283,7 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
  * @return ArgumentType
  */
 #define mkarg_def(val, dflt) \
-    ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt) })
+    ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt), .provided = 1 })
 
 /**
  * @param x const char *

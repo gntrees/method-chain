@@ -155,7 +155,6 @@ function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, 
     const returnName = normalizeName(func.function.return.structureCall.name, "kebab");
     const returns = `Builder (function-call) : ${returnName}`;
     if (func.function.isTemplateLiteral) {
-        if (args.length !== 1 || !args[0]) throw new Error("Template literal functions must have one argument");
         const doc = compactComment(
             [{ name: "...", type: "variadic" }],
             returns,
@@ -174,7 +173,7 @@ function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, 
         size_t _j = 0; \\
         for (size_t _i = 0; _i < _n; _i++) \\
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\\0')) \\
-                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \\
+                _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0}, .provided = 1 }; \\
         builder_single(0, &(ChainValue){ \\
             .kind = V_FUNCTION_CALL, \\
             .as.functionCall = { \\
@@ -247,11 +246,12 @@ function generateRegistry(definition: StructureType): string {
         if (!("function" in func)) return;
         const f = func.function;
         const base = `${snake}_${normalizeName(f.name, "snake")}`;
+        const returnName = normalizeName(f.return.structureCall.name, "kebab");
         if (f.isTemplateLiteral) {
             const expr = f.arguments[0]?.argument.struct.struct;
             declarations.push(`static const StructType ${base}_expr = ${expr ? stringifyCStruct(expr) : "{ .kind = S_STRING }"};`);
             declarations.push(`static const StructType ${base}_args[] = { { .kind = S_STRING }, ${base}_expr };`);
-            entries.push(`    { "${f.name}", 1, ${base}_args, 2 },`);
+            entries.push(`    { "${f.name}", 1, ${base}_args, 2, "${returnName}" },`);
         } else {
             const argNames: string[] = [];
             f.arguments.forEach((arg, index) => {
@@ -260,19 +260,31 @@ function generateRegistry(definition: StructureType): string {
                 argNames.push(nm);
             });
             if (argNames.length === 1) {
-                entries.push(`    { "${f.name}", 0, &${argNames[0]}, 1 },`);
+                entries.push(`    { "${f.name}", 0, &${argNames[0]}, 1, "${returnName}" },`);
             } else {
                 declarations.push(`static const StructType ${base}_args[] = { ${argNames.join(", ")} };`);
-                entries.push(`    { "${f.name}", 0, ${base}_args, ${argNames.length} },`);
+                entries.push(`    { "${f.name}", 0, ${base}_args, ${argNames.length}, "${returnName}" },`);
             }
         }
     });
     return `${declarations.join("\n")}\n\nstatic const FunctionSignature ${snake}_functions[] = {\n${entries.join("\n")}\n};`;
 }
 
+function generatePropertiesRegistry(definition: StructureType): string {
+    const snake = normalizeName(definition.structure.name, "snake");
+    const entries: string[] = [];
+    definition.structure.variables.forEach(variable => {
+        if (!("variable" in variable)) return;
+        const name = normalizeName(variable.variable.name, "camel");
+        const returnName = normalizeName(variable.variable.value.structureCall.name, "kebab");
+        entries.push(`    { "${name}", "${returnName}" },`);
+    });
+    if (entries.length === 0) return "";
+    return `static const PropertySignature ${snake}_properties[] = {\n${entries.join("\n")}\n};`;
+}
+
 function createMacro(definition: StructureType, init: InitFunctionType, index: number, importPaths: ProjectType["project"]["importPaths"]): string {
     const kebab = normalizeName(definition.structure.name, "kebab");
-    const snake = normalizeName(definition.structure.name, "snake");
     const exportName = definition.structure.exportName || "schema" + (index + 1);
     const initName = init.name;
     const initMacroName = normalizeName(initName, "camel");
@@ -300,7 +312,7 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
                         .importString = "${importString}", \\
                     }), \\
             }, \\
-            ${snake}_functions, COUNT_OF(${snake}_functions)) \\
+            gntrees_structures, COUNT_OF(gntrees_structures)) \\
     })`;
 }
 
@@ -367,6 +379,8 @@ extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const A
     const parts: string[] = [];
     if (macroSections.length) parts.push(macroSections.join("\n\n"));
     parts.push(registry);
+    const propertyRegistry = generatePropertiesRegistry(definition);
+    if (propertyRegistry) parts.push(propertyRegistry);
     if (creates) parts.push(creates);
     const custom = [...customVariables, ...variables, ...customFunctions].join("\n");
     if (custom) parts.push(custom);
@@ -414,6 +428,15 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
         .map((definition, index) => generateCDefinitionSection(definition, project, index, macroMap, macroOrder))
         .join("\n\n");
 
+    const structureRegistry = `static const StructureRegistry gntrees_structures[] = {\n${project.project.definitions.map(definition => {
+        const kebab = normalizeName(definition.structure.name, "kebab");
+        const snake = normalizeName(definition.structure.name, "snake");
+        const hasProperties = definition.structure.variables.some(variable => "variable" in variable);
+        const propertiesExpr = hasProperties ? `${snake}_properties` : "NULL";
+        const propertyCount = hasProperties ? `COUNT_OF(${snake}_properties)` : "0";
+        return `    { "${kebab}", ${snake}_functions, COUNT_OF(${snake}_functions), ${propertiesExpr}, ${propertyCount} },`;
+    }).join("\n")}\n};`;
+
     const baseTypes = stripLocalIncludes(base["base-types.h"]);
     const baseUtilsH = stripLocalIncludes(base["base-utils.h"]);
     const baseUtilsC = stripPosixDefine(stripLocalIncludes(base["base-utils.c"]));
@@ -454,6 +477,9 @@ ${implPragmaOff}
 ${defPragmaOn}
 ${definitionSections}
 ${implPragmaOff}
+
+/* ---- structure registry ---- */
+${structureRegistry}
 
 #endif /* ${guard} */
 `;

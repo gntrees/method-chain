@@ -138,7 +138,6 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                 const args = func.customFunction.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}: ${stringifyStruct(arg.argument.struct.struct)}${arg.argument.default !== undefined ? ` = ${JSON.stringify(extractDefaultValue(arg.argument.default))}` : ""}`);
                 definitionContent += `${normalizeName(func.customFunction.name, "camel")}(${args.join(', ')}): ${returnType} {\n${body}\n}\n`;
             } else if ("function" in func) {
-                if (func.function.isTemplateLiteral && (func.function.arguments.length !== 1 || !func.function.arguments[0])) throw new Error("Template literal functions must have one argument");
                 const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: (' + func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
                     + ')[]'] :
                     func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.default !== undefined ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`);

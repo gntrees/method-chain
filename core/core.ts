@@ -20,7 +20,69 @@ const baseCContent = {
     "cJSON.c": readFileSync("./core/base/c/cJSON.c", { encoding: "utf-8" }),
 }
 
+export function validateProject(project: ProjectType): void {
+    const definitions = project.project.definitions;
+    const structureNames = new Set(definitions.map(d => d.structure.name));
+
+    definitions.forEach(definition => {
+        const structureName = definition.structure.name;
+        const functionNames = new Set<string>();
+        const propertyNames = new Set<string>();
+
+        const addUnique = (set: Set<string>, name: string, kind: string) => {
+            const key = normalizeName(name, "camel");
+            if (set.has(key)) {
+                throw new Error(`Duplicate ${kind} "${name}" in structure "${structureName}"`);
+            }
+            set.add(key);
+        };
+
+        definition.structure.functions.forEach(func => {
+            if ("function" in func) {
+                addUnique(functionNames, func.function.name, "function");
+                const returnName = func.function.return.structureCall.name;
+                if (!structureNames.has(returnName)) {
+                    throw new Error(`Function "${func.function.name}" in structure "${structureName}" returns undefined structure "${returnName}"`);
+                }
+                if (func.function.isTemplateLiteral && (func.function.arguments.length !== 1 || !func.function.arguments[0])) {
+                    throw new Error(`Template literal function "${func.function.name}" must have exactly one argument`);
+                }
+            } else if ("customFunction" in func) {
+                addUnique(functionNames, func.customFunction.name, "function");
+            }
+        });
+
+        definition.structure.variables.forEach(variable => {
+            if ("variable" in variable) {
+                addUnique(propertyNames, variable.variable.name, "property");
+                const target = variable.variable.value.structureCall.name;
+                if (!structureNames.has(target)) {
+                    throw new Error(`Property "${variable.variable.name}" in structure "${structureName}" references undefined structure "${target}"`);
+                }
+            } else if ("customVariable" in variable) {
+                addUnique(propertyNames, variable.customVariable.name, "property");
+            }
+        });
+
+        for (const prop of propertyNames) {
+            if (functionNames.has(prop)) {
+                throw new Error(`Name collision between function and property "${prop}" in structure "${structureName}"`);
+            }
+        }
+    });
+
+    project.project.initFunctions.forEach(init => {
+        if ("structureCall" in init.return) {
+            const target = init.return.structureCall.name;
+            if (!structureNames.has(target)) {
+                throw new Error(`Init function "${init.name}" returns undefined structure "${target}"`);
+            }
+        }
+    });
+}
+
 export async function generateProject(project: ProjectType, config: ConfigType) {
+    validateProject(project);
     const contents = await Promise.all(config.languages.map(async language => {
         if (language === "c") {
             return {
