@@ -1,4 +1,4 @@
-#define _POSIX_C_SOURCE 200809L /* open_memstream */
+#define _POSIX_C_SOURCE 200809L
 
 #include "base-utils.h"
 #include "base-types.h"
@@ -20,60 +20,13 @@ static ArgumentValue v_null(void) { return (ArgumentValue){.type = D_NULL, .as.i
 
 static ArgumentValue v_pass(ArgumentValue v) { return v; }
 
-static ArgumentValue v_chain(const ChainType *c)
+static ArgumentValue v_builder(Builder b)
 {
-    return (ArgumentValue){.type = D_CHAIN, .as.chain = c};
+    ChainType *c = malloc(sizeof(ChainType));
+    if (c)
+        *c = b.schema.chain;
+    return (ArgumentValue){.type = D_CHAIN, .as.chain = c ? c : &b.schema.chain};
 }
-
-static int arg_value_equal(const ArgumentValue *a, const ArgumentValue *b)
-{
-    if (a->type != b->type)
-        return 0;
-    switch (a->type)
-    {
-    case D_INT:
-        return a->as.i == b->as.i;
-    case D_FLOAT:
-        return a->as.f == b->as.f;
-    case D_STRING:
-        return strcmp(a->as.s, b->as.s) == 0;
-    case D_BOOL:
-        return a->as.i == b->as.i;
-    case D_NULL:
-        return 1;
-    case D_ARRAY:
-    {
-        if (a->count != b->count)
-            return 0;
-        const ArgumentValue *aa = a->as.data;
-        const ArgumentValue *bb = b->as.data;
-        for (size_t i = 0; i < a->count; i++)
-            if (!arg_value_equal(&aa[i], &bb[i]))
-                return 0;
-        return 1;
-    }
-    case D_MAP:
-    {
-        if (a->count != b->count)
-            return 0;
-        const MapEntry *ea = a->as.data;
-        const MapEntry *eb = b->as.data;
-        for (size_t i = 0; i < a->count; i++)
-        {
-            if (strcmp(ea[i].key, eb[i].key) != 0)
-                return 0;
-            if (!arg_value_equal(&ea[i].value, &eb[i].value))
-                return 0;
-        }
-        return 1;
-    }
-    case D_CHAIN:
-        return a->as.chain == b->as.chain;
-    }
-    return 0;
-}
-
-/* ---- validasi runtime (port normalizeArgument TS) ---- */
 
 enum ValidateResult
 {
@@ -175,7 +128,9 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
     case S_STRUCT_CALL:
         if (v->type != D_CHAIN)
             return V_TYPE_MISMATCH;
-        return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
+        if (v->as.chain->typeName && v->as.chain->typeName[0])
+            return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
+        return V_OK;
     }
     return V_TYPE_MISMATCH;
 }
@@ -204,10 +159,8 @@ static int validate_schema(const SchemaType *s, const FunctionSignature *functio
             continue;
         }
 
-        if (fc->isTemplateLiteral)
+if (fc->isTemplateLiteral)
         {
-            /* tiap arg diterima jika cocok struct ekspresi ATAU bagian literal string
-               (menyamai createSchema TS yang melewatkan string part tanpa validasi). */
             for (size_t k = 0; k < fc->argumentCount; k++)
             {
                 enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[1]);
@@ -262,19 +215,10 @@ static int validate_properties(const SchemaType *s)
             fprintf(stderr, "validate: property without name\n");
             errors++;
         }
-        if (!cv->as.propertyCall.builder)
-        {
-            fprintf(stderr, "validate: property '%s' has no builder\n", cv->as.propertyCall.name);
-            errors++;
-        }
     }
     return errors;
 }
 
-/* Deep-copy schema hasil createX() agar Builder aman dikembalikan dari fungsi
-   (compound literal blok-scope mati saat blok keluar; pointer internal Builder
-   hasil return akan menggantung). Salinan dialokasikan di heap dan tidak
-   dibebaskan — cocok untuk definisi schema statis yang hidup selamanya. */
 static ArgumentValue deep_copy_value(const ArgumentValue *v);
 static ChainType *deep_copy_chain(const ChainType *c);
 static SchemaType deep_copy_schema(const SchemaType *s);
@@ -379,14 +323,52 @@ static SchemaType deep_copy_schema(const SchemaType *s)
     return copy;
 }
 
+static ChainType builder_chain(const char *typeName, const Builder *builders, size_t count, InitFunctionType init)
+{
+    ChainType flat = {0};
+    flat.typeName = typeName;
+    flat.initFunction = init;
+    size_t total = 0;
+    for (size_t i = 0; i < count; i++)
+        total += builders[i].schema.chain.valueCount;
+    flat.valueCount = total;
+    if (total == 0)
+        return flat;
+
+    ChainValue *values = malloc(total * sizeof(ChainValue));
+    if (!values)
+        return flat;
+    size_t k = 0;
+    for (size_t i = 0; i < count; i++)
+    {
+        const ChainType *src = &builders[i].schema.chain;
+        for (size_t j = 0; j < src->valueCount; j++)
+            values[k++] = src->values[j];
+    }
+    flat.values = values;
+
+    ChainType *copy = deep_copy_chain(&flat);
+    free(values);
+    if (copy)
+        return *copy;
+    return flat;
+}
+
+static Builder builder_single(const char *typeName, const ChainValue *value)
+{
+    ChainType src = { .typeName = typeName, .values = (ChainValue *)value, .valueCount = 1, .initFunction = {0} };
+    ChainType *copy = deep_copy_chain(&src);
+    if (copy)
+        return (Builder){ .type = "function-call", .schema = { .exportName = 0, .chain = *copy } };
+    return (Builder){ .type = "function-call", .schema = { .exportName = 0, .chain = src } };
+}
+
 static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount)
 {
     validate_schema(&s, functions, functionCount);
     validate_properties(&s);
     return deep_copy_schema(&s);
 }
-
-/* ---- serialisasi JSON (format sama dengan dump_schema lama) ---- */
 
 static cJSON *jval(const ArgumentValue *d);
 static cJSON *jarg(const ArgumentType *a);
@@ -565,7 +547,7 @@ static cJSON *jval(const ArgumentValue *d)
         cJSON_AddItemToObject(tag, "object", value);
         return tag;
     }
-    default: /* D_ARRAY */
+    default:
     {
         cJSON *tag = cJSON_CreateObject();
         cJSON *value = cJSON_CreateObject();
@@ -580,7 +562,7 @@ static cJSON *jval(const ArgumentValue *d)
     }
 }
 
-static char *json_buf = NULL; /* buffer hasil pemanggilan sebelumnya; ditimpa tiap panggilan */
+static char *json_buf = NULL;
 
 static SchemaType getSchema_impl(const Builder *b, const char *exportName, const char *importString)
 {

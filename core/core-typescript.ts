@@ -15,7 +15,7 @@ function extractDefaultValue(defaultVal: ArgumentValue): any {
         }
         return obj;
     }
-    if ("chain" in defaultVal) return defaultVal;
+    if ("chain" in defaultVal) throw new Error("Chain default values are not supported in TypeScript signatures");
     throw new Error("Unknown default value type");
 }
 
@@ -93,14 +93,21 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
             getSchema(
                 exportName?: string
             ): SchemaType {
+                if (exportName !== undefined && typeof exportName !== "string") {
+                    throw new Error(\`getSchema exportName must be a string, but got \${typeof exportName}\`);
+                }
                 if (exportName) { this.${schemaVariableName}.schema.exportName = exportName }
                 return this.${schemaVariableName};
             }
             initFromStructure<T>(schema: SchemaType) {
+                validateSchema(schema);
                 this.${schemaVariableName} = schema;
                 return this;
             }
             initFromInitFunction(initFunction: SchemaType['schema']['chain']['chain']['initFunction']) {
+                if (typeof initFunction !== "object" || initFunction === null || typeof initFunction.name !== "string" || typeof initFunction.variableName !== "string") {
+                    throw new Error("Invalid init function");
+                }
                 this.${schemaVariableName}.schema.chain.chain.initFunction = initFunction;
                 return this;
             }
@@ -134,14 +141,15 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                 if (func.function.isTemplateLiteral && (func.function.arguments.length !== 1 || !func.function.arguments[0])) throw new Error("Template literal functions must have one argument");
                 const args = func.function.isTemplateLiteral ? ['strings: TemplateStringsArray', '...args: (' + func.function.arguments.map(arg => `${stringifyStruct(arg.argument.struct.struct)}`).join(', ')
                     + ')[]'] :
-                    func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}: ${stringifyStruct(arg.argument.struct.struct)}${arg.argument.default !== undefined ? ` = ${JSON.stringify(extractDefaultValue(arg.argument.default))}` : ""}`);
+                    func.function.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}${arg.argument.default !== undefined ? "?" : ""}: ${stringifyStruct(arg.argument.struct.struct)}`);
                 const argsString = args.join(', ');
                 definitionContent += `${normalizeName(func.function.name, "camel", true)}(${argsString}): ${stringifyStructureCall(func.function.return, "pascal")} {
                 ${"structureCall" in func.function.return ? `return (new ${stringifyStructureCall(func.function.return, "pascal")}())
                             .initFromStructure<${normalizeName(definition.structure.name, "pascal")}>(createSchema(this.getSchema(),"${normalizeName(func.function.name, "camel")}", [${func.function.isTemplateLiteral && func.function.arguments[0] ? 
                                 `{ arg: strings, struct: { string: { type: 'string' } } }, ...args.map(arg => { return { arg: arg, struct: ${JSON.stringify(func.function.arguments[0].argument.struct.struct)} as ${JSON.stringify(func.function.arguments[0].argument.struct.struct)}}})`
-                                 : func.function.arguments.map(arg => {
-                                return `{ arg: ${normalizeName(arg.argument.name, "camel")}, struct: ${JSON.stringify(arg.argument.struct.struct)}${arg.argument.default !== undefined ? `, default: ${JSON.stringify(arg.argument.default)}` : ''} }`
+                                 : func.function.arguments.map((arg, index) => {
+                                if (arg.argument.default !== undefined && "chain" in arg.argument.default) throw new Error("Chain default values are not supported in TypeScript signatures");
+                                return `{ arg: ${normalizeName(arg.argument.name, "camel")}, struct: ${JSON.stringify(arg.argument.struct.struct)}, provided: arguments.length >= ${index + 1}${arg.argument.default !== undefined ? `, default: ${JSON.stringify(arg.argument.default)}` : ''} }`
                             }).join(', ')}], ${func.function.isTemplateLiteral}))` : ""}
                 }\n`;
             } else {
@@ -199,8 +207,8 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
     const utilsContent = `
     // Auto-generated utils
     export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
-        if (typeof arg !== "object") {
-            throw new Error("Expected an object argument for structure calls, but got " + typeof arg);
+        if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
+            throw new Error("Expected a structure instance for structure calls, but got " + (arg === null ? "null" : Array.isArray(arg) ? "array" : typeof arg));
         ${project.project.definitions.map(definition =>
         `} else if (arg instanceof ${normalizeName(definition.structure.name, "pascal")}) {
                     return arg.getSchema().schema.chain

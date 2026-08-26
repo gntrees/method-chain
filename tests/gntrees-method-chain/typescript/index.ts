@@ -194,9 +194,10 @@ export type ArgType =
 
 // Auto-generated utils
 export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
-  if (typeof arg !== "object") {
+  if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
     throw new Error(
-      "Expected an object argument for structure calls, but got " + typeof arg,
+      "Expected a structure instance for structure calls, but got " +
+        (arg === null ? "null" : Array.isArray(arg) ? "array" : typeof arg),
     );
   } else if (arg instanceof TypeConverter) {
     return arg.getSchema().schema.chain;
@@ -216,6 +217,7 @@ export function createSchema(
     arg: any;
     struct: StructType["struct"];
     default?: ArgumentValue;
+    provided?: boolean;
   }[],
   isTemplateLiteral: boolean,
 ): SchemaType {
@@ -232,7 +234,13 @@ export function createSchema(
   };
   let args: ArgumentType[] = [];
   if (isTemplateLiteral && functionArgs[0]) {
-    const strings = functionArgs[0].arg as unknown as TemplateStringsArray;
+    const strings = functionArgs[0].arg;
+    if (
+      !Array.isArray(strings) ||
+      !strings.every((str) => typeof str === "string")
+    ) {
+      throw new Error(`Expected a template strings array for ${functionName}`);
+    }
     const expressions = functionArgs.slice(1);
     const normalizedTemplateLiteralArgs = strings.reduce((acc, str, index) => {
       if (str) {
@@ -254,16 +262,25 @@ export function createSchema(
     }, [] as ArgumentType[]);
     args = normalizedTemplateLiteralArgs;
   } else {
-    args = functionArgs
-      .map((fa) =>
-        fa.arg === undefined
-          ? undefined
-          : {
-              argument: normalizeArgument(fa.arg, fa.struct),
-              default: fa.default ?? null,
-            },
-      )
-      .filter((a) => a !== undefined);
+    args = functionArgs.map((fa, index) => {
+      if (fa.arg === undefined) {
+        if (fa.provided) {
+          throw new Error(
+            `Parameter "${functionName}" argument #${index + 1} cannot be undefined`,
+          );
+        }
+        if (fa.default !== undefined) {
+          validateDefault(fa.default, fa.struct);
+          return { argument: fa.default, default: fa.default };
+        }
+        throw new Error(
+          `Parameter "${functionName}" argument #${index + 1} was not provided`,
+        );
+      }
+      const argument = normalizeArgument(fa.arg, fa.struct);
+      if (fa.default !== undefined) validateDefault(fa.default, fa.struct);
+      return { argument, default: fa.default ?? null };
+    });
   }
   newSchema.schema.chain.chain.values.push({
     functionCall: {
@@ -295,6 +312,47 @@ export function createPropertyCallSchema(
   };
 }
 
+export function validateSchema(schema: SchemaType): void {
+  if (
+    typeof schema !== "object" ||
+    schema === null ||
+    !schema.schema ||
+    !schema.schema.chain ||
+    !schema.schema.chain.chain ||
+    !Array.isArray(schema.schema.chain.chain.values) ||
+    !schema.schema.chain.chain.initFunction
+  ) {
+    throw new Error(
+      "Invalid schema: expected SchemaType with schema.chain.chain.values and schema.chain.chain.initFunction",
+    );
+  }
+}
+
+function unwrapArgumentValue(val: ArgumentValue): any {
+  if ("string" in val) return val.string.value;
+  if ("number" in val) return val.number.value;
+  if ("boolean" in val) return val.boolean.value;
+  if ("null" in val) return val.null.value;
+  if ("array" in val) return val.array.value.map(unwrapArgumentValue);
+  if ("object" in val) {
+    const obj: any = {};
+    for (const [key, value] of Object.entries(val.object.value)) {
+      obj[key] = unwrapArgumentValue(value);
+    }
+    return obj;
+  }
+  if ("chain" in val)
+    throw new Error("Cannot validate a chain default value at runtime");
+  throw new Error("Unknown argument value type");
+}
+
+function validateDefault(
+  defaultVal: ArgumentValue,
+  struct: StructType["struct"],
+): void {
+  normalizeArgument(unwrapArgumentValue(defaultVal), struct);
+}
+
 function normalizeArgument(
   arg: any,
   struct: StructType["struct"],
@@ -302,6 +360,9 @@ function normalizeArgument(
   if ("array" in struct) {
     if (!Array.isArray(arg)) {
       throw new Error(`Expected an array argument, but got ${typeof arg}`);
+    }
+    if (arg.length === 0) {
+      return { array: { value: [] } };
     }
     const itemType = struct.array.type;
     const normalizedItems = arg.map((item) =>
@@ -346,6 +407,14 @@ function normalizeArgument(
     if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
       throw new Error(`Expected an object argument, but got ${typeof arg}`);
     }
+    const missingKeys = Object.keys(struct.object).filter(
+      (key) => !(key in arg),
+    );
+    if (missingKeys.length > 0) {
+      throw new Error(
+        `Missing required key(s) "${missingKeys.join('", "')}" in object argument`,
+      );
+    }
     const normalizedObject = Object.fromEntries(
       Object.entries(arg).map(([key, value]) => {
         if (!struct.object[key]) {
@@ -364,6 +433,9 @@ function normalizeArgument(
   } else if ("number" in struct) {
     if (typeof arg !== "number") {
       throw new Error(`Expected a number argument, but got ${typeof arg}`);
+    }
+    if (!Number.isFinite(arg)) {
+      throw new Error(`Expected a finite number argument, but got ${arg}`);
     }
     return { number: { value: arg } };
   } else if ("boolean" in struct) {
@@ -437,18 +509,32 @@ export class TypeConverter {
     },
   };
   getSchema(exportName?: string): SchemaType {
+    if (exportName !== undefined && typeof exportName !== "string") {
+      throw new Error(
+        `getSchema exportName must be a string, but got ${typeof exportName}`,
+      );
+    }
     if (exportName) {
       this.schemaTypeConverter.schema.exportName = exportName;
     }
     return this.schemaTypeConverter;
   }
   initFromStructure<T>(schema: SchemaType) {
+    validateSchema(schema);
     this.schemaTypeConverter = schema;
     return this;
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
   ) {
+    if (
+      typeof initFunction !== "object" ||
+      initFunction === null ||
+      typeof initFunction.name !== "string" ||
+      typeof initFunction.variableName !== "string"
+    ) {
+      throw new Error("Invalid init function");
+    }
     this.schemaTypeConverter.schema.chain.chain.initFunction = initFunction;
     return this;
   }
@@ -462,7 +548,13 @@ export class TypeConverter {
       createSchema(
         this.getSchema(),
         "stringify",
-        [{ arg: val, struct: { string: { type: "string" } } }],
+        [
+          {
+            arg: val,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+        ],
         false,
       ),
     );
@@ -472,7 +564,13 @@ export class TypeConverter {
       createSchema(
         this.getSchema(),
         "numerify",
-        [{ arg: val, struct: { number: { type: "number" } } }],
+        [
+          {
+            arg: val,
+            struct: { number: { type: "number" } },
+            provided: arguments.length >= 1,
+          },
+        ],
         false,
       ),
     );
@@ -482,7 +580,13 @@ export class TypeConverter {
       createSchema(
         this.getSchema(),
         "boolify",
-        [{ arg: val, struct: { boolean: { type: "boolean" } } }],
+        [
+          {
+            arg: val,
+            struct: { boolean: { type: "boolean" } },
+            provided: arguments.length >= 1,
+          },
+        ],
         false,
       ),
     );
@@ -496,6 +600,7 @@ export class TypeConverter {
           {
             arg: formatter,
             struct: { structureCall: { name: "string-formatter" } },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -518,6 +623,7 @@ export class TypeConverter {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -559,7 +665,7 @@ export class TypeConverter {
       ),
     );
   }
-  label(value: string = "default"): TypeConverter {
+  label(value?: string): TypeConverter {
     return new TypeConverter().initFromStructure<TypeConverter>(
       createSchema(
         this.getSchema(),
@@ -568,6 +674,7 @@ export class TypeConverter {
           {
             arg: value,
             struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
             default: { string: { value: "default" } },
           },
         ],
@@ -575,7 +682,7 @@ export class TypeConverter {
       ),
     );
   }
-  tags(tags: string[] = ["default"]): TypeConverter {
+  tags(tags?: string[]): TypeConverter {
     return new TypeConverter().initFromStructure<TypeConverter>(
       createSchema(
         this.getSchema(),
@@ -584,6 +691,7 @@ export class TypeConverter {
           {
             arg: tags,
             struct: { array: { type: { string: { type: "string" } } } },
+            provided: arguments.length >= 1,
             default: { array: { value: [{ string: { value: "default" } }] } },
           },
         ],
@@ -614,18 +722,32 @@ export class StringFormatter {
     },
   };
   getSchema(exportName?: string): SchemaType {
+    if (exportName !== undefined && typeof exportName !== "string") {
+      throw new Error(
+        `getSchema exportName must be a string, but got ${typeof exportName}`,
+      );
+    }
     if (exportName) {
       this.schemaStringFormatter.schema.exportName = exportName;
     }
     return this.schemaStringFormatter;
   }
   initFromStructure<T>(schema: SchemaType) {
+    validateSchema(schema);
     this.schemaStringFormatter = schema;
     return this;
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
   ) {
+    if (
+      typeof initFunction !== "object" ||
+      initFunction === null ||
+      typeof initFunction.name !== "string" ||
+      typeof initFunction.variableName !== "string"
+    ) {
+      throw new Error("Invalid init function");
+    }
     this.schemaStringFormatter.schema.chain.chain.initFunction = initFunction;
     return this;
   }
@@ -634,7 +756,13 @@ export class StringFormatter {
       createSchema(
         this.getSchema(),
         "format",
-        [{ arg: val, struct: { string: { type: "string" } } }],
+        [
+          {
+            arg: val,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+        ],
         false,
       ),
     );
@@ -655,6 +783,7 @@ export class StringFormatter {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -696,7 +825,7 @@ export class StringFormatter {
       ),
     );
   }
-  label(value: string = "default"): StringFormatter {
+  label(value?: string): StringFormatter {
     return new StringFormatter().initFromStructure<StringFormatter>(
       createSchema(
         this.getSchema(),
@@ -705,6 +834,7 @@ export class StringFormatter {
           {
             arg: value,
             struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
             default: { string: { value: "default" } },
           },
         ],
@@ -735,18 +865,32 @@ export class QueryBuilder {
     },
   };
   getSchema(exportName?: string): SchemaType {
+    if (exportName !== undefined && typeof exportName !== "string") {
+      throw new Error(
+        `getSchema exportName must be a string, but got ${typeof exportName}`,
+      );
+    }
     if (exportName) {
       this.schemaQueryBuilder.schema.exportName = exportName;
     }
     return this.schemaQueryBuilder;
   }
   initFromStructure<T>(schema: SchemaType) {
+    validateSchema(schema);
     this.schemaQueryBuilder = schema;
     return this;
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
   ) {
+    if (
+      typeof initFunction !== "object" ||
+      initFunction === null ||
+      typeof initFunction.name !== "string" ||
+      typeof initFunction.variableName !== "string"
+    ) {
+      throw new Error("Invalid init function");
+    }
     this.schemaQueryBuilder.schema.chain.chain.initFunction = initFunction;
     return this;
   }
@@ -807,6 +951,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -831,6 +976,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -879,6 +1025,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -927,6 +1074,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -951,6 +1099,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -975,6 +1124,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1002,6 +1152,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: as,
@@ -1015,6 +1166,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1063,6 +1215,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1087,6 +1240,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1111,6 +1265,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1140,6 +1295,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: set,
@@ -1173,6 +1329,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1221,6 +1378,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1250,6 +1408,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: set,
@@ -1283,6 +1442,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1350,6 +1510,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1413,6 +1574,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1439,6 +1601,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1468,6 +1631,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: set,
@@ -1501,6 +1665,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1525,6 +1690,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1552,6 +1718,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1565,6 +1732,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1592,6 +1760,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1605,6 +1774,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1632,6 +1802,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1645,6 +1816,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1672,6 +1844,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1685,6 +1858,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1712,6 +1886,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1725,6 +1900,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1752,6 +1928,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: on,
@@ -1765,6 +1942,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -1789,6 +1967,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1813,6 +1992,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1837,6 +2017,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1861,6 +2042,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1885,6 +2067,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1909,6 +2092,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1933,6 +2117,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1957,6 +2142,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -1984,6 +2170,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: second,
@@ -1997,6 +2184,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -2021,6 +2209,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2045,6 +2234,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2069,6 +2259,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2117,6 +2308,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2165,6 +2357,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2192,6 +2385,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
           {
             arg: value,
@@ -2205,6 +2399,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 2,
           },
         ],
         false,
@@ -2278,6 +2473,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2302,6 +2498,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,
@@ -2326,6 +2523,7 @@ export class QueryBuilder {
                 ],
               },
             },
+            provided: arguments.length >= 1,
           },
         ],
         false,

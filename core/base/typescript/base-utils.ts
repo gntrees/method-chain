@@ -9,6 +9,7 @@ export function createSchema(
         arg: any,
         struct: StructType['struct'],
         default?: ArgumentValue,
+        provided?: boolean,
     }[],
     isTemplateLiteral: boolean
 ): SchemaType {
@@ -25,7 +26,10 @@ export function createSchema(
     };
     let args: ArgumentType[] = [];
     if (isTemplateLiteral && functionArgs[0]) {
-        const strings = functionArgs[0].arg as unknown as TemplateStringsArray;
+        const strings = functionArgs[0].arg;
+        if (!Array.isArray(strings) || !strings.every(str => typeof str === "string")) {
+            throw new Error(`Expected a template strings array for ${functionName}`);
+        }
         const expressions = functionArgs.slice(1);
         const normalizedTemplateLiteralArgs = strings.reduce((acc, str, index) => {
             if (str) {
@@ -42,7 +46,21 @@ export function createSchema(
         }, [] as ArgumentType[]);
         args = normalizedTemplateLiteralArgs;
     } else {
-        args = functionArgs.map(fa => fa.arg === undefined ? undefined : { argument: normalizeArgument(fa.arg, fa.struct), default: fa.default ?? null }).filter(a => a !== undefined);
+        args = functionArgs.map((fa, index) => {
+            if (fa.arg === undefined) {
+                if (fa.provided) {
+                    throw new Error(`Parameter "${functionName}" argument #${index + 1} cannot be undefined`);
+                }
+                if (fa.default !== undefined) {
+                    validateDefault(fa.default, fa.struct);
+                    return { argument: fa.default, default: fa.default };
+                }
+                throw new Error(`Parameter "${functionName}" argument #${index + 1} was not provided`);
+            }
+            const argument = normalizeArgument(fa.arg, fa.struct);
+            if (fa.default !== undefined) validateDefault(fa.default, fa.struct);
+            return { argument, default: fa.default ?? null };
+        });
     }
     newSchema.schema.chain.chain.values.push({
         functionCall: {
@@ -74,10 +92,48 @@ export function createPropertyCallSchema(
     };
 }
 
+export function validateSchema(schema: SchemaType): void {
+    if (
+        typeof schema !== "object" ||
+        schema === null ||
+        !schema.schema ||
+        !schema.schema.chain ||
+        !schema.schema.chain.chain ||
+        !Array.isArray(schema.schema.chain.chain.values) ||
+        !schema.schema.chain.chain.initFunction
+    ) {
+        throw new Error("Invalid schema: expected SchemaType with schema.chain.chain.values and schema.chain.chain.initFunction");
+    }
+}
+
+function unwrapArgumentValue(val: ArgumentValue): any {
+    if ("string" in val) return val.string.value;
+    if ("number" in val) return val.number.value;
+    if ("boolean" in val) return val.boolean.value;
+    if ("null" in val) return val.null.value;
+    if ("array" in val) return val.array.value.map(unwrapArgumentValue);
+    if ("object" in val) {
+        const obj: any = {};
+        for (const [key, value] of Object.entries(val.object.value)) {
+            obj[key] = unwrapArgumentValue(value);
+        }
+        return obj;
+    }
+    if ("chain" in val) throw new Error("Cannot validate a chain default value at runtime");
+    throw new Error("Unknown argument value type");
+}
+
+function validateDefault(defaultVal: ArgumentValue, struct: StructType['struct']): void {
+    normalizeArgument(unwrapArgumentValue(defaultVal), struct);
+}
+
 function normalizeArgument(arg: any, struct: StructType['struct']): ArgumentValue {
     if ("array" in struct) {
         if (!Array.isArray(arg)) {
             throw new Error(`Expected an array argument, but got ${typeof arg}`);
+        }
+        if (arg.length === 0) {
+            return { array: { value: [] } };
         }
         const itemType = struct.array.type;
         const normalizedItems = arg.map(item => normalizeArgument(item, itemType));
@@ -104,6 +160,10 @@ function normalizeArgument(arg: any, struct: StructType['struct']): ArgumentValu
         if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
             throw new Error(`Expected an object argument, but got ${typeof arg}`);
         }
+        const missingKeys = Object.keys(struct.object).filter(key => !(key in arg));
+        if (missingKeys.length > 0) {
+            throw new Error(`Missing required key(s) "${missingKeys.join('", "')}" in object argument`);
+        }
         const normalizedObject = Object.fromEntries(
             Object.entries(arg).map(([key, value]) => {
                 if (!struct.object[key]) {
@@ -122,6 +182,9 @@ function normalizeArgument(arg: any, struct: StructType['struct']): ArgumentValu
     } else if ("number" in struct) {
         if (typeof arg !== "number") {
             throw new Error(`Expected a number argument, but got ${typeof arg}`);
+        }
+        if (!Number.isFinite(arg)) {
+            throw new Error(`Expected a finite number argument, but got ${arg}`);
         }
         return { number: { value: arg } };
     } else if ("boolean" in struct) {

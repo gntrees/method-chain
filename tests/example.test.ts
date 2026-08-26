@@ -85,8 +85,8 @@ for (const { name, schema } of CASES) {
         expect(await convertSchema(schema)).toBe(
             await getFile(`./tests/data/cases/typescript/example-${name}.ts`)
         );
-        // expect(await convertCSchema(getSchemaFromCFile(name))).toBe(
-        //     await getFile(`./tests/data/cases/c/example-${name}.c`, "c")
-        // );
+        expect(await convertCSchema(getSchemaFromCFile(name))).toBe(
+            await getFile(`./tests/data/cases/c/example-${name}.c`, "c")
+        );
     });
 }

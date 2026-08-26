@@ -3,11 +3,11 @@
 Builder optional_schema() {
     Builder f = createStringFormatter(
         variableName("f"),
-        labelDef());
+        label());
     return createTypeConverter(
         variableName("c"),
-        labelDef(),
+        label(),
         label("hello"),
-        tagsDef(),
-        pipe(&f));
+        tags(),
+        pipe(f));
 }

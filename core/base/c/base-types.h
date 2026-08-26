@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <alloca.h>
 
-/* Nama tipe mengikuti SchemaType di base/typescript/base-types.ts */
-
 enum DynamicType
 {
     D_INT,
@@ -28,7 +26,6 @@ typedef struct ArgumentType ArgumentType;
 typedef struct InitFunctionType InitFunctionType;
 typedef struct SchemaType SchemaType;
 typedef struct MapEntry MapEntry;
-typedef struct SchemaMetaBuilder SchemaMetaBuilder;
 typedef struct StructType StructType;
 typedef struct StructKey StructKey;
 typedef struct FunctionSignature FunctionSignature;
@@ -42,7 +39,7 @@ struct ArgumentValue
         long long i;
         double f;
         const char *s;
-        const void *data; /* D_MAP: const MapEntry *; D_ARRAY: const ArgumentValue * */
+        const void *data;
         const ChainType *chain;
     } as;
 };
@@ -84,14 +81,7 @@ struct FunctionCallType
 struct PropertyCallType
 {
     const char *name;
-    const Builder *builder; /* isinya Builder (referensi chain pemilik property) */
-};
-
-/* Metadata init function: variableName diisi lewat operation variableName()
-   sebagai param pertama createTypeConverter / createStringFormatter. */
-struct SchemaMetaBuilder
-{
-    const char *variableName;
+    const Builder *builder;
 };
 
 struct ChainValue
@@ -106,7 +96,7 @@ struct ChainValue
 
 struct ChainType
 {
-    const char *typeName; /* struktur pemilik chain, untuk validasi structureCall */
+    const char *typeName;
     ChainValue *values;
     size_t valueCount;
     InitFunctionType initFunction;
@@ -118,14 +108,11 @@ struct SchemaType
     ChainType chain;
 };
 
-/* Hasil init functions (createTypeConverter / createStringFormatter); dipakai
-   oleh getSchema (return SchemaType). */
 struct Builder
 {
+    const char *type;
     SchemaType schema;
 };
-
-/* ---- StructType descriptor (mirror StructType TS) ---- */
 
 enum StructKind
 {
@@ -176,7 +163,6 @@ struct StructKey
     StructType type;
 };
 
-/* Registry signature fungsi per struktur (di-generate core.ts). */
 struct FunctionSignature
 {
     const char *name;
@@ -185,41 +171,121 @@ struct FunctionSignature
     size_t argumentCount;
 };
 
+/**
+ * @param x long long
+ * @return ArgumentValue (int)
+ */
 static ArgumentValue v_int(long long x);
+/**
+ * @param x double
+ * @return ArgumentValue (float)
+ */
 static ArgumentValue v_float(double x);
+/**
+ * @param s const char *
+ * @return ArgumentValue (string)
+ */
 static ArgumentValue v_string(const char *s);
+/**
+ * @param b int
+ * @return ArgumentValue (boolean)
+ */
 static ArgumentValue v_bool(int b);
+/**
+ * @return ArgumentValue (null)
+ */
 static ArgumentValue v_null(void);
+/**
+ * @param v ArgumentValue
+ * @return ArgumentValue
+ */
 static ArgumentValue v_pass(ArgumentValue v);
-static ArgumentValue v_chain(const ChainType *c);
+/**
+ * @param b Builder
+ * @return ArgumentValue (chain)
+ */
+static ArgumentValue v_builder(Builder b);
+
+/**
+ * @param typeName const char *
+ * @param builders Builder[]
+ * @param count size_t
+ * @param init InitFunctionType
+ * @return ChainType
+ */
+static ChainType builder_chain(const char *typeName, const Builder *builders, size_t count, InitFunctionType init);
+
+/**
+ * @param typeName const char *
+ * @param value ChainValue *
+ * @return Builder (function-call)
+ */
+static Builder builder_single(const char *typeName, const ChainValue *value);
 
 static int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount);
 static int validate_properties(const SchemaType *s);
-static int arg_value_equal(const ArgumentValue *a, const ArgumentValue *b);
 static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount);
 
+/**
+ * @param n const char *
+ * @param args ArgumentType[]
+ * @param cnt size_t
+ * @param tpl int
+ * @return Builder (function-call)
+ */
 #define builder_call(n, args, cnt, tpl) \
-    ((ChainValue){ \
-        .kind = V_FUNCTION_CALL, \
-        .as.functionCall = { \
-            .name = (n), \
-            .arguments = (args), \
-            .argumentCount = (cnt), \
-            .isTemplateLiteral = (tpl), \
-        } \
+    ((Builder){ \
+        .type = "function-call", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_FUNCTION_CALL, \
+                .as.functionCall = { \
+                    .name = (n), \
+                    .arguments = (args), \
+                    .argumentCount = (cnt), \
+                    .isTemplateLiteral = (tpl), \
+                } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
     })
 
+/**
+ * @param val ArgumentValue
+ * @return ArgumentType
+ */
 #define mkarg(val) \
     ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0} })
 
+/**
+ * @param val ArgumentValue
+ * @param dflt ArgumentValue
+ * @return ArgumentType
+ */
 #define mkarg_def(val, dflt) \
     ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt) })
 
-/* variableName init function (param pertama createTypeConverter /
-   createStringFormatter) */
+/**
+ * @param x const char *
+ * @return Builder (meta)
+ */
 #define variableName(x) \
-    ((SchemaMetaBuilder){ .variableName = (x) })
+    ((Builder){ \
+        .type = "meta", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = "meta", \
+            .values = 0, \
+            .valueCount = 0, \
+            .initFunction = { .name = "variableName", .variableName = (x), .importString = 0 }, \
+        } } \
+    })
 
+/**
+ * @param X any
+ * @return ArgumentValue
+ */
 #define v(X) _Generic((X),                 \
     int: v_int,                            \
     long: v_int,                           \
@@ -228,9 +294,29 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
     float: v_float,                        \
     char *: v_string,                      \
     const char *: v_string,                \
-    void *: v_null,                        \
-    ArgumentValue: v_pass)(X)
+    ArgumentValue: v_pass,                 \
+    Builder: v_builder,                    \
+    const Builder: v_builder)(X)
 
+/**
+ * @param ... Builder
+ * @return Builder (chain)
+ */
+#define chain(...) \
+    ((Builder){ \
+        .type = "chain", \
+        .schema = { .exportName = 0, .chain = builder_chain( \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
+            (Builder[]){ __VA_ARGS__ }, \
+            BUILDER_COUNT(__VA_ARGS__), \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+    })
+
+/**
+ * @param key const char *
+ * @param val any
+ * @return MapEntry
+ */
 #define entry(key, val) ((MapEntry){ (key), v(val) })
 
 #define CAT2(a, b) a##b
@@ -242,20 +328,22 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
 #define VA_MAP_4(m, a, ...) m(a), VA_MAP_3(m, __VA_ARGS__)
 #define VA_MAP_5(m, a, ...) m(a), VA_MAP_4(m, __VA_ARGS__)
 #define VA_MAP_6(m, a, ...) m(a), VA_MAP_5(m, __VA_ARGS__)
+#define VA_MAP_7(m, a, ...) m(a), VA_MAP_6(m, __VA_ARGS__)
+#define VA_MAP_8(m, a, ...) m(a), VA_MAP_7(m, __VA_ARGS__)
 
-#define VA_MAP_N(_1, _2, _3, _4, _5, _6, N, ...) CAT(VA_MAP_, N)
-#define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
+#define VA_MAP_N(_1, _2, _3, _4, _5, _6, _7, _8, N, ...) CAT(VA_MAP_, N)
+#define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
 
 #define BUILDER_COUNT(...) \
-    (sizeof((ChainValue[]){ __VA_ARGS__ }) / sizeof(ChainValue))
+    (sizeof((Builder[]){ __VA_ARGS__ }) / sizeof(Builder))
 
 #define COUNT_OF(a) \
     (sizeof(a) / sizeof((a)[0]))
 
-/* Array = kumpulan dynamic value (ArgumentValue[]), bukan buffer elemen mentah
-   (gap 5): menghilangkan elemSize/elemToData, mendukung nested array/object/chain.
-   Compound literal polos (tanpa statement-expression) agar semua array hidup di
-   blok pemanggil dan bisa bersarang dengan aman. */
+/**
+ * @param ... any
+ * @return ArgumentValue (array)
+ */
 #define arr(...) \
     ((ArgumentValue){ \
         .type = D_ARRAY, \
@@ -263,6 +351,11 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
         .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }, \
     })
 
+/**
+ * @param first MapEntry
+ * @param ... MapEntry
+ * @return ArgumentValue (map)
+ */
 #define map(first, ...) \
     ((ArgumentValue){ \
         .type = D_MAP, \

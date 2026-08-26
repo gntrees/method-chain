@@ -2,12 +2,10 @@
 #ifndef GN_TREES_GNTREES_METHOD_CHAIN_H
 #define GN_TREES_GNTREES_METHOD_CHAIN_H
 
-/* open_memstream memerlukan _POSIX_C_SOURCE sebelum header sistem apa pun. */
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200809L
 #endif
 
-/* cJSON disediakan terpisah (cJSON.h + cJSON.c) di folder yang sama. */
 #include "cJSON.h"
 
 #ifndef GN_TREES_BASE_TYPES_H
@@ -15,8 +13,6 @@
 
 #include <stddef.h>
 #include <alloca.h>
-
-/* Nama tipe mengikuti SchemaType di base/typescript/base-types.ts */
 
 enum DynamicType
 {
@@ -40,7 +36,6 @@ typedef struct ArgumentType ArgumentType;
 typedef struct InitFunctionType InitFunctionType;
 typedef struct SchemaType SchemaType;
 typedef struct MapEntry MapEntry;
-typedef struct SchemaMetaBuilder SchemaMetaBuilder;
 typedef struct StructType StructType;
 typedef struct StructKey StructKey;
 typedef struct FunctionSignature FunctionSignature;
@@ -54,7 +49,7 @@ struct ArgumentValue
         long long i;
         double f;
         const char *s;
-        const void *data; /* D_MAP: const MapEntry *; D_ARRAY: const ArgumentValue * */
+        const void *data;
         const ChainType *chain;
     } as;
 };
@@ -96,14 +91,7 @@ struct FunctionCallType
 struct PropertyCallType
 {
     const char *name;
-    const Builder *builder; /* isinya Builder (referensi chain pemilik property) */
-};
-
-/* Metadata init function: variableName diisi lewat operation variableName()
-   sebagai param pertama createTypeConverter / createStringFormatter. */
-struct SchemaMetaBuilder
-{
-    const char *variableName;
+    const Builder *builder;
 };
 
 struct ChainValue
@@ -118,7 +106,7 @@ struct ChainValue
 
 struct ChainType
 {
-    const char *typeName; /* struktur pemilik chain, untuk validasi structureCall */
+    const char *typeName;
     ChainValue *values;
     size_t valueCount;
     InitFunctionType initFunction;
@@ -130,14 +118,11 @@ struct SchemaType
     ChainType chain;
 };
 
-/* Hasil init functions (createTypeConverter / createStringFormatter); dipakai
-   oleh getSchema (return SchemaType). */
 struct Builder
 {
+    const char *type;
     SchemaType schema;
 };
-
-/* ---- StructType descriptor (mirror StructType TS) ---- */
 
 enum StructKind
 {
@@ -188,7 +173,6 @@ struct StructKey
     StructType type;
 };
 
-/* Registry signature fungsi per struktur (di-generate core.ts). */
 struct FunctionSignature
 {
     const char *name;
@@ -197,41 +181,121 @@ struct FunctionSignature
     size_t argumentCount;
 };
 
+/**
+ * @param x long long
+ * @return ArgumentValue (int)
+ */
 static ArgumentValue v_int(long long x);
+/**
+ * @param x double
+ * @return ArgumentValue (float)
+ */
 static ArgumentValue v_float(double x);
+/**
+ * @param s const char *
+ * @return ArgumentValue (string)
+ */
 static ArgumentValue v_string(const char *s);
+/**
+ * @param b int
+ * @return ArgumentValue (boolean)
+ */
 static ArgumentValue v_bool(int b);
+/**
+ * @return ArgumentValue (null)
+ */
 static ArgumentValue v_null(void);
+/**
+ * @param v ArgumentValue
+ * @return ArgumentValue
+ */
 static ArgumentValue v_pass(ArgumentValue v);
-static ArgumentValue v_chain(const ChainType *c);
+/**
+ * @param b Builder
+ * @return ArgumentValue (chain)
+ */
+static ArgumentValue v_builder(Builder b);
+
+/**
+ * @param typeName const char *
+ * @param builders Builder[]
+ * @param count size_t
+ * @param init InitFunctionType
+ * @return ChainType
+ */
+static ChainType builder_chain(const char *typeName, const Builder *builders, size_t count, InitFunctionType init);
+
+/**
+ * @param typeName const char *
+ * @param value ChainValue *
+ * @return Builder (function-call)
+ */
+static Builder builder_single(const char *typeName, const ChainValue *value);
 
 static int validate_schema(const SchemaType *s, const FunctionSignature *functions, size_t functionCount);
 static int validate_properties(const SchemaType *s);
-static int arg_value_equal(const ArgumentValue *a, const ArgumentValue *b);
 static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount);
 
+/**
+ * @param n const char *
+ * @param args ArgumentType[]
+ * @param cnt size_t
+ * @param tpl int
+ * @return Builder (function-call)
+ */
 #define builder_call(n, args, cnt, tpl) \
-    ((ChainValue){ \
-        .kind = V_FUNCTION_CALL, \
-        .as.functionCall = { \
-            .name = (n), \
-            .arguments = (args), \
-            .argumentCount = (cnt), \
-            .isTemplateLiteral = (tpl), \
-        } \
+    ((Builder){ \
+        .type = "function-call", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_FUNCTION_CALL, \
+                .as.functionCall = { \
+                    .name = (n), \
+                    .arguments = (args), \
+                    .argumentCount = (cnt), \
+                    .isTemplateLiteral = (tpl), \
+                } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
     })
 
+/**
+ * @param val ArgumentValue
+ * @return ArgumentType
+ */
 #define mkarg(val) \
     ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0} })
 
+/**
+ * @param val ArgumentValue
+ * @param dflt ArgumentValue
+ * @return ArgumentType
+ */
 #define mkarg_def(val, dflt) \
     ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt) })
 
-/* variableName init function (param pertama createTypeConverter /
-   createStringFormatter) */
+/**
+ * @param x const char *
+ * @return Builder (meta)
+ */
 #define variableName(x) \
-    ((SchemaMetaBuilder){ .variableName = (x) })
+    ((Builder){ \
+        .type = "meta", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = "meta", \
+            .values = 0, \
+            .valueCount = 0, \
+            .initFunction = { .name = "variableName", .variableName = (x), .importString = 0 }, \
+        } } \
+    })
 
+/**
+ * @param X any
+ * @return ArgumentValue
+ */
 #define v(X) _Generic((X),                 \
     int: v_int,                            \
     long: v_int,                           \
@@ -240,9 +304,29 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
     float: v_float,                        \
     char *: v_string,                      \
     const char *: v_string,                \
-    void *: v_null,                        \
-    ArgumentValue: v_pass)(X)
+    ArgumentValue: v_pass,                 \
+    Builder: v_builder,                    \
+    const Builder: v_builder)(X)
 
+/**
+ * @param ... Builder
+ * @return Builder (chain)
+ */
+#define chain(...) \
+    ((Builder){ \
+        .type = "chain", \
+        .schema = { .exportName = 0, .chain = builder_chain( \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
+            (Builder[]){ __VA_ARGS__ }, \
+            BUILDER_COUNT(__VA_ARGS__), \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+    })
+
+/**
+ * @param key const char *
+ * @param val any
+ * @return MapEntry
+ */
 #define entry(key, val) ((MapEntry){ (key), v(val) })
 
 #define CAT2(a, b) a##b
@@ -254,20 +338,22 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
 #define VA_MAP_4(m, a, ...) m(a), VA_MAP_3(m, __VA_ARGS__)
 #define VA_MAP_5(m, a, ...) m(a), VA_MAP_4(m, __VA_ARGS__)
 #define VA_MAP_6(m, a, ...) m(a), VA_MAP_5(m, __VA_ARGS__)
+#define VA_MAP_7(m, a, ...) m(a), VA_MAP_6(m, __VA_ARGS__)
+#define VA_MAP_8(m, a, ...) m(a), VA_MAP_7(m, __VA_ARGS__)
 
-#define VA_MAP_N(_1, _2, _3, _4, _5, _6, N, ...) CAT(VA_MAP_, N)
-#define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
+#define VA_MAP_N(_1, _2, _3, _4, _5, _6, _7, _8, N, ...) CAT(VA_MAP_, N)
+#define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
 
 #define BUILDER_COUNT(...) \
-    (sizeof((ChainValue[]){ __VA_ARGS__ }) / sizeof(ChainValue))
+    (sizeof((Builder[]){ __VA_ARGS__ }) / sizeof(Builder))
 
 #define COUNT_OF(a) \
     (sizeof(a) / sizeof((a)[0]))
 
-/* Array = kumpulan dynamic value (ArgumentValue[]), bukan buffer elemen mentah
-   (gap 5): menghilangkan elemSize/elemToData, mendukung nested array/object/chain.
-   Compound literal polos (tanpa statement-expression) agar semua array hidup di
-   blok pemanggil dan bisa bersarang dengan aman. */
+/**
+ * @param ... any
+ * @return ArgumentValue (array)
+ */
 #define arr(...) \
     ((ArgumentValue){ \
         .type = D_ARRAY, \
@@ -275,6 +361,11 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
         .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }, \
     })
 
+/**
+ * @param first MapEntry
+ * @param ... MapEntry
+ * @return ArgumentValue (map)
+ */
 #define map(first, ...) \
     ((ArgumentValue){ \
         .type = D_MAP, \
@@ -294,20 +385,21 @@ static SchemaType validate_and_return(SchemaType s, const FunctionSignature *fun
 #define GN_TREES_BASE_UTILS_H
 
 
-/* getSchema(builder[, exportName[, importString]]) — exportName & importString
-   opsional (NULL = biarkan nilai bawaan init function). */
 static SchemaType getSchema_impl(const Builder *b, const char *exportName, const char *importString);
 
 #define GET_SCHEMA_1(b) getSchema_impl((b), NULL, NULL)
 #define GET_SCHEMA_2(b, e) getSchema_impl((b), (e), NULL)
 #define GET_SCHEMA_3(b, e, i) getSchema_impl((b), (e), (i))
 #define GET_SCHEMA_SELECT(_1, _2, _3, NAME, ...) NAME
+/**
+ * @param b Builder *
+ * @param e const char * (optional)
+ * @param i const char * (optional)
+ * @return SchemaType
+ */
 #define getSchema(...) \
     GET_SCHEMA_SELECT(__VA_ARGS__, GET_SCHEMA_3, GET_SCHEMA_2, GET_SCHEMA_1)(__VA_ARGS__)
 
-/* getJSONSchema(builder) atau getJSONSchema(schema) — menerima pointer ke
-   SchemaType maupun Builder. String mengarah ke buffer internal yang ditimpa
-   pada pemanggilan berikutnya — caller TIDAK perlu free(). */
 static const char *getJSONSchema_impl(const SchemaType *s);
 
 static inline const char *getJSONSchema_builder(const Builder *b)
@@ -315,6 +407,10 @@ static inline const char *getJSONSchema_builder(const Builder *b)
     return getJSONSchema_impl(&b->schema);
 }
 
+/**
+ * @param x SchemaType * | Builder *
+ * @return const char *
+ */
 #define getJSONSchema(x) \
     _Generic((x), \
         const Builder *: getJSONSchema_builder, \
@@ -341,60 +437,13 @@ static ArgumentValue v_null(void) { return (ArgumentValue){.type = D_NULL, .as.i
 
 static ArgumentValue v_pass(ArgumentValue v) { return v; }
 
-static ArgumentValue v_chain(const ChainType *c)
+static ArgumentValue v_builder(Builder b)
 {
-    return (ArgumentValue){.type = D_CHAIN, .as.chain = c};
+    ChainType *c = malloc(sizeof(ChainType));
+    if (c)
+        *c = b.schema.chain;
+    return (ArgumentValue){.type = D_CHAIN, .as.chain = c ? c : &b.schema.chain};
 }
-
-static int arg_value_equal(const ArgumentValue *a, const ArgumentValue *b)
-{
-    if (a->type != b->type)
-        return 0;
-    switch (a->type)
-    {
-    case D_INT:
-        return a->as.i == b->as.i;
-    case D_FLOAT:
-        return a->as.f == b->as.f;
-    case D_STRING:
-        return strcmp(a->as.s, b->as.s) == 0;
-    case D_BOOL:
-        return a->as.i == b->as.i;
-    case D_NULL:
-        return 1;
-    case D_ARRAY:
-    {
-        if (a->count != b->count)
-            return 0;
-        const ArgumentValue *aa = a->as.data;
-        const ArgumentValue *bb = b->as.data;
-        for (size_t i = 0; i < a->count; i++)
-            if (!arg_value_equal(&aa[i], &bb[i]))
-                return 0;
-        return 1;
-    }
-    case D_MAP:
-    {
-        if (a->count != b->count)
-            return 0;
-        const MapEntry *ea = a->as.data;
-        const MapEntry *eb = b->as.data;
-        for (size_t i = 0; i < a->count; i++)
-        {
-            if (strcmp(ea[i].key, eb[i].key) != 0)
-                return 0;
-            if (!arg_value_equal(&ea[i].value, &eb[i].value))
-                return 0;
-        }
-        return 1;
-    }
-    case D_CHAIN:
-        return a->as.chain == b->as.chain;
-    }
-    return 0;
-}
-
-/* ---- validasi runtime (port normalizeArgument TS) ---- */
 
 enum ValidateResult
 {
@@ -496,7 +545,9 @@ static enum ValidateResult validate_value(const ArgumentValue *v, const StructTy
     case S_STRUCT_CALL:
         if (v->type != D_CHAIN)
             return V_TYPE_MISMATCH;
-        return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
+        if (v->as.chain->typeName && v->as.chain->typeName[0])
+            return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
+        return V_OK;
     }
     return V_TYPE_MISMATCH;
 }
@@ -525,10 +576,8 @@ static int validate_schema(const SchemaType *s, const FunctionSignature *functio
             continue;
         }
 
-        if (fc->isTemplateLiteral)
+if (fc->isTemplateLiteral)
         {
-            /* tiap arg diterima jika cocok struct ekspresi ATAU bagian literal string
-               (menyamai createSchema TS yang melewatkan string part tanpa validasi). */
             for (size_t k = 0; k < fc->argumentCount; k++)
             {
                 enum ValidateResult r = validate_value(&fc->arguments[k].argument, &sig->argumentStructs[1]);
@@ -583,19 +632,10 @@ static int validate_properties(const SchemaType *s)
             fprintf(stderr, "validate: property without name\n");
             errors++;
         }
-        if (!cv->as.propertyCall.builder)
-        {
-            fprintf(stderr, "validate: property '%s' has no builder\n", cv->as.propertyCall.name);
-            errors++;
-        }
     }
     return errors;
 }
 
-/* Deep-copy schema hasil createX() agar Builder aman dikembalikan dari fungsi
-   (compound literal blok-scope mati saat blok keluar; pointer internal Builder
-   hasil return akan menggantung). Salinan dialokasikan di heap dan tidak
-   dibebaskan — cocok untuk definisi schema statis yang hidup selamanya. */
 static ArgumentValue deep_copy_value(const ArgumentValue *v);
 static ChainType *deep_copy_chain(const ChainType *c);
 static SchemaType deep_copy_schema(const SchemaType *s);
@@ -700,14 +740,52 @@ static SchemaType deep_copy_schema(const SchemaType *s)
     return copy;
 }
 
+static ChainType builder_chain(const char *typeName, const Builder *builders, size_t count, InitFunctionType init)
+{
+    ChainType flat = {0};
+    flat.typeName = typeName;
+    flat.initFunction = init;
+    size_t total = 0;
+    for (size_t i = 0; i < count; i++)
+        total += builders[i].schema.chain.valueCount;
+    flat.valueCount = total;
+    if (total == 0)
+        return flat;
+
+    ChainValue *values = malloc(total * sizeof(ChainValue));
+    if (!values)
+        return flat;
+    size_t k = 0;
+    for (size_t i = 0; i < count; i++)
+    {
+        const ChainType *src = &builders[i].schema.chain;
+        for (size_t j = 0; j < src->valueCount; j++)
+            values[k++] = src->values[j];
+    }
+    flat.values = values;
+
+    ChainType *copy = deep_copy_chain(&flat);
+    free(values);
+    if (copy)
+        return *copy;
+    return flat;
+}
+
+static Builder builder_single(const char *typeName, const ChainValue *value)
+{
+    ChainType src = { .typeName = typeName, .values = (ChainValue *)value, .valueCount = 1, .initFunction = {0} };
+    ChainType *copy = deep_copy_chain(&src);
+    if (copy)
+        return (Builder){ .type = "function-call", .schema = { .exportName = 0, .chain = *copy } };
+    return (Builder){ .type = "function-call", .schema = { .exportName = 0, .chain = src } };
+}
+
 static SchemaType validate_and_return(SchemaType s, const FunctionSignature *functions, size_t functionCount)
 {
     validate_schema(&s, functions, functionCount);
     validate_properties(&s);
     return deep_copy_schema(&s);
 }
-
-/* ---- serialisasi JSON (format sama dengan dump_schema lama) ---- */
 
 static cJSON *jval(const ArgumentValue *d);
 static cJSON *jarg(const ArgumentType *a);
@@ -886,7 +964,7 @@ static cJSON *jval(const ArgumentValue *d)
         cJSON_AddItemToObject(tag, "object", value);
         return tag;
     }
-    default: /* D_ARRAY */
+    default:
     {
         cJSON *tag = cJSON_CreateObject();
         cJSON *value = cJSON_CreateObject();
@@ -901,7 +979,7 @@ static cJSON *jval(const ArgumentValue *d)
     }
 }
 
-static char *json_buf = NULL; /* buffer hasil pemanggilan sebelumnya; ditimpa tiap panggilan */
+static char *json_buf = NULL;
 
 static SchemaType getSchema_impl(const Builder *b, const char *exportName, const char *importString)
 {
@@ -938,64 +1016,61 @@ static const char *getJSONSchema_impl(const SchemaType *s)
 #endif
 
 /* ---- definitions ---- */
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 // ==== type-converter ====
 
 /**
- * @brief Appends the `stringify` function call to the builder chain.
- * @param val Value of type `string`.
- * @return A `ChainValue` representing the `stringify` function call to be appended to the builder chain.
+ * @param val string
+ * @return Builder (function-call) : type-converter
  */
-#ifndef stringify
 #define stringify(val) \
     builder_call("stringify", ((ArgumentType[]){ mkarg(v(val)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `numerify` function call to the builder chain.
- * @param val Value of type `number`.
- * @return A `ChainValue` representing the `numerify` function call to be appended to the builder chain.
+ * @param val number
+ * @return Builder (function-call) : type-converter
  */
-#ifndef numerify
 #define numerify(val) \
     builder_call("numerify", ((ArgumentType[]){ mkarg(v(val)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `boolify` function call to the builder chain.
- * @param val Value of type `boolean`.
- * @return A `ChainValue` representing the `boolify` function call to be appended to the builder chain.
+ * @param val boolean
+ * @return Builder (function-call) : type-converter
  */
-#ifndef boolify
 #define boolify(val) \
     builder_call("boolify", ((ArgumentType[]){ mkarg(v_bool((val) ? 1 : 0)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `pipe` function call to the builder chain.
- * @param formatter Value of type `chain<string-formatter>`.
- * @return A `ChainValue` representing the `pipe` function call to be appended to the builder chain.
+ * @param formatter chain<string-formatter>
+ * @return Builder (function-call) : type-converter
  */
-#ifndef pipe
 #define pipe(formatter) \
-    builder_call("pipe", ((ArgumentType[]){ mkarg(v_chain(&(formatter)->schema.chain)) }), 1, 0)
-#endif
+    builder_call("pipe", ((ArgumentType[]){ mkarg(v(formatter)) }), 1, 0)
 
-/**
- * @brief Appends the `unify` function call to the builder chain.
- * @param value Value of type `string | number`.
- * @return A `ChainValue` representing the `unify` function call to be appended to the builder chain.
+/*
+ * type-converter
+ *   param => value : string | number
+ *   return => Builder (function-call) : type-converter
+ * 
+ * string-formatter
+ *   param => value : string | number
+ *   return => Builder (function-call) : string-formatter
  */
-#ifndef unify
 #define unify(value) \
     builder_call("unify", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
-/**
- * @brief Appends the `interpolate` template-literal function call to the builder chain.
- * @param ... Interpolated expression values (string literal parts are passed as literal text).
- * @return A `ChainValue` representing the `interpolate` template-literal function call.
+/*
+ * type-converter
+ *   param => ... : variadic
+ *   return => Builder (function-call) : type-converter
+ * 
+ * string-formatter
+ *   param => ... : variadic
+ *   return => Builder (function-call) : string-formatter
  */
-#ifndef interpolate
 #define interpolate(...) \
     ({ \
         const ArgumentValue _vals[] = { VA_MAP(v, __VA_ARGS__) }; \
@@ -1008,7 +1083,7 @@ static const char *getJSONSchema_impl(const SchemaType *s)
         for (size_t _i = 0; _i < _n; _i++) \
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0')) \
                 _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \
-        (ChainValue){ \
+        builder_single(0, &(ChainValue){ \
             .kind = V_FUNCTION_CALL, \
             .as.functionCall = { \
                 .name = "interpolate", \
@@ -1016,49 +1091,35 @@ static const char *getJSONSchema_impl(const SchemaType *s)
                 .argumentCount = _cnt, \
                 .isTemplateLiteral = 1, \
             } \
-        }; \
+        }); \
     })
-#endif
 
-/**
- * @brief Appends the `label` function call to the builder chain.
- * @param value Value of type `string`. Defaults to `"default"`.
- * @return A `ChainValue` representing the `label` function call to be appended to the builder chain.
+/*
+ * type-converter
+ *   param => value : string (default: "default")
+ *   return => Builder (function-call) : type-converter
+ * 
+ * string-formatter
+ *   param => value : string (default: "default")
+ *   return => Builder (function-call) : string-formatter
  */
-#ifndef label
-#define label(value) \
+#define label(...) \
+    CAT(label_, __VA_OPT__(1))(__VA_ARGS__)
+#define label_1(value) \
     builder_call("label", ((ArgumentType[]){ mkarg_def(v(value), v("default")) }), 1, 0)
-#endif
-
-
-/**
- * @brief Appends the `label` function call to the builder chain using its default argument.
- * @return A `ChainValue` representing the `label` function call with the default argument.
- */
-#ifndef labelDef
-#define labelDef() \
-    builder_call("label", ((ArgumentType[]){ mkarg_def(v("default"), v("default")) }), 1, 0)
-#endif
+#define label_() \
+    label_1("default")
 
 /**
- * @brief Appends the `tags` function call to the builder chain.
- * @param tags Value of type `array<string>`. Defaults to `[ "default" ]`.
- * @return A `ChainValue` representing the `tags` function call to be appended to the builder chain.
+ * @param tags array<string> (default: [ "default" ])
+ * @return Builder (function-call) : type-converter
  */
-#ifndef tags
-#define tags(tags) \
+#define tags(...) \
+    CAT(tags_, __VA_OPT__(1))(__VA_ARGS__)
+#define tags_1(tags) \
     builder_call("tags", ((ArgumentType[]){ mkarg_def(v(tags), v(arr("default"))) }), 1, 0)
-#endif
-
-
-/**
- * @brief Appends the `tags` function call to the builder chain using its default argument.
- * @return A `ChainValue` representing the `tags` function call with the default argument.
- */
-#ifndef tagsDef
-#define tagsDef() \
-    builder_call("tags", ((ArgumentType[]){ mkarg_def(v(arr("default")), v(arr("default"))) }), 1, 0)
-#endif
+#define tags_() \
+    tags_1(arr("default"))
 
 static const StructType type_converter_stringify_arg0 = { .kind = S_STRING };
 static const StructType type_converter_numerify_arg0 = { .kind = S_NUMBER };
@@ -1082,41 +1143,50 @@ static const FunctionSignature type_converter_functions[] = {
 };
 
 /**
- * @brief Creates a new `schema` builder (structure `type-converter`).
- * @param meta Metadata containing the variableName.
- * @param ... Chain values (function/property calls) forming the schema.
- * @return A `Builder` holding the validated schema for the `type-converter` structure.
+ * @param variableName variableName( var : string )
+ * @param ... chain
+ * @return Builder (schema) : type-converter
  */
 #define createTypeConverter(meta, ...) \
     ((Builder){ \
+        .type = "init-function", \
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = { \
-                    .typeName = "type-converter", \
-                    .initFunction = { \
+                .chain = builder_chain( \
+                    "type-converter", \
+                    (Builder[]){ __VA_ARGS__ }, \
+                    BUILDER_COUNT(__VA_ARGS__), \
+                    (InitFunctionType){ \
                         .name = "create-type-converter", \
-                        .variableName = (meta).variableName, \
+                        .variableName = (meta).schema.chain.initFunction.variableName, \
                         .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }, \
-                    .values = (ChainValue[]){ __VA_ARGS__ }, \
-                    .valueCount = BUILDER_COUNT(__VA_ARGS__), \
-                }, \
+                    }), \
             }, \
             type_converter_functions, COUNT_OF(type_converter_functions)) \
     })
 
+/**
+ * @return Builder property-call
+ */
+static Builder testvar = {
+    .type = "property-call",
+    .schema = { .exportName = 0, .chain = {
+        .typeName = "type-converter",
+        .values = (ChainValue[]){ { .kind = V_PROPERTY_CALL, .as.propertyCall = { .name = "testvar" } } },
+        .valueCount = 1,
+        .initFunction = {0},
+    } }
+};
+
 // ==== string-formatter ====
 
 /**
- * @brief Appends the `format` function call to the builder chain.
- * @param val Value of type `string`.
- * @return A `ChainValue` representing the `format` function call to be appended to the builder chain.
+ * @param val string
+ * @return Builder (function-call) : string-formatter
  */
-#ifndef format
 #define format(val) \
     builder_call("format", ((ArgumentType[]){ mkarg(v(val)) }), 1, 0)
-#endif
 
 static const StructType string_formatter_format_arg0 = { .kind = S_STRING };
 static const StructType string_formatter_unify_arg0 = { .kind = S_UNION, .as.unionType = { .count = 2, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER } } } };
@@ -1132,26 +1202,25 @@ static const FunctionSignature string_formatter_functions[] = {
 };
 
 /**
- * @brief Creates a new `schema` builder (structure `string-formatter`).
- * @param meta Metadata containing the variableName.
- * @param ... Chain values (function/property calls) forming the schema.
- * @return A `Builder` holding the validated schema for the `string-formatter` structure.
+ * @param variableName variableName( var : string )
+ * @param ... chain
+ * @return Builder (schema) : string-formatter
  */
 #define createStringFormatter(meta, ...) \
     ((Builder){ \
+        .type = "init-function", \
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = { \
-                    .typeName = "string-formatter", \
-                    .initFunction = { \
+                .chain = builder_chain( \
+                    "string-formatter", \
+                    (Builder[]){ __VA_ARGS__ }, \
+                    BUILDER_COUNT(__VA_ARGS__), \
+                    (InitFunctionType){ \
                         .name = "create-string-formatter", \
-                        .variableName = (meta).variableName, \
+                        .variableName = (meta).schema.chain.initFunction.variableName, \
                         .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }, \
-                    .values = (ChainValue[]){ __VA_ARGS__ }, \
-                    .valueCount = BUILDER_COUNT(__VA_ARGS__), \
-                }, \
+                    }), \
             }, \
             string_formatter_functions, COUNT_OF(string_formatter_functions)) \
     })
@@ -1159,413 +1228,294 @@ static const FunctionSignature string_formatter_functions[] = {
 // ==== query-builder ====
 
 /**
- * @brief Appends the `select` function call to the builder chain.
- * @param columns Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `select` function call to be appended to the builder chain.
+ * @param columns string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef select
 #define select(columns) \
     builder_call("select", ((ArgumentType[]){ mkarg(v(columns)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `from` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `from` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef from
 #define from(table) \
     builder_call("from", ((ArgumentType[]){ mkarg(v(table)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `transaction` function call to the builder chain.
- * @param transaction Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `transaction` function call to be appended to the builder chain.
+ * @param transaction string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef transaction
 #define transaction(transaction) \
     builder_call("transaction", ((ArgumentType[]){ mkarg(v(transaction)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `order-by` function call to the builder chain.
- * @param columns Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `order-by` function call to be appended to the builder chain.
+ * @param columns string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef orderBy
 #define orderBy(columns) \
     builder_call("order-by", ((ArgumentType[]){ mkarg(v(columns)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `limit` function call to the builder chain.
- * @param count Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `limit` function call to be appended to the builder chain.
+ * @param count string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef limit
 #define limit(count) \
     builder_call("limit", ((ArgumentType[]){ mkarg(v(count)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `offset` function call to the builder chain.
- * @param count Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `offset` function call to be appended to the builder chain.
+ * @param count string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef offset
 #define offset(count) \
     builder_call("offset", ((ArgumentType[]){ mkarg(v(count)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `with` function call to the builder chain.
- * @param statement Value of type `string | number | boolean | chain<query-builder>`.
- * @param as Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `with` function call to be appended to the builder chain.
+ * @param statement string | number | boolean | chain<query-builder>
+ * @param as string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef with
 #define with(statement, as) \
     builder_call("with", ((ArgumentType[]){ mkarg(v(statement)), mkarg(v(as)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `group-by` function call to the builder chain.
- * @param columns Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `group-by` function call to be appended to the builder chain.
+ * @param columns string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef groupBy
 #define groupBy(columns) \
     builder_call("group-by", ((ArgumentType[]){ mkarg(v(columns)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `having` function call to the builder chain.
- * @param statement Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `having` function call to be appended to the builder chain.
+ * @param statement string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef having
 #define having(statement) \
     builder_call("having", ((ArgumentType[]){ mkarg(v(statement)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `where` function call to the builder chain.
- * @param statement Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `where` function call to be appended to the builder chain.
+ * @param statement string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef where
 #define where(statement) \
     builder_call("where", ((ArgumentType[]){ mkarg(v(statement)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `update` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param set Value of type `string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `update` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param set string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef update
 #define update(table, set) \
     builder_call("update", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(set)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `set` function call to the builder chain.
- * @param statement Value of type `string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `set` function call to be appended to the builder chain.
+ * @param statement string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef set
 #define set(statement) \
     builder_call("set", ((ArgumentType[]){ mkarg(v(statement)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `insert` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param set Value of type `string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `insert` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param set string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef insert
 #define insert(table, set) \
     builder_call("insert", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(set)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `values` function call to the builder chain.
- * @param values Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | array<array<string | number | boolean | chain<query-builder>>>`.
- * @return A `ChainValue` representing the `values` function call to be appended to the builder chain.
+ * @param values string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | array<array<string | number | boolean | chain<query-builder>>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef values
 #define values(values) \
     builder_call("values", ((ArgumentType[]){ mkarg(v(values)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `returning` function call to the builder chain.
- * @param columns Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `returning` function call to be appended to the builder chain.
+ * @param columns string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef returning
 #define returning(columns) \
     builder_call("returning", ((ArgumentType[]){ mkarg(v(columns)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `on-conflict-do-nothing` function call to the builder chain.
- * @param target Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `on-conflict-do-nothing` function call to be appended to the builder chain.
+ * @param target string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef onConflictDoNothing
 #define onConflictDoNothing(target) \
     builder_call("on-conflict-do-nothing", ((ArgumentType[]){ mkarg(v(target)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `on-conflict-do-update` function call to the builder chain.
- * @param target Value of type `string | number | boolean | chain<query-builder>`.
- * @param set Value of type `string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `on-conflict-do-update` function call to be appended to the builder chain.
+ * @param target string | number | boolean | chain<query-builder>
+ * @param set string | number | boolean | chain<query-builder> | map<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef onConflictDoUpdate
 #define onConflictDoUpdate(target, set) \
     builder_call("on-conflict-do-update", ((ArgumentType[]){ mkarg(v(target)), mkarg(v(set)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `delete` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `delete` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef delete
 #define delete(table) \
     builder_call("delete", ((ArgumentType[]){ mkarg(v(table)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef join
 #define join(table, on) \
     builder_call("join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `left-join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `left-join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef leftJoin
 #define leftJoin(table, on) \
     builder_call("left-join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `right-join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `right-join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef rightJoin
 #define rightJoin(table, on) \
     builder_call("right-join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `inner-join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `inner-join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef innerJoin
 #define innerJoin(table, on) \
     builder_call("inner-join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `full-join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `full-join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef fullJoin
 #define fullJoin(table, on) \
     builder_call("full-join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `cross-join` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @param on Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `cross-join` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @param on string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef crossJoin
 #define crossJoin(table, on) \
     builder_call("cross-join", ((ArgumentType[]){ mkarg(v(table)), mkarg(v(on)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `eq` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `eq` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef eq
 #define eq(value) \
     builder_call("eq", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `gt` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `gt` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef gt
 #define gt(value) \
     builder_call("gt", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `gte` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `gte` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef gte
 #define gte(value) \
     builder_call("gte", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `lt` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `lt` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef lt
 #define lt(value) \
     builder_call("lt", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `lte` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `lte` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef lte
 #define lte(value) \
     builder_call("lte", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `exists` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `exists` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef exists
 #define exists(value) \
     builder_call("exists", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `is-null` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `is-null` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef isNull
 #define isNull(value) \
     builder_call("is-null", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `in` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `in` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef in
 #define in(value) \
     builder_call("in", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `between` function call to the builder chain.
- * @param first Value of type `string | number | boolean | chain<query-builder>`.
- * @param second Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `between` function call to be appended to the builder chain.
+ * @param first string | number | boolean | chain<query-builder>
+ * @param second string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef between
 #define between(first, second) \
     builder_call("between", ((ArgumentType[]){ mkarg(v(first)), mkarg(v(second)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `like` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `like` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef like
 #define like(value) \
     builder_call("like", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `ilike` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `ilike` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef ilike
 #define ilike(value) \
     builder_call("ilike", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `not` function call to the builder chain.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `not` function call to be appended to the builder chain.
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef not
 #define not(value) \
     builder_call("not", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `and` function call to the builder chain.
- * @param values Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `and` function call to be appended to the builder chain.
+ * @param values string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef and
 #define and(values) \
     builder_call("and", ((ArgumentType[]){ mkarg(v(values)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `or` function call to the builder chain.
- * @param values Value of type `string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>`.
- * @return A `ChainValue` representing the `or` function call to be appended to the builder chain.
+ * @param values string | number | boolean | chain<query-builder> | array<string | number | boolean | chain<query-builder>>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef or
 #define or(values) \
     builder_call("or", ((ArgumentType[]){ mkarg(v(values)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `op` function call to the builder chain.
- * @param operation Value of type `string | number | boolean | chain<query-builder>`.
- * @param value Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `op` function call to be appended to the builder chain.
+ * @param operation string | number | boolean | chain<query-builder>
+ * @param value string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef op
 #define op(operation, value) \
     builder_call("op", ((ArgumentType[]){ mkarg(v(operation)), mkarg(v(value)) }), 2, 0)
-#endif
 
 /**
- * @brief Appends the `raw` template-literal function call to the builder chain.
- * @param ... Interpolated expression values (string literal parts are passed as literal text).
- * @return A `ChainValue` representing the `raw` template-literal function call.
+ * @param ... variadic
+ * @return Builder (function-call) : query-builder
  */
-#ifndef raw
 #define raw(...) \
     ({ \
         const ArgumentValue _vals[] = { VA_MAP(v, __VA_ARGS__) }; \
@@ -1578,7 +1528,7 @@ static const FunctionSignature string_formatter_functions[] = {
         for (size_t _i = 0; _i < _n; _i++) \
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\0')) \
                 _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \
-        (ChainValue){ \
+        builder_single(0, &(ChainValue){ \
             .kind = V_FUNCTION_CALL, \
             .as.functionCall = { \
                 .name = "raw", \
@@ -1586,57 +1536,41 @@ static const FunctionSignature string_formatter_functions[] = {
                 .argumentCount = _cnt, \
                 .isTemplateLiteral = 1, \
             } \
-        }; \
+        }); \
     })
-#endif
 
 /**
- * @brief Appends the `asc` function call to the builder chain.
- * @return A `ChainValue` representing the `asc` function call to be appended to the builder chain.
+ * @return Builder (function-call) : query-builder
  */
-#ifndef asc
 #define asc() \
     builder_call("asc", ((ArgumentType[]){  }), 0, 0)
-#endif
 
 /**
- * @brief Appends the `desc` function call to the builder chain.
- * @return A `ChainValue` representing the `desc` function call to be appended to the builder chain.
+ * @return Builder (function-call) : query-builder
  */
-#ifndef desc
 #define desc() \
     builder_call("desc", ((ArgumentType[]){  }), 0, 0)
-#endif
 
 /**
- * @brief Appends the `as` function call to the builder chain.
- * @param alias Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `as` function call to be appended to the builder chain.
+ * @param alias string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef as
 #define as(alias) \
     builder_call("as", ((ArgumentType[]){ mkarg(v(alias)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `col` function call to the builder chain.
- * @param column Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `col` function call to be appended to the builder chain.
+ * @param column string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef col
 #define col(column) \
     builder_call("col", ((ArgumentType[]){ mkarg(v(column)) }), 1, 0)
-#endif
 
 /**
- * @brief Appends the `table` function call to the builder chain.
- * @param table Value of type `string | number | boolean | chain<query-builder>`.
- * @return A `ChainValue` representing the `table` function call to be appended to the builder chain.
+ * @param table string | number | boolean | chain<query-builder>
+ * @return Builder (function-call) : query-builder
  */
-#ifndef table
 #define table(table) \
     builder_call("table", ((ArgumentType[]){ mkarg(v(table)) }), 1, 0)
-#endif
 
 static const StructType query_builder_select_arg0 = { .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } } } } } } };
 static const StructType query_builder_from_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };
@@ -1758,28 +1692,30 @@ static const FunctionSignature query_builder_functions[] = {
 };
 
 /**
- * @brief Creates a new `schema` builder (structure `query-builder`).
- * @param meta Metadata containing the variableName.
- * @param ... Chain values (function/property calls) forming the schema.
- * @return A `Builder` holding the validated schema for the `query-builder` structure.
+ * @param variableName variableName( var : string )
+ * @param ... chain
+ * @return Builder (schema) : query-builder
  */
 #define queryBuilder(meta, ...) \
     ((Builder){ \
+        .type = "init-function", \
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = { \
-                    .typeName = "query-builder", \
-                    .initFunction = { \
+                .chain = builder_chain( \
+                    "query-builder", \
+                    (Builder[]){ __VA_ARGS__ }, \
+                    BUILDER_COUNT(__VA_ARGS__), \
+                    (InitFunctionType){ \
                         .name = "query-builder", \
-                        .variableName = (meta).variableName, \
+                        .variableName = (meta).schema.chain.initFunction.variableName, \
                         .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }, \
-                    .values = (ChainValue[]){ __VA_ARGS__ }, \
-                    .valueCount = BUILDER_COUNT(__VA_ARGS__), \
-                }, \
+                    }), \
             }, \
             query_builder_functions, COUNT_OF(query_builder_functions)) \
     })
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 #endif /* GN_TREES_GNTREES_METHOD_CHAIN_H */

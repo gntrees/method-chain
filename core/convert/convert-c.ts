@@ -43,6 +43,11 @@ function renderValue(value: JsonValue, declarations: BuilderDecl[], inContainer 
     }
     if ("chain" in value) {
         const inner = value.chain.chain ?? value.chain;
+        /* chain inline (hasil chain() di C, tanpa init function) ditulis
+           langsung sebagai chain(...); chain bernama memakai deklarasi Builder. */
+        if (!inner.initFunction || !inner.initFunction.name) {
+            return `chain(${renderChainValues(inner.values, declarations).join(", ")})`;
+        }
         const name = normalizeName(inner.initFunction.variableName, "camel");
         declarations.push({
             name,
@@ -50,7 +55,7 @@ function renderValue(value: JsonValue, declarations: BuilderDecl[], inContainer 
             variableName: inner.initFunction.variableName,
             values: renderChainValues(inner.values, declarations),
         });
-        return inContainer ? `v_chain(&${name}->schema.chain)` : `&${name}`;
+        return `${name}`;
     }
     if ("array" in value) {
         const items = (value.array.value as JsonValue[]).map(item => renderValue(item, declarations, true));
@@ -70,7 +75,10 @@ function renderValue(value: JsonValue, declarations: BuilderDecl[], inContainer 
 
 function renderPropertyCall(propertyCall: JsonValue, declarations: BuilderDecl[]): string {
     const name = propertyCall.name as string;
-    const builder = propertyCall.builder as JsonValue;
+    const builder = propertyCall.builder as JsonValue | undefined;
+    if (!builder) {
+        return name;
+    }
     const inner = (builder.chain as JsonValue).chain ?? builder.chain;
     const declName = normalizeName(inner.initFunction.variableName, "camel");
     declarations.push({
@@ -95,7 +103,7 @@ function renderFunctionCall(functionCall: JsonValue, declarations: BuilderDecl[]
     const first = args[0];
     const macroName = normalizeName(functionCall.name, "camel", true);
     if (first && args.length === 1 && first.default !== null && deepEqual(first.argument, first.default)) {
-        return `${macroName}Def()`;
+        return `${macroName}()`;
     }
     return `${macroName}(${args.map(arg => renderValue(arg.argument, declarations)).join(", ")})`;
 }

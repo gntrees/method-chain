@@ -109,21 +109,15 @@ function cDefaultDoc(def: NonNullable<ArgumentType["argument"]["default"]>): str
     throw new Error("Unsupported default value type for C");
 }
 
-function doxygenComment(
-    brief: string,
-    params: { name: string, type: string, default?: string, description?: string }[],
+function compactComment(
+    params: { name: string, type?: string, default?: string }[],
     returns: string,
-    details?: string,
 ): string {
-    const lines = ["/**", ` * @brief ${brief}`];
-    if (details) {
-        lines.push(" *");
-        lines.push(` * ${details}`);
-    }
+    const lines = ["/**"];
     for (const param of params) {
-        const description = param.description ?? `Value of type \`${param.type}\`.`;
-        let line = ` * @param ${param.name} ${description}`;
-        if (param.default) line += ` Defaults to \`${param.default}\`.`;
+        let line = ` * @param ${param.name}`;
+        if (param.type) line += ` ${param.type}`;
+        if (param.default) line += ` (default: ${param.default})`;
         lines.push(line);
     }
     lines.push(` * @return ${returns}`);
@@ -131,22 +125,45 @@ function doxygenComment(
     return lines.join("\n");
 }
 
-function functionMacroBlocks(func: ModelFunction): { name: string, content: string }[] {
+function plainDocLines(doc: string): string[] {
+    return doc.split("\n").slice(1, -1).map(line => {
+        const t = line.replace(/^ \* ?/, "");
+        const pm = t.match(/^@param (\S+) (.*)$/);
+        if (pm) return ` *   param => ${pm[1]} : ${pm[2]}`;
+        const rm = t.match(/^@return (.*)$/);
+        if (rm) return ` *   return => ${rm[1]}`;
+        return ` * ${t}`;
+    });
+}
+
+function mergeDocs(docs: { structure: string, doc: string }[]): string {
+    if (docs.length === 1) return docs[0]!.doc;
+    const lines = ["/*"];
+    docs.forEach((entry, i) => {
+        if (i > 0) lines.push(" * ");
+        lines.push(` * ${entry.structure}`);
+        lines.push(...plainDocLines(entry.doc));
+    });
+    lines.push(" */");
+    return lines.join("\n");
+}
+
+function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, body: string }[] {
     const name = func.function.name;
     const macroName = normalizeName(func.function.name, "camel", true);
     const args = func.function.arguments;
+    const returnName = normalizeName(func.function.return.structureCall.name, "kebab");
+    const returns = `Builder (function-call) : ${returnName}`;
     if (func.function.isTemplateLiteral) {
         if (args.length !== 1 || !args[0]) throw new Error("Template literal functions must have one argument");
-        const doc = doxygenComment(
-            `Appends the \`${name}\` template-literal function call to the builder chain.`,
-            [{ name: "...", type: "variadic", description: "Interpolated expression values (string literal parts are passed as literal text)." }],
-            `A \`ChainValue\` representing the \`${name}\` template-literal function call.`,
+        const doc = compactComment(
+            [{ name: "...", type: "variadic" }],
+            returns,
         );
         return [{
             name: macroName,
-            content: `${doc}
-#ifndef ${macroName}
-#define ${macroName}(...) \\
+            doc,
+            body: `#define ${macroName}(...) \\
     ({ \\
         const ArgumentValue _vals[] = { VA_MAP(v, __VA_ARGS__) }; \\
         size_t _n = sizeof(_vals) / sizeof(_vals[0]); \\
@@ -158,7 +175,7 @@ function functionMacroBlocks(func: ModelFunction): { name: string, content: stri
         for (size_t _i = 0; _i < _n; _i++) \\
             if (!(_vals[_i].type == D_STRING && _vals[_i].as.s[0] == '\\0')) \\
                 _args[_j++] = (ArgumentType){ .argument = _vals[_i], .hasDefault = 0, .def = {0} }; \\
-        (ChainValue){ \\
+        builder_single(0, &(ChainValue){ \\
             .kind = V_FUNCTION_CALL, \\
             .as.functionCall = { \\
                 .name = "${name}", \\
@@ -166,9 +183,8 @@ function functionMacroBlocks(func: ModelFunction): { name: string, content: stri
                 .argumentCount = _cnt, \\
                 .isTemplateLiteral = 1, \\
             } \\
-        }; \\
-    })
-#endif`,
+        }); \\
+    })`,
         }];
     }
     const params = args.map(arg => normalizeName(arg.argument.name, "camel"));
@@ -176,7 +192,7 @@ function functionMacroBlocks(func: ModelFunction): { name: string, content: stri
         const param = params[index];
         const struct = arg.argument.struct.struct;
         if ("structureCall" in struct) {
-            return `mkarg(v_chain(&(${param})->schema.chain))`;
+            return `mkarg(v(${param}))`;
         }
         const argInner = "boolean" in struct ? `v_bool((${param}) ? 1 : 0)` : `v(${param})`;
         if (arg.argument.default === undefined) {
@@ -184,39 +200,43 @@ function functionMacroBlocks(func: ModelFunction): { name: string, content: stri
         }
         return `mkarg_def(${argInner}, ${cDefaultArgExpr(arg.argument.default, struct)})`;
     }).join(", ");
-    const blocks: { name: string, content: string }[] = [{
-        name: macroName,
-        content: `${doxygenComment(
-            `Appends the \`${name}\` function call to the builder chain.`,
-            args.map(arg => ({
-                name: normalizeName(arg.argument.name, "camel"),
-                type: cStructTypeName(arg.argument.struct.struct),
-                default: arg.argument.default !== undefined ? cDefaultDoc(arg.argument.default) : undefined,
-            })),
-            `A \`ChainValue\` representing the \`${name}\` function call to be appended to the builder chain.`,
-        )}
-#ifndef ${macroName}
-#define ${macroName}(${params.join(", ")}) \\
-    builder_call("${name}", ((ArgumentType[]){ ${mkargs} }), ${args.length}, 0)
-#endif`,
-    }];
+    const callExpr = `builder_call("${name}", ((ArgumentType[]){ ${mkargs} }), ${args.length}, 0)`;
     const singleArgWithDefault = args[0] && args[0].argument.default !== undefined && !("structureCall" in args[0].argument.struct.struct);
     if (args.length === 1 && singleArgWithDefault) {
-        blocks.push({
-            name: `${macroName}Def`,
-            content: `
-${doxygenComment(
-                `Appends the \`${name}\` function call to the builder chain using its default argument.`,
-                [],
-                `A \`ChainValue\` representing the \`${name}\` function call with the default argument.`,
-            )}
-#ifndef ${macroName}Def
-#define ${macroName}Def() \\
-    builder_call("${name}", ((ArgumentType[]){ mkarg_def(${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}, ${cDefaultArgExpr(args[0]!.argument.default!, args[0]!.argument.struct.struct)}) }), 1, 0)
-#endif`,
-        });
+        const arg0 = args[0]!;
+        const param = params[0]!;
+        const struct = arg0.argument.struct.struct;
+        const argInner = "boolean" in struct ? `v_bool((${param}) ? 1 : 0)` : `v(${param})`;
+        const defExpr = cDefaultArgExpr(arg0.argument.default!, struct);
+        const doc = compactComment(
+            [{ name: param, type: cStructTypeName(struct), default: cDefaultDoc(arg0.argument.default!) }],
+            returns,
+        );
+        return [{
+            name: macroName,
+            doc,
+            body: `#define ${macroName}(...) \\
+    CAT(${macroName}_, __VA_OPT__(1))(__VA_ARGS__)
+#define ${macroName}_1(${param}) \\
+    ${callExpr}
+#define ${macroName}_() \\
+    ${macroName}_1(${cDefaultLiteral(arg0.argument.default!)})`,
+        }];
     }
-    return blocks;
+    const doc = compactComment(
+        args.map(arg => ({
+            name: normalizeName(arg.argument.name, "camel"),
+            type: cStructTypeName(arg.argument.struct.struct),
+            default: arg.argument.default !== undefined ? cDefaultDoc(arg.argument.default) : undefined,
+        })),
+        returns,
+    );
+    return [{
+        name: macroName,
+        doc,
+        body: `#define ${macroName}(${params.join(", ")}) \\
+    ${callExpr}`,
+    }];
 }
 
 function generateRegistry(definition: StructureType): string {
@@ -257,29 +277,28 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
     const initName = init.name;
     const initMacroName = normalizeName(initName, "camel");
     const importString = escapeCString(`import { ${normalizeName(initName, "camel")} } from "${importPaths['c'] ?? importPaths['typescript'] ?? ""}"`);
-    return `${doxygenComment(
-        `Creates a new \`${exportName}\` builder (structure \`${kebab}\`).`,
+    return `${compactComment(
         [
-            { name: "meta", type: "SchemaMetaBuilder", description: "Metadata containing the variableName." },
-            { name: "...", type: "variadic ChainValue", description: "Chain values (function/property calls) forming the schema." },
+            { name: "variableName", type: "variableName( var : string )" },
+            { name: "...", type: "chain" },
         ],
-        `A \`Builder\` holding the validated schema for the \`${kebab}\` structure.`,
+        `Builder (schema) : ${kebab}`,
     )}
 #define ${initMacroName}(meta, ...) \\
     ((Builder){ \\
+        .type = "init-function", \\
         .schema = validate_and_return( \\
             (SchemaType){ \\
                 .exportName = "${exportName}", \\
-                .chain = { \\
-                    .typeName = "${kebab}", \\
-                    .initFunction = { \\
+                .chain = builder_chain( \\
+                    "${kebab}", \\
+                    (Builder[]){ __VA_ARGS__ }, \\
+                    BUILDER_COUNT(__VA_ARGS__), \\
+                    (InitFunctionType){ \\
                         .name = "${initName}", \\
-                        .variableName = (meta).variableName, \\
+                        .variableName = (meta).schema.chain.initFunction.variableName, \\
                         .importString = "${importString}", \\
-                    }, \\
-                    .values = (ChainValue[]){ __VA_ARGS__ }, \\
-                    .valueCount = BUILDER_COUNT(__VA_ARGS__), \\
-                }, \\
+                    }), \\
             }, \\
             ${snake}_functions, COUNT_OF(${snake}_functions)) \\
     })`;
@@ -288,21 +307,19 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
 function generateCDefinitionSection(
     definition: StructureType,
     project: ProjectType,
-    usedMacros: Set<string>,
     index: number,
+    macroMap: Map<string, { docs: { structure: string, doc: string }[], body: string }>,
+    macroOrder: { name: string, index: number }[],
 ): string {
     const structureName = definition.structure.name;
     const kebab = normalizeName(structureName, "kebab");
     const snake = normalizeName(structureName, "snake");
 
     const macroSections: string[] = [];
-    definition.structure.functions.forEach(func => {
-        if (!("function" in func)) return;
-        functionMacroBlocks(func).forEach(block => {
-            if (usedMacros.has(block.name)) return;
-            usedMacros.add(block.name);
-            macroSections.push(block.content);
-        });
+    macroOrder.forEach(({ name, index: firstIndex }) => {
+        if (firstIndex !== index) return;
+        const entry = macroMap.get(name)!;
+        macroSections.push(`${mergeDocs(entry.docs)}\n${entry.body}`);
     });
 
     const registry = generateRegistry(definition);
@@ -321,13 +338,29 @@ function generateCDefinitionSection(
     const customVariables = definition.structure.variables
         .filter(variable => "customVariable" in variable)
         .map(variable => `extern ArgumentValue ${normalizeName(variable.customVariable.name, "snake")};`);
+    const variables = definition.structure.variables
+        .filter(variable => "variable" in variable)
+        .map(variable => {
+            const varName = normalizeName(variable.variable.name, "camel");
+            const typeName = normalizeName(variable.variable.value.structureCall.name, "kebab");
+            return `/**
+ * @return Builder property-call
+ */
+static Builder ${varName} = {
+    .type = "property-call",
+    .schema = { .exportName = 0, .chain = {
+        .typeName = "${typeName}",
+        .values = (ChainValue[]){ { .kind = V_PROPERTY_CALL, .as.propertyCall = { .name = "${varName}" } } },
+        .valueCount = 1,
+        .initFunction = {0},
+    } }
+};`;
+        });
     const customFunctions = definition.structure.functions
         .filter(func => "customFunction" in func)
         .map(func => `/**
- * @brief External implementation of the \`${func.customFunction.name}\` custom function.
- *
- * @param arg The argument value passed to the custom function.
- * @return The result of the custom function as an \`ArgumentValue\`.
+ * @param arg ArgumentValue
+ * @return ArgumentValue
  */
 extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const ArgumentValue *arg);`);
 
@@ -335,7 +368,7 @@ extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const A
     if (macroSections.length) parts.push(macroSections.join("\n\n"));
     parts.push(registry);
     if (creates) parts.push(creates);
-    const custom = [...customVariables, ...customFunctions].join("\n");
+    const custom = [...customVariables, ...variables, ...customFunctions].join("\n");
     if (custom) parts.push(custom);
 
     return `// ==== ${structureName} ====\n\n` + parts.join("\n\n");
@@ -359,9 +392,26 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
     const projectName = project.project.projectName;
     const guard = `GN_TREES_${normalizeName(projectName, "snake").toUpperCase()}_H`;
 
-    const usedMacros = new Set<string>();
+    const macroMap = new Map<string, { docs: { structure: string, doc: string }[], body: string }>();
+    const macroOrder: { name: string, index: number }[] = [];
+    project.project.definitions.forEach((definition, index) => {
+        const structureName = definition.structure.name;
+        definition.structure.functions.forEach(func => {
+            if (!("function" in func)) return;
+            functionMacroBlocks(func).forEach(block => {
+                const entry = macroMap.get(block.name);
+                if (entry) {
+                    entry.docs.push({ structure: structureName, doc: block.doc });
+                } else {
+                    macroMap.set(block.name, { docs: [{ structure: structureName, doc: block.doc }], body: block.body });
+                    macroOrder.push({ name: block.name, index });
+                }
+            });
+        });
+    });
+
     const definitionSections = project.project.definitions
-        .map((definition, index) => generateCDefinitionSection(definition, project, usedMacros, index))
+        .map((definition, index) => generateCDefinitionSection(definition, project, index, macroMap, macroOrder))
         .join("\n\n");
 
     const baseTypes = stripLocalIncludes(base["base-types.h"]);
@@ -377,16 +427,19 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
 #pragma GCC diagnostic pop
 #endif`;
 
+    const defPragmaOn = `#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif`;
+
     return `// Auto-generated single-header for ${projectName}
 #ifndef ${guard}
 #define ${guard}
 
-/* open_memstream memerlukan _POSIX_C_SOURCE sebelum header sistem apa pun. */
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200809L
 #endif
 
-/* cJSON disediakan terpisah (cJSON.h + cJSON.c) di folder yang sama. */
 #include "cJSON.h"
 
 ${baseTypes}
@@ -398,7 +451,9 @@ ${baseUtilsC}
 ${implPragmaOff}
 
 /* ---- definitions ---- */
+${defPragmaOn}
 ${definitionSections}
+${implPragmaOff}
 
 #endif /* ${guard} */
 `;
