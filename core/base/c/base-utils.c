@@ -843,13 +843,13 @@ static cJSON *jval(const ArgumentValue *d)
 
 static char *json_buf = NULL;
 
-static SchemaType getSchema_impl(const Builder *b, const char *exportName, const char *importString)
+static SchemaType getSchema_impl(const Builder *b, const char *exportName, ArgumentValue importPaths)
 {
     SchemaType s = b->schema;
     if (exportName)
         s.exportName = exportName;
-    if (importString)
-        s.chain.initFunction.importString = importString;
+    if (importPaths.type == D_MAP)
+        s.importPaths = importPaths;
     return s;
 }
 
@@ -858,6 +858,14 @@ static const char *getJSONSchema_impl(const SchemaType *s)
     cJSON *root = cJSON_CreateObject();
     cJSON *schema = cJSON_CreateObject();
     cJSON_AddStringToObject(schema, "exportName", s->exportName);
+    if (s->importPaths.type == D_MAP)
+    {
+        cJSON *ip = cJSON_CreateObject();
+        const MapEntry *e = s->importPaths.as.data;
+        for (size_t i = 0; i < s->importPaths.count; i++)
+            cJSON_AddStringToObject(ip, e[i].key, e[i].value.as.s);
+        cJSON_AddItemToObject(schema, "importPaths", ip);
+    }
     cJSON_AddItemToObject(schema, "chain", jchain(&s->chain));
     cJSON_AddItemToObject(root, "schema", schema);
 

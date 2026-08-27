@@ -91,12 +91,17 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                 }
             }
             getSchema(
-                exportName?: string
+                exportName?: string,
+                importPaths?: Partial<Record<LanguageType, string>>
             ): SchemaType {
                 if (exportName !== undefined && typeof exportName !== "string") {
                     throw new Error(\`getSchema exportName must be a string, but got \${typeof exportName}\`);
                 }
+                if (importPaths !== undefined && (typeof importPaths !== "object" || importPaths === null || Array.isArray(importPaths))) {
+                    throw new Error(\`getSchema importPaths must be an object, but got \${typeof importPaths}\`);
+                }
                 if (exportName) { this.${schemaVariableName}.schema.exportName = exportName }
+                if (importPaths) { this.${schemaVariableName}.schema.importPaths = { ...this.${schemaVariableName}.schema.importPaths, ...importPaths } }
                 return this.${schemaVariableName};
             }
             initFromStructure<T>(schema: SchemaType) {

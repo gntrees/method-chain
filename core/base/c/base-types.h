@@ -108,6 +108,7 @@ struct ChainType
 struct SchemaType
 {
     const char *exportName;
+    ArgumentValue importPaths;
     ChainType chain;
 };
 

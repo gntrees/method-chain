@@ -539,14 +539,33 @@ export class TypeConverter {
       },
     },
   };
-  getSchema(exportName?: string): SchemaType {
+  getSchema(
+    exportName?: string,
+    importPaths?: Partial<Record<LanguageType, string>>,
+  ): SchemaType {
     if (exportName !== undefined && typeof exportName !== "string") {
       throw new Error(
         `getSchema exportName must be a string, but got ${typeof exportName}`,
       );
     }
+    if (
+      importPaths !== undefined &&
+      (typeof importPaths !== "object" ||
+        importPaths === null ||
+        Array.isArray(importPaths))
+    ) {
+      throw new Error(
+        `getSchema importPaths must be an object, but got ${typeof importPaths}`,
+      );
+    }
     if (exportName) {
       this.schemaTypeConverter.schema.exportName = exportName;
+    }
+    if (importPaths) {
+      this.schemaTypeConverter.schema.importPaths = {
+        ...this.schemaTypeConverter.schema.importPaths,
+        ...importPaths,
+      };
     }
     return this.schemaTypeConverter;
   }
@@ -752,14 +771,33 @@ export class StringFormatter {
       },
     },
   };
-  getSchema(exportName?: string): SchemaType {
+  getSchema(
+    exportName?: string,
+    importPaths?: Partial<Record<LanguageType, string>>,
+  ): SchemaType {
     if (exportName !== undefined && typeof exportName !== "string") {
       throw new Error(
         `getSchema exportName must be a string, but got ${typeof exportName}`,
       );
     }
+    if (
+      importPaths !== undefined &&
+      (typeof importPaths !== "object" ||
+        importPaths === null ||
+        Array.isArray(importPaths))
+    ) {
+      throw new Error(
+        `getSchema importPaths must be an object, but got ${typeof importPaths}`,
+      );
+    }
     if (exportName) {
       this.schemaStringFormatter.schema.exportName = exportName;
+    }
+    if (importPaths) {
+      this.schemaStringFormatter.schema.importPaths = {
+        ...this.schemaStringFormatter.schema.importPaths,
+        ...importPaths,
+      };
     }
     return this.schemaStringFormatter;
   }
@@ -895,14 +933,33 @@ export class QueryBuilder {
       },
     },
   };
-  getSchema(exportName?: string): SchemaType {
+  getSchema(
+    exportName?: string,
+    importPaths?: Partial<Record<LanguageType, string>>,
+  ): SchemaType {
     if (exportName !== undefined && typeof exportName !== "string") {
       throw new Error(
         `getSchema exportName must be a string, but got ${typeof exportName}`,
       );
     }
+    if (
+      importPaths !== undefined &&
+      (typeof importPaths !== "object" ||
+        importPaths === null ||
+        Array.isArray(importPaths))
+    ) {
+      throw new Error(
+        `getSchema importPaths must be an object, but got ${typeof importPaths}`,
+      );
+    }
     if (exportName) {
       this.schemaQueryBuilder.schema.exportName = exportName;
+    }
+    if (importPaths) {
+      this.schemaQueryBuilder.schema.importPaths = {
+        ...this.schemaQueryBuilder.schema.importPaths,
+        ...importPaths,
+      };
     }
     return this.schemaQueryBuilder;
   }

@@ -8,7 +8,7 @@ const cGenDir = join(import.meta.dir, "gntrees-method-chain/c");
 
 let tempCounter = 0;
 
-function compileAndRun(runner: string): { status: number | null; signal: string | null; stderr: string } {
+function compileAndRun(runner: string): { status: number | null; signal: string | null; stderr: string; stdout: string } {
     const tag = `${process.pid}-${tempCounter++}`;
     const tempC = join(tmpdir(), `gntrees-runtime-c-${tag}.c`);
     const binary = join(tmpdir(), `gntrees-runtime-c-${tag}`);
@@ -19,7 +19,7 @@ function compileAndRun(runner: string): { status: number | null; signal: string 
             { stdio: "pipe" }
         );
         const res = spawnSync(binary, [], { encoding: "utf8" });
-        return { status: res.status, signal: res.signal, stderr: res.stderr };
+        return { status: res.status, signal: res.signal, stderr: res.stderr, stdout: res.stdout ?? "" };
     } finally {
         try { unlinkSync(tempC); } catch { /* ignore */ }
         try { unlinkSync(binary); } catch { /* ignore */ }
@@ -427,4 +427,228 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
+});
+
+test("string variables passed to builder functions", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    char *a = "data";
+    const char *b = "hello";
+    Builder bld = createTypeConverter(
+        variableName("c"),
+        stringify(a),
+        label(b),
+        tags(arr(a, b)));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain('"data"');
+    expect(stdout).toContain('"hello"');
+});
+
+test("numeric variables of each supported type", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    int i = 42;
+    long l = 7;
+    long long ll = 99;
+    double d = 3.14;
+    float f = 2.5f;
+    Builder bld = createTypeConverter(
+        variableName("c"),
+        numerify(i),
+        numerify(l),
+        numerify(ll),
+        numerify(d),
+        numerify(f));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("42");
+    expect(stdout).toContain("2.5");
+});
+
+test("numeric variables in query-builder", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    int i = 42;
+    long l = 7;
+    long long ll = 99;
+    double d = 3.14;
+    Builder bld = queryBuilder(
+        variableName("q"),
+        select("id"),
+        limit(i),
+        offset(l),
+        between(ll, d));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("42");
+    expect(stdout).toContain("3.14");
+});
+
+test("bool variable via boolify", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    int flag = 1;
+    Builder bld = createTypeConverter(variableName("c"), boolify(flag));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("boolean");
+});
+
+test("ArgumentValue variables pass through v_pass", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    ArgumentValue av = v_string("x");
+    ArgumentValue num = v_int(7);
+    Builder bld = createTypeConverter(variableName("c"), unify(av), unify(num));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain('"x"');
+});
+
+test("Builder variables used as sub-chain arguments", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder fmt = chain(format("hello"));
+    Builder sub = chain(col("id"));
+    Builder tc = createTypeConverter(variableName("c"), pipe(fmt));
+    Builder qb = queryBuilder(variableName("q"), select("id"), with("cte", sub));
+    printf("%s\\n", getJSONSchema(&tc));
+    printf("%s\\n", getJSONSchema(&qb));
+    return 0;
+}
+`;
+    const { status, stderr } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+});
+
+test("array and map variables in query-builder", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    ArgumentValue cols = arr("name", "age");
+    ArgumentValue setMap = map(entry("name", "bob"));
+    ArgumentValue nested = arr(arr("a", "b"), arr("c", "d"));
+    Builder bld = queryBuilder(
+        variableName("q"),
+        select(cols),
+        set(setMap),
+        values(nested));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain('"bob"');
+});
+
+test("combined schema built from variables prints values", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    char *name = "data";
+    const char *alias = "hello";
+    int i = 42;
+    double d = 3.14;
+    ArgumentValue av = v_string("x");
+    Builder fmt = chain(format("hello"));
+    Builder bld = createTypeConverter(
+        variableName("c"),
+        stringify(name),
+        label(alias),
+        numerify(i),
+        numerify(d),
+        unify(av),
+        pipe(fmt));
+    printf("%s\\n", getJSONSchema(&bld));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain('"data"');
+    expect(stdout).toContain('"hello"');
+    expect(stdout).toContain('"x"');
+    expect(stdout).toContain("42");
+    expect(stdout).toContain("3.14");
+});
+
+test("variable with type not covered by _Generic fails to compile", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    unsigned u = 5;
+    Builder b = createTypeConverter(variableName("c"), numerify(u));
+    return 0;
+}
+`;
+    expect(() => compileAndRun(runner)).toThrow();
+});
+
+test("getSchema with importPaths map sets importPaths in JSON", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder b = createTypeConverter(variableName("c"), stringify("hello"));
+    SchemaType s = getSchema(&b, map(entry("c", "./c-lib"), entry("typescript", "./ts-lib")));
+    printf("%s\\n", getJSONSchema(&s));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain('"importPaths"');
+    expect(stdout).toContain('"c": "./c-lib"');
+    expect(stdout).toContain('"typescript": "./ts-lib"');
+});
+
+test("getSchema without importPaths omits importPaths from JSON", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder b = createTypeConverter(variableName("c"), stringify("hello"));
+    SchemaType s = getSchema(&b);
+    printf("%s\\n", getJSONSchema(&s));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).not.toContain("importPaths");
 });

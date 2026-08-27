@@ -165,6 +165,25 @@ test("getSchema with non-string exportName throws", () => {
     expect(() => tc().getSchema(123)).toThrow("getSchema exportName");
 });
 
+test("getSchema with importPaths sets importPaths", () => {
+    const schema = tc().getSchema(undefined, { c: "./c", typescript: "./ts" });
+    expect(schema.schema.importPaths).toEqual({ c: "./c", typescript: "./ts" });
+});
+
+test("getSchema merges importPaths with existing defaults", () => {
+    const schema = tc().getSchema(undefined, { c: "./c" });
+    expect(schema.schema.importPaths).toEqual({
+        typescript: "../../../gntrees-method-chain/typescript/index",
+        c: "./c",
+    });
+});
+
+test("getSchema with non-object importPaths throws", () => {
+    expect(() => tc().getSchema(undefined, 123)).toThrow("getSchema importPaths");
+    expect(() => tc().getSchema(undefined, [])).toThrow("getSchema importPaths");
+    expect(() => tc().getSchema(undefined, null)).toThrow("getSchema importPaths");
+});
+
 test("initFromStructure with invalid schema throws", () => {
     expect(() => tc().initFromStructure({})).toThrow("Invalid schema");
 });
