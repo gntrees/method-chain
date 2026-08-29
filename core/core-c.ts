@@ -292,7 +292,7 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
     return `${compactComment(
         [
             { name: "variableName", type: "variableName( var : string )" },
-            { name: "...", type: "chain" },
+            { name: "...", type: "chain ( function-call | copy( builder ) )" },
         ],
         `Builder (schema) : ${kebab}`,
     )}

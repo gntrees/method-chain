@@ -9,6 +9,14 @@ services:
     environment:
       TARGET: ${TARGET:-typescript}
 
+  lingua-tungga:
+    image: oven/bun:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bun_node_modules:/app/node_modules
+    command: sh -c "bun install --frozen-lockfile && bun core/lingua-tungga/lingua-tungga-project.ts"
+
   build_image:
     build:
       context: .

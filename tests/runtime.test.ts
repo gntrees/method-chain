@@ -3,7 +3,10 @@ import type { ArgumentValue, StructType } from "./gntrees-method-chain/typescrip
 import {
     QueryBuilder,
     TypeConverter,
+    copy,
     createSchema,
+    createStringFormatter,
+    createTypeConverter,
     normalizeArgumentStructureCall,
     queryBuilder,
 } from "./gntrees-method-chain/typescript/index";
@@ -327,4 +330,49 @@ test("non-plain empty object in object struct throws", () => {
 
 test("QueryBuilder import is usable", () => {
     expect(QueryBuilder).toBeDefined();
+});
+test("copy() records the source structure as a copy value", () => {
+    const f = createTypeConverter("f").label();
+    const b = createTypeConverter("c", copy(f)).label("hello");
+    const values = b.getSchema().schema.chain.chain.values;
+    expect(values).toHaveLength(2);
+    expect(values[0].copy.structureName).toBe("type-converter");
+    expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
+    expect(values[0].copy.chain.chain.values[0].functionCall.name).toBe("label");
+    expect(values[1].functionCall.name).toBe("label");
+    expect(b.getSchema().schema.chain.chain.initFunction.variableName).toBe("c");
+});
+
+test("copy of empty structure is valid", () => {
+    const e = createTypeConverter("e");
+    const b = createTypeConverter("c", copy(e));
+    const values = b.getSchema().schema.chain.chain.values;
+    expect(values).toHaveLength(1);
+    expect(values[0].copy.chain.chain.values).toHaveLength(0);
+});
+
+test("copy rest args keep their order", () => {
+    const f = createTypeConverter("f").label();
+    const g = createTypeConverter("g").stringify("x");
+    const b = createTypeConverter("c", copy(f), copy(g));
+    const values = b.getSchema().schema.chain.chain.values;
+    expect(values.map((v: any) => ("copy" in v ? v.copy.chain.chain.initFunction.variableName : v.functionCall.name))).toEqual(["f", "g"]);
+});
+
+test("raw structure in init function throws", () => {
+    const f = createTypeConverter("f");
+    expect(() => createTypeConverter("c", f as any)).toThrow("wrap the structure with copy(...)");
+});
+
+test("cross-type copy throws", () => {
+    const s = createStringFormatter("s").format("x");
+    expect(() => createTypeConverter("c", copy(s))).toThrow("Cannot copy builder of structure 'string-formatter' into 'type-converter'");
+});
+
+test("copy source chain survives chaining on the target", () => {
+    const f = createTypeConverter("f").label("custom");
+    const b = createTypeConverter("c", copy(f)).numerify(42);
+    const values = b.getSchema().schema.chain.chain.values;
+    expect(values[0].copy.chain.chain.values[0].functionCall.arguments[0].argument).toEqual({ string: { value: "custom" } });
+    expect(values[1].functionCall.name).toBe("numerify");
 });

@@ -28,6 +28,7 @@ enum DynamicType
 
 typedef struct Builder Builder;
 typedef struct ChainType ChainType;
+typedef struct CopyType CopyType;
 typedef struct FunctionCallType FunctionCallType;
 typedef struct PropertyCallType PropertyCallType;
 typedef struct ChainValue ChainValue;
@@ -80,7 +81,8 @@ struct ArgumentType
 enum ChainValueKind
 {
     V_FUNCTION_CALL,
-    V_PROPERTY_CALL
+    V_PROPERTY_CALL,
+    V_COPY
 };
 
 struct FunctionCallType
@@ -97,6 +99,19 @@ struct PropertyCallType
     const Builder *builder;
 };
 
+struct ChainType
+{
+    const char *typeName;
+    ChainValue *values;
+    size_t valueCount;
+    InitFunctionType initFunction;
+};
+
+struct CopyType
+{
+    ChainType source;
+};
+
 struct ChainValue
 {
     enum ChainValueKind kind;
@@ -104,15 +119,8 @@ struct ChainValue
     {
         FunctionCallType functionCall;
         PropertyCallType propertyCall;
+        CopyType copy;
     } as;
-};
-
-struct ChainType
-{
-    const char *typeName;
-    ChainValue *values;
-    size_t valueCount;
-    InitFunctionType initFunction;
 };
 
 struct SchemaType
@@ -312,6 +320,30 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
     })
 
 /**
+ * @param src Builder (schema/init-function)
+ * @return Builder (copy)
+ *
+ * Membungkus builder hasil init function agar semua builder-nya ditaruh
+ * ke chain builder lain saat dipakai sebagai argumen chain (param kedua
+ * init function / isi chain()). Sumber disimpan sebagai nilai V_COPY di
+ * chain (bukan di-flatten) sehingga skema JSON tetap merekam operasi copy.
+ * Builder mentah tanpa copy() akan ditolak oleh builder_chain.
+ */
+#define copy(src) \
+    ((Builder){ \
+        .type = "copy", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_COPY, \
+                .as.copy = { .source = (src).schema.chain } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
+    })
+
+/**
  * @param X any
  * @return ArgumentValue
  */
@@ -373,23 +405,28 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
  * @param ... any
  * @return ArgumentValue (array)
  */
-#define arr(...) \
+#define arr(...) CAT(arr_, __VA_OPT__(1))(__VA_ARGS__)
+#define arr_() \
+    ((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 })
+#define arr_1(...) \
     ((ArgumentValue){ \
         .type = D_ARRAY, \
         .count = sizeof((ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }) / sizeof(ArgumentValue), \
-        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }, \
+        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) } \
     })
 
 /**
- * @param first MapEntry
  * @param ... MapEntry
  * @return ArgumentValue (map)
  */
-#define map(first, ...) \
+#define map(...) CAT(map_, __VA_OPT__(1))(__VA_ARGS__)
+#define map_() \
+    ((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })
+#define map_1(...) \
     ((ArgumentValue){ \
         .type = D_MAP, \
-        .count = sizeof((MapEntry[]){ first, __VA_ARGS__ }) / sizeof(MapEntry), \
-        .as.data = (MapEntry[]){ first, __VA_ARGS__ } \
+        .count = sizeof((MapEntry[]){ __VA_ARGS__ }) / sizeof(MapEntry), \
+        .as.data = (MapEntry[]){ __VA_ARGS__ } \
     })
 
 #endif
@@ -933,6 +970,15 @@ static void validate_chain_flow(const ChainType *chain, const StructureRegistry 
             if (!current)
                 fail("validate: property '%s' returns unknown structure", pc->name);
         }
+        else if (cv->kind == V_COPY)
+        {
+            const ChainType *src = &cv->as.copy.source;
+            if (!src->typeName || !src->typeName[0])
+                fail("validate: copy source chain without structure type");
+            if (strcmp(src->typeName, current->typeName) != 0)
+                fail("validate: cannot copy builder of structure '%s' into '%s'", src->typeName, current->typeName);
+            validate_chain_flow(src, registries, registryCount, src->typeName);
+        }
         else
         {
             fail("validate: unknown chain value kind");
@@ -1038,6 +1084,15 @@ static ChainType *deep_copy_chain(const ChainType *c)
                 }
             }
         }
+        else if (values[i].kind == V_COPY)
+        {
+            ChainType *srcCopy = deep_copy_chain(&values[i].as.copy.source);
+            if (srcCopy)
+            {
+                values[i].as.copy.source = *srcCopy;
+                free(srcCopy);
+            }
+        }
     }
     copy->values = values;
     return copy;
@@ -1059,7 +1114,14 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
     flat.initFunction = init;
     size_t total = 0;
     for (size_t i = 0; i < count; i++)
-        total += builders[i].schema.chain.valueCount;
+    {
+        const Builder *b = &builders[i];
+        if (b->type && strcmp(b->type, "init-function") == 0)
+            fail("builder_chain: builder '%s' (%s) cannot be placed directly in a chain; wrap it with copy(...)",
+                 b->schema.chain.initFunction.variableName ? b->schema.chain.initFunction.variableName : "(anonymous)",
+                 b->schema.chain.initFunction.name ? b->schema.chain.initFunction.name : "(unknown)");
+        total += b->schema.chain.valueCount;
+    }
     flat.valueCount = total;
     if (total == 0)
         return flat;
@@ -1183,13 +1245,19 @@ static cJSON *jchain(const ChainType *c)
             cJSON_AddBoolToObject(fc, "isTemplateLiteral", (cJSON_bool)cv->as.functionCall.isTemplateLiteral);
             cJSON_AddItemToObject(item, "functionCall", fc);
         }
-        else
+        else if (cv->kind == V_PROPERTY_CALL)
         {
             cJSON *pc = cJSON_CreateObject();
             cJSON_AddStringToObject(pc, "name", cv->as.propertyCall.name);
             if (cv->as.propertyCall.builder)
                 cJSON_AddItemToObject(pc, "builder", jchain(&cv->as.propertyCall.builder->schema.chain));
             cJSON_AddItemToObject(item, "propertyCall", pc);
+        }
+        else if (cv->kind == V_COPY)
+        {
+            cJSON *cp = cJSON_CreateObject();
+            cJSON_AddItemToObject(cp, "chain", jchain(&cv->as.copy.source));
+            cJSON_AddItemToObject(item, "copy", cp);
         }
         cJSON_AddItemToArray(values, item);
     }
@@ -1467,7 +1535,7 @@ static const PropertySignature type_converter_properties[] = {
 
 /**
  * @param variableName variableName( var : string )
- * @param ... chain
+ * @param ... chain ( function-call | copy( builder ) )
  * @return Builder (schema) : type-converter
  */
 #define createTypeConverter(meta, ...) \
@@ -1526,7 +1594,7 @@ static const FunctionSignature string_formatter_functions[] = {
 
 /**
  * @param variableName variableName( var : string )
- * @param ... chain
+ * @param ... chain ( function-call | copy( builder ) )
  * @return Builder (schema) : string-formatter
  */
 #define createStringFormatter(meta, ...) \
@@ -2016,7 +2084,7 @@ static const FunctionSignature query_builder_functions[] = {
 
 /**
  * @param variableName variableName( var : string )
- * @param ... chain
+ * @param ... chain ( function-call | copy( builder ) )
  * @return Builder (schema) : query-builder
  */
 #define queryBuilder(meta, ...) \

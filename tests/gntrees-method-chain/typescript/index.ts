@@ -81,8 +81,15 @@ type PropertyCallType = {
 
 type ChainType = {
   chain: {
-    values: (FunctionCallType | PropertyCallType)[];
+    values: (FunctionCallType | PropertyCallType | CopyType)[];
     initFunction: InitFunctionType;
+  };
+};
+
+type CopyType = {
+  copy: {
+    structureName: string;
+    chain: ChainType;
   };
 };
 
@@ -153,6 +160,8 @@ export type StructureCallType = {
 export type {
   SchemaType,
   FunctionCallType,
+  PropertyCallType,
+  CopyType,
   InitFunctionType,
   ArrayType,
   ObjectType,
@@ -209,6 +218,20 @@ export const normalizeArgumentStructureCall = (arg: ArgType): ArgumentValue => {
     throw new Error("Unknown structure call argument type");
   }
 };
+export function copy(source: ArgType): CopyBuilder {
+  if (source instanceof TypeConverter) {
+    return makeCopy("type-converter", source);
+  }
+  if (source instanceof StringFormatter) {
+    return makeCopy("string-formatter", source);
+  }
+  if (source instanceof QueryBuilder) {
+    return makeCopy("query-builder", source);
+  }
+  throw new Error(
+    "copy() expects a structure instance created by an init function",
+  );
+}
 
 export function createSchema(
   oldSchema: SchemaType,
@@ -519,6 +542,61 @@ function normalizeArgument(
   }
 }
 
+export type CopyBuilder = {
+  copy: {
+    structureName: string;
+    chain: SchemaType["schema"]["chain"];
+  };
+};
+
+export function makeCopy(
+  structureName: string,
+  source: { getSchema(): SchemaType },
+): CopyBuilder {
+  const schema = source.getSchema();
+  validateSchema(schema);
+  return {
+    copy: {
+      structureName,
+      chain: schema.schema.chain,
+    },
+  };
+}
+
+export function applyCopies(
+  schema: SchemaType,
+  copies: CopyBuilder[] | undefined,
+  targetStructureName: string,
+): void {
+  if (!copies || copies.length === 0) return;
+  for (const cp of copies) {
+    if (
+      typeof cp !== "object" ||
+      cp === null ||
+      !("copy" in cp) ||
+      typeof (cp as CopyBuilder).copy?.structureName !== "string" ||
+      typeof (cp as CopyBuilder).copy?.chain !== "object" ||
+      (cp as CopyBuilder).copy?.chain === null
+    ) {
+      throw new Error(
+        "Invalid builder argument in init function: wrap the structure with copy(...)",
+      );
+    }
+    if (cp.copy.structureName !== targetStructureName) {
+      throw new Error(
+        `Cannot copy builder of structure '${cp.copy.structureName}' into '${targetStructureName}'`,
+      );
+    }
+    const value: CopyType = {
+      copy: {
+        structureName: cp.copy.structureName,
+        chain: cp.copy.chain,
+      },
+    };
+    schema.schema.chain.chain.values.push(value);
+  }
+}
+
 // Auto-generated definition for type-converter
 
 export class TypeConverter {
@@ -576,6 +654,7 @@ export class TypeConverter {
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
+    copies?: CopyBuilder[],
   ) {
     if (
       typeof initFunction !== "object" ||
@@ -586,6 +665,7 @@ export class TypeConverter {
       throw new Error("Invalid init function");
     }
     this.schemaTypeConverter.schema.chain.chain.initFunction = initFunction;
+    applyCopies(this.schemaTypeConverter, copies, "type-converter");
     return this;
   }
   get testvar(): TypeConverter {
@@ -808,6 +888,7 @@ export class StringFormatter {
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
+    copies?: CopyBuilder[],
   ) {
     if (
       typeof initFunction !== "object" ||
@@ -818,6 +899,7 @@ export class StringFormatter {
       throw new Error("Invalid init function");
     }
     this.schemaStringFormatter.schema.chain.chain.initFunction = initFunction;
+    applyCopies(this.schemaStringFormatter, copies, "string-formatter");
     return this;
   }
   format(val: string): StringFormatter {
@@ -970,6 +1052,7 @@ export class QueryBuilder {
   }
   initFromInitFunction(
     initFunction: SchemaType["schema"]["chain"]["chain"]["initFunction"],
+    copies?: CopyBuilder[],
   ) {
     if (
       typeof initFunction !== "object" ||
@@ -980,6 +1063,7 @@ export class QueryBuilder {
       throw new Error("Invalid init function");
     }
     this.schemaQueryBuilder.schema.chain.chain.initFunction = initFunction;
+    applyCopies(this.schemaQueryBuilder, copies, "query-builder");
     return this;
   }
   select(
@@ -2621,33 +2705,48 @@ export class QueryBuilder {
 }
 
 // Auto-generated init functions
-export function createTypeConverter(variableName?: string) {
+export function createTypeConverter(
+  variableName?: string,
+  ...copies: CopyBuilder[]
+) {
   const structure = new TypeConverter();
-  structure.initFromInitFunction({
-    name: "create-type-converter",
-    variableName:
-      variableName ||
-      structure.getSchema().schema.chain.chain.initFunction.variableName,
-  });
+  structure.initFromInitFunction(
+    {
+      name: "create-type-converter",
+      variableName:
+        variableName ||
+        structure.getSchema().schema.chain.chain.initFunction.variableName,
+    },
+    copies,
+  );
   return structure;
 }
-export function createStringFormatter(variableName?: string) {
+export function createStringFormatter(
+  variableName?: string,
+  ...copies: CopyBuilder[]
+) {
   const structure = new StringFormatter();
-  structure.initFromInitFunction({
-    name: "create-string-formatter",
-    variableName:
-      variableName ||
-      structure.getSchema().schema.chain.chain.initFunction.variableName,
-  });
+  structure.initFromInitFunction(
+    {
+      name: "create-string-formatter",
+      variableName:
+        variableName ||
+        structure.getSchema().schema.chain.chain.initFunction.variableName,
+    },
+    copies,
+  );
   return structure;
 }
-export function queryBuilder(variableName?: string) {
+export function queryBuilder(variableName?: string, ...copies: CopyBuilder[]) {
   const structure = new QueryBuilder();
-  structure.initFromInitFunction({
-    name: "query-builder",
-    variableName:
-      variableName ||
-      structure.getSchema().schema.chain.chain.initFunction.variableName,
-  });
+  structure.initFromInitFunction(
+    {
+      name: "query-builder",
+      variableName:
+        variableName ||
+        structure.getSchema().schema.chain.chain.initFunction.variableName,
+    },
+    copies,
+  );
   return structure;
 }

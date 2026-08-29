@@ -17,6 +17,7 @@ const { schema: queryBuilderSchema } = await import("./data/cases/typescript/exa
 const { schema: defaultValueSchema } = await import("./data/cases/typescript/example-default-value");
 const { schema: propertyCallSchema } = await import("./data/cases/typescript/example-property-call");
 const { schema: paramCasesSchema } = await import("./data/cases/typescript/example-param-cases");
+const { schema: copySchema } = await import("./data/cases/typescript/example-copy");
 
 const getFile = async (path: string, language: LanguageType = "typescript") =>
     prettierContent(readFileSync(path, "utf8"), language);
@@ -77,7 +78,8 @@ const CASES = [
     { name: "query-builder", schema: queryBuilderSchema },
     { name: "default-value", schema: defaultValueSchema },
     { name: "property-call", schema: propertyCallSchema },
-    { name: "param-cases", schema: paramCasesSchema }
+    { name: "param-cases", schema: paramCasesSchema },
+    { name: "copy", schema: copySchema }
 ];
 
 for (const { name, schema } of CASES) {

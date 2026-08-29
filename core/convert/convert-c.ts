@@ -90,10 +90,29 @@ function renderPropertyCall(propertyCall: JsonValue, declarations: BuilderDecl[]
     return `(ChainValue){ .kind = V_PROPERTY_CALL, .as.propertyCall = { .name = ${cString(name)}, .builder = &${declName} } }`;
 }
 
+function renderCopy(copy: JsonValue, declarations: BuilderDecl[]): string {
+    const inner = (copy.chain as JsonValue).chain ?? copy.chain;
+    const init = inner.initFunction as JsonValue;
+    if (!init || !init.name || !init.variableName) {
+        throw new Error("Copy source chain requires a named init function");
+    }
+    const name = normalizeName(init.variableName, "camel");
+    if (!declarations.some(decl => decl.name === name)) {
+        declarations.push({
+            name,
+            initMacro: initMacro(init.name),
+            variableName: init.variableName,
+            values: renderChainValues(inner.values, declarations),
+        });
+    }
+    return `copy(${name})`;
+}
+
 function renderChainValues(values: JsonValue[], declarations: BuilderDecl[]): string[] {
     return values.map((value: JsonValue) => {
         if ("functionCall" in value) return renderFunctionCall(value.functionCall, declarations);
         if ("propertyCall" in value) return renderPropertyCall(value.propertyCall, declarations);
+        if ("copy" in value) return renderCopy(value.copy, declarations);
         throw new Error("Unsupported chain value for C");
     });
 }

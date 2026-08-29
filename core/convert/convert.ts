@@ -1,4 +1,4 @@
-import type { ArgumentType, ArgumentValue, InitFunctionType, LanguageType, SchemaType } from "../base/typescript/base-types";
+import type { ArgumentType, ArgumentValue, CopyType, InitFunctionType, LanguageType, SchemaType } from "../base/typescript/base-types";
 import { normalizeName, prettierContent } from "../utils";
 import { convertSchemaToC } from "./convert-c";
 
@@ -7,7 +7,25 @@ export async function convert(schema: SchemaType, target: LanguageType) {
         return prettierContent(convertSchemaToC(schema), "c");
     }
     if (target == "typescript" || target == "javascript") {
-        const chainContent = normalizeChain(schema.schema.chain, target, schema.schema.chain.chain.initFunction.variableName);
+        const mainChain = schema.schema.chain;
+        const mainValues = mainChain.chain.values;
+        const leadingCopies: CopyType[] = [];
+        let valueIndex = 0;
+        while (valueIndex < mainValues.length && "copy" in mainValues[valueIndex]) {
+            leadingCopies.push(mainValues[valueIndex] as CopyType);
+            valueIndex++;
+        }
+        const restValues = mainValues.slice(valueIndex);
+        if (restValues.some(value => "copy" in value)) {
+            throw new Error("copy() is only supported at the start of a chain for TypeScript output");
+        }
+        const restChain: SchemaType["schema"]["chain"] = {
+            chain: {
+                values: restValues,
+                initFunction: mainChain.chain.initFunction,
+            }
+        };
+        const chainContent = normalizeChain(restChain, target, mainChain.chain.initFunction.variableName);
         const findInitFunctionsRecursively = (chain: SchemaType["schema"]["chain"]): InitFunctionType[] => {
             let initFunctions: InitFunctionType[] = [];
             if (chain.chain.initFunction) {
@@ -20,28 +38,55 @@ export async function convert(schema: SchemaType, target: LanguageType) {
                             initFunctions.push(...findInitFunctionsRecursively(arg.argument));
                         }
                     }
+                } else if ("copy" in value) {
+                    initFunctions.push(...findInitFunctionsRecursively(value.copy.chain));
                 }
             }
             return initFunctions;
         }
-        const initFunctions = [
-            schema.schema.chain.chain.initFunction,
-            ...findInitFunctionsRecursively(schema.schema.chain)
-        ]        
+        const mainInitFunction = mainChain.chain.initFunction;
+        const copySourceVarNames = new Set(leadingCopies.map(value => value.copy.chain.chain.initFunction.variableName));
+        const copyDeclarations = leadingCopies.map(value => {
+            const sourceChain = value.copy.chain;
+            const init = sourceChain.chain.initFunction;
+            const content = normalizeChain(sourceChain, target, init.variableName);
+            return `const ${normalizeName(init.variableName, "camel")} = ${normalizeName(init.name, "camel")}("${normalizeName(init.variableName, "camel")}")${content}`;
+        });
+        const nestedInitFunctions = [
+            ...findInitFunctionsRecursively(restChain),
+        ]
+            .filter(initFunction => initFunction.variableName !== mainInitFunction.variableName)
+            .filter(initFunction => !copySourceVarNames.has(initFunction.variableName))
+            .filter((v, i, a) => a.findIndex(initFunction => initFunction.variableName === v.variableName) === i);
+        const copyArgs = leadingCopies.length > 0
+            ? `, ${leadingCopies.map(value => `copy(${normalizeName(value.copy.chain.chain.initFunction.variableName, "camel")})`).join(", ")}`
+            : "";
+        const mainDeclaration = `const ${normalizeName(mainInitFunction.variableName, "camel")} = ${normalizeName(mainInitFunction.name, "camel")}("${normalizeName(mainInitFunction.variableName, "camel")}"${copyArgs})`;
+        const declarationLines = [
+            ...copyDeclarations,
+            mainDeclaration,
+            ...nestedInitFunctions.map(initFunction => {
+                return `const ${normalizeName(initFunction.variableName, "camel")} = ${normalizeName(initFunction.name, "camel")}("${normalizeName(initFunction.variableName, "camel")}")`
+            }),
+        ].filter(line => line.length > 0).join("\n");
+        const importSymbols = [
+            ...new Set([
+                normalizeName(mainInitFunction.name, "camel"),
+                ...nestedInitFunctions.map(initFunction => normalizeName(initFunction.name, "camel")),
+                ...leadingCopies.map(value => normalizeName(value.copy.chain.chain.initFunction.name, "camel")),
+                ...(leadingCopies.length > 0 ? ["copy"] : []),
+            ]),
+        ];
         const importPaths = schema.schema.importPaths;
         const importPath = importPaths?.[target] ?? importPaths?.typescript ?? importPaths?.javascript;
-        const importSymbols = [...new Set(initFunctions.map(initFunction => normalizeName(initFunction.name, "camel")))];
         if (importSymbols.length > 0 && !importPath) {
             throw new Error(`No import path available for language "${target}". Set project.project.importPaths in the project config.`);
         }
         const importsContent = importPath ? `import { ${importSymbols.join(", ")} } from "${importPath}"` : "";
         const content = `${importsContent}
 
-        ${initFunctions.filter((v, i, a) => a.findIndex(initFunction => initFunction.variableName === v.variableName) === i)
-            .map(initFunction => {
-            return `const ${normalizeName(initFunction.variableName, "camel")} = ${normalizeName(initFunction.name, "camel")}("${normalizeName(initFunction.variableName, "camel")}")`
-        }).join("\n")}
-        export const ${normalizeName(schema.schema.exportName, "camel")} = ${chainContent ? normalizeName(schema.schema.chain.chain.initFunction.variableName, "camel") : ""}${chainContent}
+        ${declarationLines}
+        export const ${normalizeName(schema.schema.exportName, "camel")} = ${chainContent ? normalizeName(mainInitFunction.variableName, "camel") : ""}${chainContent}
     `
         return await prettierContent(content, "typescript");
     }

@@ -62,8 +62,15 @@ type PropertyCallType = {
 
 type ChainType = {
     chain: {
-        values: (FunctionCallType | PropertyCallType)[]
+        values: (FunctionCallType | PropertyCallType | CopyType)[]
         initFunction: InitFunctionType,
+    }
+}
+
+type CopyType = {
+    copy: {
+        structureName: string,
+        chain: ChainType,
     }
 }
 
@@ -125,6 +132,8 @@ export type StructureCallType = {
 export type {
     SchemaType,
     FunctionCallType,
+    PropertyCallType,
+    CopyType,
     InitFunctionType,
     ArrayType,
     ObjectType,

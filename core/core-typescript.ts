@@ -1,6 +1,7 @@
 import { normalizeName } from "./utils";
-import type { ProjectType } from "./core.types";
+import type { LanguageType, ProjectType, StatementSourceType } from "./core.types";
 import type { ArgumentValue, StructType, StructureCallType } from "./base/typescript/base-types";
+import { LinguaTungga } from "./lingua-tungga/lingua-tungga-legacy";
 
 function extractDefaultValue(defaultVal: ArgumentValue): any {
     if ("string" in defaultVal) return defaultVal.string.value;
@@ -24,6 +25,15 @@ function stripRelativeImports(content: string): string {
         .split("\n")
         .filter(line => !/^import .* from ["']\.\.?/.test(line))
         .join("\n");
+}
+
+function resolveStatementSource(source: StatementSourceType, fallbackLanguages: LanguageType[] = ["typescript", "javascript"]): string | undefined {
+    const resolved = source instanceof LinguaTungga ? source.getResolvedStatements() : source;
+    for (const lang of fallbackLanguages) {
+        const value = resolved[lang];
+        if (value !== undefined) return value;
+    }
+    return undefined;
 }
 
 export function generateTypeScriptContent(project: ProjectType, baseTypes: string, baseUtils: string): string {
@@ -109,18 +119,19 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
                 this.${schemaVariableName} = schema;
                 return this;
             }
-            initFromInitFunction(initFunction: SchemaType['schema']['chain']['chain']['initFunction']) {
+            initFromInitFunction(initFunction: SchemaType['schema']['chain']['chain']['initFunction'], copies?: CopyBuilder[]) {
                 if (typeof initFunction !== "object" || initFunction === null || typeof initFunction.name !== "string" || typeof initFunction.variableName !== "string") {
                     throw new Error("Invalid init function");
                 }
                 this.${schemaVariableName}.schema.chain.chain.initFunction = initFunction;
+                applyCopies(this.${schemaVariableName}, copies, "${normalizeName(definition.structure.name, "kebab")}");
                 return this;
             }
         `;
         definition.structure.variables.forEach(variable => {
             if ("customVariable" in variable) {
-                const value = variable.customVariable.value['typescript'] ?? variable.customVariable.value['javascript'];
-                if (value === undefined) throw new Error(`Custom variable ${variable.customVariable.name} requires a value string`);
+                const value = resolveStatementSource(variable.customVariable.value);
+                if (value === undefined) throw new Error(`Custom variable ${variable.customVariable.name} requires a value string or LinguaTungga`);
                 definitionContent += `${normalizeName(variable.customVariable.name, "camel")} = ${value};\n`;
             } else if ("variable" in variable) {
                 if ("structureCall" in variable.variable.value) {
@@ -136,10 +147,10 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
         });
         definition.structure.functions.forEach(func => {
             if ("customFunction" in func) {
-                const body = func.customFunction.body['typescript'] ?? func.customFunction.body['javascript'];
-                if (body === undefined) throw new Error(`Custom function ${func.customFunction.name} requires a body string`);
-                const returnType = func.customFunction.return['typescript'] ?? func.customFunction.return['javascript'];
-                if (returnType === undefined) throw new Error(`Custom function ${func.customFunction.name} requires a return type string`);
+                const body = resolveStatementSource(func.customFunction.body);
+                if (body === undefined) throw new Error(`Custom function ${func.customFunction.name} requires a body string or LinguaTungga`);
+                const returnType = resolveStatementSource(func.customFunction.return);
+                if (returnType === undefined) throw new Error(`Custom function ${func.customFunction.name} requires a return type string or LinguaTungga`);
                 const args = func.customFunction.arguments.map(arg => `${normalizeName(arg.argument.name, "camel")}: ${stringifyStruct(arg.argument.struct.struct)}${arg.argument.default !== undefined ? ` = ${JSON.stringify(extractDefaultValue(arg.argument.default))}` : ""}`);
                 definitionContent += `${normalizeName(func.customFunction.name, "camel")}(${args.join(', ')}): ${returnType} {\n${body}\n}\n`;
             } else if ("function" in func) {
@@ -173,13 +184,12 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
         let definitionContent = "";
         project.project.initFunctions.forEach(initFunction => {
             if ("structureCall" in initFunction.return) {
-                definitionContent += `export function ${normalizeName(initFunction.name, "camel")}(${initFunction.withVariableName ? "variableName?: string" : ""
-                    }) {
+                definitionContent += `export function ${normalizeName(initFunction.name, "camel")}(${initFunction.withVariableName ? "variableName?: string, " : ""}...copies: CopyBuilder[]) {
                     const structure = new ${stringifyStructureCall(initFunction.return, "pascal")}();
                     structure.initFromInitFunction({
                         name: "${initFunction.name}",
                         variableName: ${initFunction.withVariableName ? "variableName || structure.getSchema().schema.chain.chain.initFunction.variableName" : "structure.getSchema().schema.chain.chain.initFunction.variableName"}
-                    })
+                    }, copies)
                     return structure;
                 }\n`;
             } else {
@@ -221,6 +231,14 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
         }} else {
             throw new Error("Unknown structure call argument type");
          }
+    }
+    export function copy(source: ArgType): CopyBuilder {
+        ${project.project.definitions.map(definition =>
+        `if (source instanceof ${normalizeName(definition.structure.name, "pascal")}) {
+                return makeCopy("${normalizeName(definition.structure.name, "kebab")}", source);
+            } `
+    ).join('')}
+        throw new Error("copy() expects a structure instance created by an init function");
     }
     `;
     const baseUtilsInlined = stripRelativeImports(baseUtils);

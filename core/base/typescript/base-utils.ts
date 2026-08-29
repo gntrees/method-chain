@@ -1,5 +1,5 @@
 import { normalizeArgumentStructureCall } from './utils';
-import type { ArgumentType, ArgumentValue, StructType } from "./base-types";
+import type { ArgumentType, ArgumentValue, CopyType, StructType } from "./base-types";
 import type { SchemaType } from "./base-types";
 
 export function createSchema(
@@ -240,5 +240,49 @@ function normalizeArgument(arg: any, struct: StructType['struct']): ArgumentValu
         return normalizedArgumentStructureCall;
     } else {
         throw new Error("Unsupported struct type in normalizeArgument");
+    }
+}
+
+export type CopyBuilder = {
+    copy: {
+        structureName: string,
+        chain: SchemaType["schema"]["chain"],
+    }
+};
+
+export function makeCopy(structureName: string, source: { getSchema(): SchemaType }): CopyBuilder {
+    const schema = source.getSchema();
+    validateSchema(schema);
+    return {
+        copy: {
+            structureName,
+            chain: schema.schema.chain,
+        },
+    };
+}
+
+export function applyCopies(schema: SchemaType, copies: CopyBuilder[] | undefined, targetStructureName: string): void {
+    if (!copies || copies.length === 0) return;
+    for (const cp of copies) {
+        if (
+            typeof cp !== "object" ||
+            cp === null ||
+            !("copy" in cp) ||
+            typeof (cp as CopyBuilder).copy?.structureName !== "string" ||
+            typeof (cp as CopyBuilder).copy?.chain !== "object" ||
+            (cp as CopyBuilder).copy?.chain === null
+        ) {
+            throw new Error("Invalid builder argument in init function: wrap the structure with copy(...)");
+        }
+        if (cp.copy.structureName !== targetStructureName) {
+            throw new Error(`Cannot copy builder of structure '${cp.copy.structureName}' into '${targetStructureName}'`);
+        }
+        const value: CopyType = {
+            copy: {
+                structureName: cp.copy.structureName,
+                chain: cp.copy.chain,
+            },
+        };
+        schema.schema.chain.chain.values.push(value);
     }
 }

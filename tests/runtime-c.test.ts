@@ -3,6 +3,7 @@ import { execSync, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { unlinkSync, writeFileSync } from "node:fs";
+import { convertSchemaToC } from "../core/convert/convert-c";
 
 const cGenDir = join(import.meta.dir, "gntrees-method-chain/c");
 
@@ -651,4 +652,270 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).not.toContain("importPaths");
+});
+
+test("empty map() and arr() macros produce zero-count values", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    ArgumentValue m = map();
+    ArgumentValue a = arr();
+    if (m.type != D_MAP || a.type != D_ARRAY || m.count != 0 || a.count != 0) return 1;
+    printf("OK\\n");
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("OK");
+});
+
+test("non-empty map/arr dispatch preserves entries", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    ArgumentValue m = map(entry("a", v_int(1)), entry("b", v_int(2)));
+    ArgumentValue a = arr(v_int(1), v_int(2));
+    if (m.count != 2 || a.count != 2) return 1;
+    if (((const MapEntry *)m.as.data)[0].value.as.i != 1) return 1;
+    if (((const ArgumentValue *)a.as.data)[1].as.i != 2) return 1;
+    printf("OK\\n");
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("OK");
+});
+
+test("copy() records the source builder as a copy value", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder f = createTypeConverter(variableName("f"), label());
+    Builder b = createTypeConverter(variableName("c"), copy(f), label("hello"));
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const schema = JSON.parse(stdout);
+    const values = schema.schema.chain.chain.values;
+    expect(values).toHaveLength(2);
+    expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
+    expect(values[0].copy.chain.chain.values[0].functionCall.name).toBe("label");
+    expect(values[1].functionCall.name).toBe("label");
+    expect(schema.schema.chain.chain.initFunction.variableName).toBe("c");
+});
+
+test("raw init-function builder in chain args aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder f = createTypeConverter(variableName("f"), label());
+    Builder b = createTypeConverter(variableName("c"), f);
+    (void)b;
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("cannot be placed directly in a chain");
+    expect(stderr).toContain("copy(");
+});
+
+test("raw init-function builder inside chain() aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder f = createStringFormatter(variableName("s"), format("x"));
+    Builder b = createTypeConverter(variableName("c"), pipe(chain(f)));
+    (void)b;
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("cannot be placed directly in a chain");
+});
+
+test("cross-type copy aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder s = createStringFormatter(variableName("s"), format("x"));
+    Builder b = createTypeConverter(variableName("c"), copy(s));
+    (void)b;
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("cannot copy builder of structure 'string-formatter' into 'type-converter'");
+});
+
+test("copy of empty builder is valid", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder e = createTypeConverter(variableName("e"));
+    Builder b = createTypeConverter(variableName("c"), copy(e), stringify("x"));
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const schema = JSON.parse(stdout);
+    const values = schema.schema.chain.chain.values;
+    expect(values).toHaveLength(2);
+    expect(values[0].copy.chain.chain.values).toHaveLength(0);
+    expect(values[1].functionCall.name).toBe("stringify");
+});
+
+test("multiple copies keep their positions", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder f = createTypeConverter(variableName("f"), label());
+    Builder g = createTypeConverter(variableName("g"), stringify("x"));
+    Builder b = createTypeConverter(variableName("c"), copy(f), numerify(1), copy(g));
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const schema = JSON.parse(stdout);
+    const values = schema.schema.chain.chain.values;
+    expect(values).toHaveLength(3);
+    expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
+    expect(values[1].functionCall.name).toBe("numerify");
+    expect(values[2].copy.chain.chain.initFunction.variableName).toBe("g");
+});
+
+test("init-function builder stays intact inside functionCall param", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder s = createStringFormatter(variableName("s"), format("x"));
+    Builder b = createTypeConverter(variableName("c"), pipe(s));
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const schema = JSON.parse(stdout);
+    const values = schema.schema.chain.chain.values;
+    expect(values).toHaveLength(1);
+    const arg = values[0].functionCall.arguments[0].argument;
+    expect(arg.chain.chain.initFunction.variableName).toBe("s");
+    expect(arg.chain.chain.values[0].functionCall.name).toBe("format");
+});
+
+test("copy of the same source twice emits a single declaration", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder f = createTypeConverter(variableName("f"), label());
+    Builder b = createTypeConverter(variableName("c"), copy(f), label("hello"), copy(f));
+    b.schema.exportName = "copy-dedup";
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const schema = JSON.parse(stdout);
+    const values = schema.schema.chain.chain.values;
+    expect(values).toHaveLength(3);
+    expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
+    expect(values[2].copy.chain.chain.initFunction.variableName).toBe("f");
+
+    const code = convertSchemaToC(schema);
+    expect(code.match(/Builder f =/g)).toHaveLength(1);
+    expect(code.match(/copy\(f\)/g)).toHaveLength(2);
+
+    const roundtripRunner = `${code}
+#include <stdio.h>
+int main(void) {
+    Builder b = copy_dedup_schema();
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const roundtrip = compileAndRun(roundtripRunner);
+    expect(roundtrip.status).toBe(0);
+    expect(roundtrip.stderr).not.toContain("validate:");
+    const regenerated = JSON.parse(roundtrip.stdout);
+    expect(regenerated.schema.chain).toEqual(schema.schema.chain);
+});
+
+test("copy source without named init function throws during conversion", () => {
+    const bad = {
+        schema: {
+            exportName: "bad-copy",
+            chain: {
+                chain: {
+                    values: [
+                        { copy: { chain: { chain: { values: [], initFunction: {} } } } },
+                    ],
+                    initFunction: { name: "create-type-converter", variableName: "c", importString: "import" },
+                },
+            },
+        },
+    };
+    expect(() => convertSchemaToC(bad as any)).toThrow("Copy source chain requires a named init function");
+});
+
+test("copy source chain without structure type aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    ChainValue copyVal = { .kind = V_COPY, .as.copy = { .source = { .typeName = "", .values = 0, .valueCount = 0, .initFunction = {0} } } };
+    ChainType chain = { .typeName = "type-converter", .values = &copyVal, .valueCount = 1, .initFunction = { .name = "init", .variableName = "v", .importString = 0 } };
+    SchemaType s = { .exportName = 0, .chain = chain };
+    validate_schema(&s, gntrees_structures, COUNT_OF(gntrees_structures));
+    printf("NO ERROR\\n");
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("copy source chain without structure type");
+});
+
+test("copy source deep-copied: mutating source later does not leak into target", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder f = createTypeConverter(variableName("f"), label());
+    Builder b = createTypeConverter(variableName("c"), copy(f), label("hello"));
+    f.schema.chain.values[0].as.functionCall.name = "stringify";
+    printf("%s\\n", getJSONSchema(&b));
+    printf("===SPLIT===\\n");
+    printf("%s\\n", getJSONSchema(&f));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const [bJson, fJson] = stdout.split("===SPLIT===\n").map(part => JSON.parse(part));
+    const bValues = bJson.schema.chain.chain.values;
+    expect(bValues).toHaveLength(2);
+    expect(bValues[0].copy.chain.chain.values[0].functionCall.name).toBe("label");
+    expect(JSON.stringify(bJson)).not.toContain('"stringify"');
+    const fValues = fJson.schema.chain.chain.values;
+    expect(fValues[0].functionCall.name).toBe("stringify");
 });

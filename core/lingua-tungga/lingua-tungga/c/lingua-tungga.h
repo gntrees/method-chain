@@ -1,8 +1,494 @@
-#define _POSIX_C_SOURCE 200809L
+// Auto-generated single-header for lingua-tungga
+#ifndef GN_TREES_LINGUA_TUNGGA_H
+#define GN_TREES_LINGUA_TUNGGA_H
 
-#include "base-utils.h"
-#include "base-types.h"
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
+
 #include "cJSON.h"
+
+#ifndef GN_TREES_BASE_TYPES_H
+#define GN_TREES_BASE_TYPES_H
+
+#include <stddef.h>
+#include <alloca.h>
+
+enum DynamicType
+{
+    D_INT,
+    D_FLOAT,
+    D_STRING,
+    D_BOOL,
+    D_NULL,
+    D_MAP,
+    D_ARRAY,
+    D_CHAIN
+};
+
+typedef struct Builder Builder;
+typedef struct ChainType ChainType;
+typedef struct CopyType CopyType;
+typedef struct FunctionCallType FunctionCallType;
+typedef struct PropertyCallType PropertyCallType;
+typedef struct ChainValue ChainValue;
+typedef struct ArgumentValue ArgumentValue;
+typedef struct ArgumentType ArgumentType;
+typedef struct InitFunctionType InitFunctionType;
+typedef struct SchemaType SchemaType;
+typedef struct MapEntry MapEntry;
+typedef struct StructType StructType;
+typedef struct StructKey StructKey;
+typedef struct FunctionSignature FunctionSignature;
+typedef struct PropertySignature PropertySignature;
+typedef struct StructureRegistry StructureRegistry;
+
+struct ArgumentValue
+{
+    enum DynamicType type;
+    size_t count;
+    union
+    {
+        long long i;
+        double f;
+        const char *s;
+        const void *data;
+        const ChainType *chain;
+    } as;
+};
+
+struct MapEntry
+{
+    const char *key;
+    ArgumentValue value;
+};
+
+struct InitFunctionType
+{
+    const char *name;
+    const char *variableName;
+    const char *importString;
+};
+
+struct ArgumentType
+{
+    ArgumentValue argument;
+    int hasDefault;
+    ArgumentValue def;
+    int provided;
+};
+
+enum ChainValueKind
+{
+    V_FUNCTION_CALL,
+    V_PROPERTY_CALL,
+    V_COPY
+};
+
+struct FunctionCallType
+{
+    const char *name;
+    ArgumentType *arguments;
+    size_t argumentCount;
+    int isTemplateLiteral;
+};
+
+struct PropertyCallType
+{
+    const char *name;
+    const Builder *builder;
+};
+
+struct ChainType
+{
+    const char *typeName;
+    ChainValue *values;
+    size_t valueCount;
+    InitFunctionType initFunction;
+};
+
+struct CopyType
+{
+    ChainType source;
+};
+
+struct ChainValue
+{
+    enum ChainValueKind kind;
+    union
+    {
+        FunctionCallType functionCall;
+        PropertyCallType propertyCall;
+        CopyType copy;
+    } as;
+};
+
+struct SchemaType
+{
+    const char *exportName;
+    ArgumentValue importPaths;
+    ChainType chain;
+};
+
+struct Builder
+{
+    const char *type;
+    SchemaType schema;
+};
+
+enum StructKind
+{
+    S_STRING,
+    S_NUMBER,
+    S_BOOL,
+    S_NULL,
+    S_UNION,
+    S_ARRAY,
+    S_OBJECT,
+    S_MAP,
+    S_STRUCT_CALL
+};
+
+struct StructType
+{
+    enum StructKind kind;
+    union
+    {
+        struct
+        {
+            size_t count;
+            const StructType *types;
+        } unionType;
+        struct
+        {
+            const StructType *elem;
+        } array;
+        struct
+        {
+            size_t count;
+            const StructKey *keys;
+        } object;
+        struct
+        {
+            const StructType *value;
+        } map;
+        struct
+        {
+            const char *name;
+        } structureCall;
+    } as;
+};
+
+struct StructKey
+{
+    const char *key;
+    StructType type;
+};
+
+struct FunctionSignature
+{
+    const char *name;
+    int isTemplateLiteral;
+    const StructType *argumentStructs;
+    size_t argumentCount;
+    const char *returnTypeName;
+};
+
+struct PropertySignature
+{
+    const char *name;
+    const char *returnTypeName;
+};
+
+struct StructureRegistry
+{
+    const char *typeName;
+    const FunctionSignature *functions;
+    size_t functionCount;
+    const PropertySignature *properties;
+    size_t propertyCount;
+};
+
+/**
+ * @param x long long
+ * @return ArgumentValue (int)
+ */
+static ArgumentValue v_int(long long x);
+/**
+ * @param x double
+ * @return ArgumentValue (float)
+ */
+static ArgumentValue v_float(double x);
+/**
+ * @param s const char *
+ * @return ArgumentValue (string)
+ */
+static ArgumentValue v_string(const char *s);
+/**
+ * @param b int
+ * @return ArgumentValue (boolean)
+ */
+static ArgumentValue v_bool(int b);
+/**
+ * @return ArgumentValue (null)
+ */
+static ArgumentValue v_null(void);
+/**
+ * @param v ArgumentValue
+ * @return ArgumentValue
+ */
+static ArgumentValue v_pass(ArgumentValue v);
+/**
+ * @param b Builder
+ * @return ArgumentValue (chain)
+ */
+static ArgumentValue v_builder(Builder b);
+
+/**
+ * @param typeName const char *
+ * @param builders Builder[]
+ * @param count size_t
+ * @param init InitFunctionType
+ * @return ChainType
+ */
+static ChainType builder_chain(const char *typeName, const Builder *builders, size_t count, InitFunctionType init);
+
+/**
+ * @param typeName const char *
+ * @param value ChainValue *
+ * @return Builder (function-call)
+ */
+static Builder builder_single(const char *typeName, const ChainValue *value);
+
+static void validate_schema(const SchemaType *s, const StructureRegistry *registries, size_t registryCount);
+static SchemaType validate_and_return(SchemaType s, const StructureRegistry *registries, size_t registryCount);
+
+/**
+ * @param n const char *
+ * @param args ArgumentType[]
+ * @param cnt size_t
+ * @param tpl int
+ * @return Builder (function-call)
+ */
+#define builder_call(n, args, cnt, tpl) \
+    ((Builder){ \
+        .type = "function-call", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_FUNCTION_CALL, \
+                .as.functionCall = { \
+                    .name = (n), \
+                    .arguments = (args), \
+                    .argumentCount = (cnt), \
+                    .isTemplateLiteral = (tpl), \
+                } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
+    })
+
+/**
+ * @param val ArgumentValue
+ * @return ArgumentType
+ */
+#define mkarg(val) \
+    ((ArgumentType){ .argument = (val), .hasDefault = 0, .def = {0}, .provided = 1 })
+
+/**
+ * @param val ArgumentValue
+ * @param dflt ArgumentValue
+ * @return ArgumentType
+ */
+#define mkarg_def(val, dflt) \
+    ((ArgumentType){ .argument = (val), .hasDefault = 1, .def = (dflt), .provided = 1 })
+
+/**
+ * @param x const char *
+ * @return Builder (meta)
+ */
+#define variableName(x) \
+    ((Builder){ \
+        .type = "meta", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = "meta", \
+            .values = 0, \
+            .valueCount = 0, \
+            .initFunction = { .name = "variableName", .variableName = (x), .importString = 0 }, \
+        } } \
+    })
+
+/**
+ * @param src Builder (schema/init-function)
+ * @return Builder (copy)
+ *
+ * Membungkus builder hasil init function agar semua builder-nya ditaruh
+ * ke chain builder lain saat dipakai sebagai argumen chain (param kedua
+ * init function / isi chain()). Sumber disimpan sebagai nilai V_COPY di
+ * chain (bukan di-flatten) sehingga skema JSON tetap merekam operasi copy.
+ * Builder mentah tanpa copy() akan ditolak oleh builder_chain.
+ */
+#define copy(src) \
+    ((Builder){ \
+        .type = "copy", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_COPY, \
+                .as.copy = { .source = (src).schema.chain } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
+    })
+
+/**
+ * @param X any
+ * @return ArgumentValue
+ */
+#define v(X) _Generic((X),                 \
+    int: v_int,                            \
+    long: v_int,                           \
+    long long: v_int,                      \
+    double: v_float,                       \
+    float: v_float,                        \
+    char *: v_string,                      \
+    const char *: v_string,                \
+    ArgumentValue: v_pass,                 \
+    Builder: v_builder,                    \
+    const Builder: v_builder)(X)
+
+/**
+ * @param ... Builder
+ * @return Builder (chain)
+ */
+#define chain(...) \
+    ((Builder){ \
+        .type = "chain", \
+        .schema = { .exportName = 0, .chain = builder_chain( \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
+            (Builder[]){ __VA_ARGS__ }, \
+            BUILDER_COUNT(__VA_ARGS__), \
+            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+    })
+
+/**
+ * @param key const char *
+ * @param val any
+ * @return MapEntry
+ */
+#define entry(key, val) ((MapEntry){ (key), v(val) })
+
+#define CAT2(a, b) a##b
+#define CAT(a, b) CAT2(a, b)
+
+#define VA_MAP_1(m, a) m(a)
+#define VA_MAP_2(m, a, ...) m(a), VA_MAP_1(m, __VA_ARGS__)
+#define VA_MAP_3(m, a, ...) m(a), VA_MAP_2(m, __VA_ARGS__)
+#define VA_MAP_4(m, a, ...) m(a), VA_MAP_3(m, __VA_ARGS__)
+#define VA_MAP_5(m, a, ...) m(a), VA_MAP_4(m, __VA_ARGS__)
+#define VA_MAP_6(m, a, ...) m(a), VA_MAP_5(m, __VA_ARGS__)
+#define VA_MAP_7(m, a, ...) m(a), VA_MAP_6(m, __VA_ARGS__)
+#define VA_MAP_8(m, a, ...) m(a), VA_MAP_7(m, __VA_ARGS__)
+
+#define VA_MAP_N(_1, _2, _3, _4, _5, _6, _7, _8, N, ...) CAT(VA_MAP_, N)
+#define VA_MAP(m, ...) VA_MAP_N(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)(m, __VA_ARGS__)
+
+#define BUILDER_COUNT(...) \
+    (sizeof((Builder[]){ __VA_ARGS__ }) / sizeof(Builder))
+
+#define COUNT_OF(a) \
+    (sizeof(a) / sizeof((a)[0]))
+
+/**
+ * @param ... any
+ * @return ArgumentValue (array)
+ */
+#define arr(...) CAT(arr_, __VA_OPT__(1))(__VA_ARGS__)
+#define arr_() \
+    ((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 })
+#define arr_1(...) \
+    ((ArgumentValue){ \
+        .type = D_ARRAY, \
+        .count = sizeof((ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }) / sizeof(ArgumentValue), \
+        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) } \
+    })
+
+/**
+ * @param ... MapEntry
+ * @return ArgumentValue (map)
+ */
+#define map(...) CAT(map_, __VA_OPT__(1))(__VA_ARGS__)
+#define map_() \
+    ((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })
+#define map_1(...) \
+    ((ArgumentValue){ \
+        .type = D_MAP, \
+        .count = sizeof((MapEntry[]){ __VA_ARGS__ }) / sizeof(MapEntry), \
+        .as.data = (MapEntry[]){ __VA_ARGS__ } \
+    })
+
+#endif
+
+
+/* ---- base utilities (di-inline sebagai header-only) ---- */
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
+#ifndef GN_TREES_BASE_UTILS_H
+#define GN_TREES_BASE_UTILS_H
+
+
+static SchemaType getSchema_impl(const Builder *b, const char *exportName, ArgumentValue importPaths);
+
+static inline SchemaType getSchema_exportName_impl(const Builder *b, const char *exportName)
+{
+    return getSchema_impl(b, exportName, (ArgumentValue){0});
+}
+
+static inline SchemaType getSchema_importPaths_impl(const Builder *b, ArgumentValue importPaths)
+{
+    return getSchema_impl(b, NULL, importPaths);
+}
+
+#define GET_SCHEMA_1(b) getSchema_impl((b), NULL, (ArgumentValue){0})
+#define GET_SCHEMA_2(b, e) _Generic((e), \
+    const char *: getSchema_exportName_impl, \
+    char *: getSchema_exportName_impl, \
+    default: getSchema_importPaths_impl)((b), (e))
+#define GET_SCHEMA_3(b, e, i) getSchema_impl((b), (e), (i))
+#define GET_SCHEMA_SELECT(_1, _2, _3, NAME, ...) NAME
+/**
+ * @param b Builder *
+ * @param e const char * (optional) exportName ATAU ArgumentValue (optional) importPaths map
+ * @param i ArgumentValue (optional, map of language -> import path)
+ * @return SchemaType
+ */
+#define getSchema(...) \
+    GET_SCHEMA_SELECT(__VA_ARGS__, GET_SCHEMA_3, GET_SCHEMA_2, GET_SCHEMA_1)(__VA_ARGS__)
+
+static const char *getJSONSchema_impl(const SchemaType *s);
+
+static inline const char *getJSONSchema_builder(const Builder *b)
+{
+    return getJSONSchema_impl(&b->schema);
+}
+
+/**
+ * @param x SchemaType * | Builder *
+ * @return const char *
+ */
+#define getJSONSchema(x) \
+    _Generic((x), \
+        const Builder *: getJSONSchema_builder, \
+        Builder *: getJSONSchema_builder, \
+        default: getJSONSchema_impl)(x)
+
+#endif
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -911,3 +1397,155 @@ static const char *getJSONSchema_impl(const SchemaType *s)
     json_buf = buf;
     return json_buf;
 }
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+
+/* ---- definitions ---- */
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+// ==== lingua-tungga ====
+
+/**
+ * @param statements map<array<string>>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define setStatements(statements) \
+    builder_call("set-statements", ((ArgumentType[]){ mkarg(v(statements)) }), 1, 0)
+
+/**
+ * @param statements map<array<string>>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addStatements(statements) \
+    builder_call("add-statements", ((ArgumentType[]){ mkarg(v(statements)) }), 1, 0)
+
+/**
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define getStatements() \
+    builder_call("get-statements", ((ArgumentType[]){  }), 0, 0)
+
+/**
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define getResolvedStatements() \
+    builder_call("get-resolved-statements", ((ArgumentType[]){  }), 0, 0)
+
+/**
+ * @param functionName string
+ * @param args array<string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string> | chain<lingua-tungga>> (default: [])
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define structureFunctionCall(functionName, args) \
+    builder_call("structure-function-call", ((ArgumentType[]){ mkarg(v(functionName)), mkarg_def(v(args), v(((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 }))) }), 2, 0)
+
+/**
+ * @param variableName string
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define structureVariableCall(variableName) \
+    builder_call("structure-variable-call", ((ArgumentType[]){ mkarg(v(variableName)) }), 1, 0)
+
+/**
+ * @param functionName string
+ * @param args array<string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string> | chain<lingua-tungga>> (default: [])
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addStructureFunctionCall(functionName, args) \
+    builder_call("add-structure-function-call", ((ArgumentType[]){ mkarg(v(functionName)), mkarg_def(v(args), v(((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 }))) }), 2, 0)
+
+/**
+ * @param variableName string
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addStructureVariableCall(variableName) \
+    builder_call("add-structure-variable-call", ((ArgumentType[]){ mkarg(v(variableName)) }), 1, 0)
+
+/**
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addValue(value) \
+    builder_call("add-value", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
+
+/**
+ * @param variableName string
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addVariable(variableName, value) \
+    builder_call("add-variable", ((ArgumentType[]){ mkarg(v(variableName)), mkarg(v(value)) }), 2, 0)
+
+static const StructType lingua_tungga_set_statements_arg0 = { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } } } };
+static const StructType lingua_tungga_add_statements_arg0 = { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } } } };
+static const StructType lingua_tungga_get_statements_args[] = {  };
+static const StructType lingua_tungga_get_resolved_statements_args[] = {  };
+static const StructType lingua_tungga_structure_function_call_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_structure_function_call_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 7, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_STRING } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } } } };
+static const StructType lingua_tungga_structure_function_call_args[] = { lingua_tungga_structure_function_call_arg0, lingua_tungga_structure_function_call_arg1 };
+static const StructType lingua_tungga_structure_variable_call_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_structure_function_call_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_structure_function_call_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 7, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_STRING } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } } } };
+static const StructType lingua_tungga_add_structure_function_call_args[] = { lingua_tungga_add_structure_function_call_arg0, lingua_tungga_add_structure_function_call_arg1 };
+static const StructType lingua_tungga_add_structure_variable_call_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_value_arg0 = { .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } };
+static const StructType lingua_tungga_add_variable_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_variable_arg1 = { .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } };
+static const StructType lingua_tungga_add_variable_args[] = { lingua_tungga_add_variable_arg0, lingua_tungga_add_variable_arg1 };
+
+static const FunctionSignature lingua_tungga_functions[] = {
+    { "set-statements", 0, &lingua_tungga_set_statements_arg0, 1, "lingua-tungga" },
+    { "add-statements", 0, &lingua_tungga_add_statements_arg0, 1, "lingua-tungga" },
+    { "get-statements", 0, lingua_tungga_get_statements_args, 0, "lingua-tungga" },
+    { "get-resolved-statements", 0, lingua_tungga_get_resolved_statements_args, 0, "lingua-tungga" },
+    { "structure-function-call", 0, lingua_tungga_structure_function_call_args, 2, "lingua-tungga" },
+    { "structure-variable-call", 0, &lingua_tungga_structure_variable_call_arg0, 1, "lingua-tungga" },
+    { "add-structure-function-call", 0, lingua_tungga_add_structure_function_call_args, 2, "lingua-tungga" },
+    { "add-structure-variable-call", 0, &lingua_tungga_add_structure_variable_call_arg0, 1, "lingua-tungga" },
+    { "add-value", 0, &lingua_tungga_add_value_arg0, 1, "lingua-tungga" },
+    { "add-variable", 0, lingua_tungga_add_variable_args, 2, "lingua-tungga" },
+};
+
+/**
+ * @param variableName variableName( var : string )
+ * @param ... chain ( function-call | copy( builder ) )
+ * @return Builder (schema) : lingua-tungga
+ */
+#define linguaTungga(meta, ...) \
+    ((Builder){ \
+        .type = "init-function", \
+        .schema = validate_and_return( \
+            (SchemaType){ \
+                .exportName = "schema", \
+                .chain = builder_chain( \
+                    "lingua-tungga", \
+                    (Builder[]){ __VA_ARGS__ }, \
+                    BUILDER_COUNT(__VA_ARGS__), \
+                    (InitFunctionType){ \
+                        .name = "lingua-tungga", \
+                        .variableName = (meta).schema.chain.initFunction.variableName, \
+                        .importString = "import { linguaTungga } from \"./lingua-tungga.h\"", \
+                    }), \
+            }, \
+            gntrees_structures, COUNT_OF(gntrees_structures)) \
+    })
+
+/**
+ * @param arg ArgumentValue
+ * @return ArgumentValue
+ */
+extern ArgumentValue generate(const ArgumentValue *arg);
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+
+/* ---- structure registry ---- */
+static const StructureRegistry gntrees_structures[] = {
+    { "lingua-tungga", lingua_tungga_functions, COUNT_OF(lingua_tungga_functions), NULL, 0 },
+};
+
+#endif /* GN_TREES_LINGUA_TUNGGA_H */

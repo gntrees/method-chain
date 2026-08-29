@@ -18,6 +18,7 @@ enum DynamicType
 
 typedef struct Builder Builder;
 typedef struct ChainType ChainType;
+typedef struct CopyType CopyType;
 typedef struct FunctionCallType FunctionCallType;
 typedef struct PropertyCallType PropertyCallType;
 typedef struct ChainValue ChainValue;
@@ -70,7 +71,8 @@ struct ArgumentType
 enum ChainValueKind
 {
     V_FUNCTION_CALL,
-    V_PROPERTY_CALL
+    V_PROPERTY_CALL,
+    V_COPY
 };
 
 struct FunctionCallType
@@ -87,6 +89,19 @@ struct PropertyCallType
     const Builder *builder;
 };
 
+struct ChainType
+{
+    const char *typeName;
+    ChainValue *values;
+    size_t valueCount;
+    InitFunctionType initFunction;
+};
+
+struct CopyType
+{
+    ChainType source;
+};
+
 struct ChainValue
 {
     enum ChainValueKind kind;
@@ -94,15 +109,8 @@ struct ChainValue
     {
         FunctionCallType functionCall;
         PropertyCallType propertyCall;
+        CopyType copy;
     } as;
-};
-
-struct ChainType
-{
-    const char *typeName;
-    ChainValue *values;
-    size_t valueCount;
-    InitFunctionType initFunction;
 };
 
 struct SchemaType
@@ -302,6 +310,30 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
     })
 
 /**
+ * @param src Builder (schema/init-function)
+ * @return Builder (copy)
+ *
+ * Membungkus builder hasil init function agar semua builder-nya ditaruh
+ * ke chain builder lain saat dipakai sebagai argumen chain (param kedua
+ * init function / isi chain()). Sumber disimpan sebagai nilai V_COPY di
+ * chain (bukan di-flatten) sehingga skema JSON tetap merekam operasi copy.
+ * Builder mentah tanpa copy() akan ditolak oleh builder_chain.
+ */
+#define copy(src) \
+    ((Builder){ \
+        .type = "copy", \
+        .schema = { .exportName = 0, .chain = { \
+            .typeName = 0, \
+            .values = (ChainValue[]){ { \
+                .kind = V_COPY, \
+                .as.copy = { .source = (src).schema.chain } \
+            } }, \
+            .valueCount = 1, \
+            .initFunction = {0}, \
+        } } \
+    })
+
+/**
  * @param X any
  * @return ArgumentValue
  */
@@ -363,23 +395,28 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
  * @param ... any
  * @return ArgumentValue (array)
  */
-#define arr(...) \
+#define arr(...) CAT(arr_, __VA_OPT__(1))(__VA_ARGS__)
+#define arr_() \
+    ((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 })
+#define arr_1(...) \
     ((ArgumentValue){ \
         .type = D_ARRAY, \
         .count = sizeof((ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }) / sizeof(ArgumentValue), \
-        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) }, \
+        .as.data = (ArgumentValue[]){ VA_MAP(v, __VA_ARGS__) } \
     })
 
 /**
- * @param first MapEntry
  * @param ... MapEntry
  * @return ArgumentValue (map)
  */
-#define map(first, ...) \
+#define map(...) CAT(map_, __VA_OPT__(1))(__VA_ARGS__)
+#define map_() \
+    ((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })
+#define map_1(...) \
     ((ArgumentValue){ \
         .type = D_MAP, \
-        .count = sizeof((MapEntry[]){ first, __VA_ARGS__ }) / sizeof(MapEntry), \
-        .as.data = (MapEntry[]){ first, __VA_ARGS__ } \
+        .count = sizeof((MapEntry[]){ __VA_ARGS__ }) / sizeof(MapEntry), \
+        .as.data = (MapEntry[]){ __VA_ARGS__ } \
     })
 
 #endif
