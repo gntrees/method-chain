@@ -2139,6 +2139,111 @@ export class LinguaTungga {
       createSchema(this.getSchema(), "freeCVariables", [], false),
     );
   }
+  return(
+    value?:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "return",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+            default: { null: { value: null } },
+          },
+        ],
+        false,
+      ),
+    );
+  }
   stringConcat(
     left:
       | (string | number | boolean | null)

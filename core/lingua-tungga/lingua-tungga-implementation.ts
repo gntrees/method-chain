@@ -532,6 +532,13 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
             addVariable(state, args[0] as string, args[1]);
         } else if (functionName === "freeCVariables") {
             addStatements(state, { typescript: [], c: ["lt_free_all();"] });
+        } else if (functionName === "return") {
+            if (args[0] === null || args[0] === undefined) {
+                addStatements(state, { typescript: ["return;"], c: ["lt_free_all();", "return;"] });
+            } else {
+                const value = renderCallArgument(args[0]);
+                addStatements(state, { typescript: [`return ${value.typescript};`], c: [`return lt_detach(${value.c});`] });
+            }
         } else if (functionName === "if") {
             const condition = renderCondition(args[0]);
             addStatements(state, renderBlock(
@@ -627,7 +634,8 @@ export function generate(schema: SchemaType): Record<LanguageType, string> {
     const state: ChainState = { statements, variables };
     const result = runChain(schema.schema.chain.chain.values, state) as Record<LanguageType, unknown>;
 
-    if ((state.resultKind ?? "statements") !== "expression" && statements.c.length > 0 && statements.c[statements.c.length - 1] !== "lt_free_all();") {
+    const autoFree = (state.resultKind ?? "statements") !== "expression";
+    if (autoFree && statements.c.length > 0 && statements.c[statements.c.length - 1] !== "lt_free_all();") {
         statements.c.push("lt_free_all();");
     }
 
@@ -638,7 +646,7 @@ export function generate(schema: SchemaType): Record<LanguageType, string> {
             resolved[lang] = value.join("\n");
         } else if (typeof value === "string") {
             resolved[lang] = value;
-            if (lang === "c" && (state.resultKind ?? "statements") !== "expression" && value.length > 0 && !value.endsWith("lt_free_all();")) {
+            if (lang === "c" && autoFree && value.length > 0 && !value.endsWith("lt_free_all();")) {
                 resolved[lang] = `${value}\nlt_free_all();`;
             }
         }

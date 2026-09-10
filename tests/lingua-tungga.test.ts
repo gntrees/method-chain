@@ -324,6 +324,30 @@ test("expression producers are not auto-freed", async () => {
     expect(await linguaTungga().stringConcat("a", "b").generate()).toEqual({ typescript: '("a" + "b")', c: 'lt_str_concat(v_string("a"), v_string("b"))' });
 });
 
+test("return renders value, void and null per language", async () => {
+    expect(await linguaTungga().return(linguaTungga().addValue(5)).generate()).toEqual({ typescript: "return 5;", c: "return lt_detach(v_int(5));\nlt_free_all();" });
+    expect(await linguaTungga().return(linguaTungga().stringUpper("bob")).generate()).toEqual({ typescript: 'return "bob".toUpperCase();', c: 'return lt_detach(lt_to_upper(v_string("bob")));\nlt_free_all();' });
+    expect(await linguaTungga().return().generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;\nlt_free_all();" });
+    expect(await linguaTungga().return(null).generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;\nlt_free_all();" });
+    expect(await linguaTungga().return(linguaTungga().addValue(null)).generate()).toEqual({ typescript: "return null;", c: "return lt_detach(v_null());\nlt_free_all();" });
+});
+
+test("return frees all except the returned value", async () => {
+    const guarded = await linguaTungga()
+        .if(linguaTungga().equal(1, 1), linguaTungga().return(linguaTungga().addValue(1)))
+        .generate();
+    expect(guarded).toEqual({
+        typescript: "if (1 === 1) {\n  return 1;\n}",
+        c: "if (1 == 1) {\n  return lt_detach(v_int(1));\n}\nlt_free_all();",
+    });
+
+    const withVar = await linguaTungga()
+        .addVariable("x", 1)
+        .return(linguaTungga().variableForCounter("x"))
+        .generate();
+    expect(withVar).toEqual({ typescript: "const x = 1;\nreturn x;", c: "ArgumentValue x = v_int(1);\nreturn lt_detach(x);\nlt_free_all();" });
+});
+
 
 test("getStatements producer joins raw statements into resolved output", async () => {
     const out = await linguaTungga()
@@ -496,6 +520,8 @@ beforeAll(async () => {
         .getResolvedStatements()
         .generate();
 
+    const returned = await linguaTungga().return(linguaTungga().addValue(5)).generate();
+
     await generateProject(
         {
             project: {
@@ -544,6 +570,20 @@ beforeAll(async () => {
                                         return: {
                                             typescript: "void",
                                             c: "void",
+                                        },
+                                    },
+                                },
+                                {
+                                    customFunction: {
+                                        name: "returnValue",
+                                        arguments: [],
+                                        body: {
+                                            typescript: returned.typescript,
+                                            c: returned.c,
+                                        },
+                                        return: {
+                                            typescript: "unknown",
+                                            c: "ArgumentValue",
                                         },
                                     },
                                 },
@@ -600,6 +640,41 @@ int main(void) {
     (void)joined;
     (void)merged;
     lt_free_all();
+    return 0;
+}
+`;
+    try {
+        writeFileSync(runner, source);
+        const availability = spawnSync("gcc", ["-fsanitize=address", "-x", "c", "-", "-o", binary, "-I", cDir, join(cDir, "cJSON.c"), "-lm"], { input: "int main(void){return 0;}\n", encoding: "utf8" });
+        if (availability.status !== 0) return;
+
+        const compiled = spawnSync("gcc", ["-fsanitize=address", "-g", "-std=c11", "-o", binary, runner, join(cDir, "cJSON.c"), "-I", cDir, "-lm"], { encoding: "utf8" });
+        expect(compiled.status).toBe(0);
+
+        const executed = spawnSync(binary, [], { encoding: "utf8" });
+        expect(executed.status).toBe(0);
+        expect(executed.stderr).not.toContain("AddressSanitizer");
+        expect(executed.stderr).not.toContain("LeakSanitizer");
+    } finally {
+        try { unlinkSync(runner); } catch { /* ignore */ }
+        try { unlinkSync(binary); } catch { /* ignore */ }
+    }
+}, 30000);
+
+test("lt_detach frees everything except the returned value under asan", () => {
+    const cDir = join(projectDir, "c");
+    const tag = `${process.pid}-${Date.now()}`;
+    const runner = join(tmpdir(), `lt-detach-${tag}.c`);
+    const binary = join(tmpdir(), `lt-detach-${tag}`);
+    const source = `#include "test-lingua-tungga.h"
+#include <string.h>
+int main(void) {
+    ArgumentValue keep = lt_to_upper(v_string("keep"));
+    ArgumentValue drop = lt_str_concat(v_string("dro"), v_string("p"));
+    (void)drop;
+    ArgumentValue out = lt_detach(keep);
+    if (strcmp(out.as.s, "KEEP") != 0) return 2;
+    free((void *)out.as.s);
     return 0;
 }
 `;

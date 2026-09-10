@@ -503,6 +503,7 @@ static inline const char *getJSONSchema_builder(const Builder *b)
 
 static void *lt_allocs[LT_MAX_ALLOCS];
 static size_t lt_alloc_count = 0;
+static char lt_kept[LT_MAX_ALLOCS];
 
 static void *lt_alloc(size_t n)
 {
@@ -517,6 +518,63 @@ static void lt_free_all(void)
     for (size_t i = 0; i < lt_alloc_count; i++)
         free(lt_allocs[i]);
     lt_alloc_count = 0;
+}
+
+static void lt_mark_ptr(const void *p)
+{
+    if (!p)
+        return;
+    for (size_t i = 0; i < lt_alloc_count; i++)
+        if (lt_allocs[i] == p)
+        {
+            lt_kept[i] = 1;
+            return;
+        }
+}
+
+static void lt_mark_value(ArgumentValue v)
+{
+    switch (v.type)
+    {
+    case D_STRING:
+        lt_mark_ptr(v.as.s);
+        break;
+    case D_ARRAY:
+    {
+        lt_mark_ptr(v.as.data);
+        const ArgumentValue *items = v.as.data;
+        for (size_t i = 0; i < v.count; i++)
+            lt_mark_value(items[i]);
+        break;
+    }
+    case D_MAP:
+    {
+        lt_mark_ptr(v.as.data);
+        const MapEntry *entries = v.as.data;
+        for (size_t i = 0; i < v.count; i++)
+        {
+            lt_mark_ptr(entries[i].key);
+            lt_mark_value(entries[i].value);
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+/* Free semua alokasi arena kecuali yang reachable dari `v`, lalu keluarkan
+ * alokasi milik `v` dari tracking (ownership pindah ke pemanggil). */
+static ArgumentValue lt_detach(ArgumentValue v)
+{
+    for (size_t i = 0; i < lt_alloc_count; i++)
+        lt_kept[i] = 0;
+    lt_mark_value(v);
+    for (size_t i = 0; i < lt_alloc_count; i++)
+        if (!lt_kept[i])
+            free(lt_allocs[i]);
+    lt_alloc_count = 0;
+    return v;
 }
 
 static ArgumentValue lt_make_arr(ArgumentValue *items, size_t count)

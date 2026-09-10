@@ -135,6 +135,7 @@ const linguaTunggaStructure: StructureType = {
             ]),
             ltFunction("increment-for-counter", [arg("target", operatorOperand)]),
             ltFunction("free-c-variables"),
+            ltFunction("return", [argWithDefault("value", operatorOperand, { null: { value: null } })]),
             ltFunction("string-concat", [arg("left", operatorOperand), arg("right", operatorOperand)]),
             ltFunction("string-length", [arg("value", operatorOperand)]),
             ltFunction("string-upper", [arg("value", operatorOperand)]),
