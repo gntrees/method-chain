@@ -6,7 +6,7 @@ export async function convert(schema: SchemaType, target: LanguageType) {
     if (target == "c") {
         return prettierContent(convertSchemaToC(schema), "c");
     }
-    if (target == "typescript" || target == "javascript") {
+    if (target == "typescript") {
         const mainChain = schema.schema.chain;
         const mainValues = mainChain.chain.values;
         const leadingCopies: CopyType[] = [];
@@ -78,7 +78,7 @@ export async function convert(schema: SchemaType, target: LanguageType) {
             ]),
         ];
         const importPaths = schema.schema.importPaths;
-        const importPath = importPaths?.[target] ?? importPaths?.typescript ?? importPaths?.javascript;
+        const importPath = importPaths?.[target] ?? importPaths?.typescript;
         if (importSymbols.length > 0 && !importPath) {
             throw new Error(`No import path available for language "${target}". Set project.project.importPaths in the project config.`);
         }
@@ -129,7 +129,7 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
         }
         return normalizeArgumentValue(arg.argument);
     }
-    if (target == "typescript" || target == "javascript") {
+    if (target == "typescript") {
         return chain.chain.values.map(value => {
             if ("functionCall" in value) {
                 let args: string;

@@ -919,3 +919,64 @@ int main(void) {
     const fValues = fJson.schema.chain.chain.values;
     expect(fValues[0].functionCall.name).toBe("stringify");
 });
+
+test("custom function dispatches to the matching structure impl", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder tc = createTypeConverter(variableName("c"), stringify("x"));
+    Builder sf = createStringFormatter(variableName("s"), format("y"));
+    printf("%s\\n", render(tc, "hello"));
+    printf("%s\\n", render(sf, "world"));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("type-converter");
+    expect(stdout).toContain("string-formatter");
+});
+
+test("custom function on wrong structure aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder qb = queryBuilder(variableName("q"));
+    (void)render(qb, "x");
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("not a member");
+});
+
+test("custom function wrong argument type aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder tc = createTypeConverter(variableName("c"));
+    (void)render(tc, 42);
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("type mismatch");
+});
+
+test("custom function without arguments works", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder qb = queryBuilder(variableName("q"));
+    printf("%s\\n", sign(qb));
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain("query-builder-sign");
+});

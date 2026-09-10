@@ -8,9 +8,9 @@ import type {
 } from "./lingua-tungga/typescript/index";
 import { normalizeName } from "../utils";
 
-type ExpressionRecord = Partial<Record<LanguageType, string>>;
-type StatementsRecord = Partial<Record<LanguageType, string[]>>;
-type VariablesRecord = Partial<Record<LanguageType, Record<string, string>>>;
+type ExpressionRecord = Record<LanguageType, string>;
+type StatementsRecord = Record<LanguageType, string[]>;
+type VariablesRecord = Record<LanguageType, Record<string, string>>;
 
 type ChainValue = FunctionCallType | PropertyCallType | CopyType;
 
@@ -20,7 +20,7 @@ type ChainState = {
     result?: unknown;
 };
 
-const LANGUAGE_KEYS: LanguageType[] = ["typescript", "javascript", "c"];
+const LANGUAGE_KEYS: LanguageType[] = ["typescript", "c"];
 
 function escapeCString(value: string): string {
     return value.replace(/"/g, '\\"');
@@ -153,7 +153,7 @@ function renderCallArgument(argument: unknown): ExpressionRecord {
         return argument;
     }
     if (isChainArgument(argument)) {
-        const subState: ChainState = { statements: {}, variables: {} };
+        const subState: ChainState = { statements: { typescript: [], c: [] }, variables: { typescript: {}, c: {} } };
         return renderCallArgument(runChain(argument.chain.values, subState));
     }
     return renderValue(argument);
@@ -163,7 +163,7 @@ function structureFunctionCall(functionName: string, args: unknown[]): Expressio
     const method = normalizeName(functionName, "camel", true);
     const renderedArgs = args.map((arg) => renderCallArgument(arg));
     return {
-        typescript: `this.${method}(${renderedArgs.map((arg) => pickExpression(arg, ["typescript", "javascript"])).join(", ")})`,
+        typescript: `this.${method}(${renderedArgs.map((arg) => pickExpression(arg, ["typescript"])).join(", ")})`,
         c: `${method}(${renderedArgs.map((arg) => pickExpression(arg, ["c"])).join(", ")})`,
     };
 }
@@ -186,47 +186,30 @@ function addStatements(state: ChainState, statements: StatementsRecord): void {
 }
 
 function addExpressionStatements(state: ChainState, expressions: ExpressionRecord): void {
-    const statements: StatementsRecord = {};
-    for (const [lang, expression] of Object.entries(expressions)) {
-        if (expression !== undefined) {
-            statements[lang as LanguageType] = [expression];
-        }
-    }
-    addStatements(state, statements);
+    addStatements(state, {
+        typescript: [`${expressions.typescript};`],
+        c: [`${expressions.c};`],
+    });
 }
 
 function addVariable(state: ChainState, variableName: string, value: unknown): void {
     const valueExpressions = renderValue(value);
-    const declarations: StatementsRecord = {};
-    for (const [lang, expression] of Object.entries(valueExpressions)) {
-        const statement = lang === "c"
-            ? `ArgumentValue ${variableName} = ${expression};`
-            : `const ${variableName} = ${expression};`;
-        declarations[lang as LanguageType] = [statement];
-    }
-
-    for (const [lang, statements] of Object.entries(declarations)) {
-        const statement = statements?.[0];
-        if (statement === undefined) {
-            continue;
-        }
-        state.variables[lang as LanguageType] = {
-            ...(state.variables[lang as LanguageType] ?? {}),
-            [variableName]: statement,
-        };
-    }
-
+    const tsStatement = `const ${variableName} = ${valueExpressions.typescript};`;
+    const cStatement = `ArgumentValue ${variableName} = ${valueExpressions.c};`;
+    const declarations: StatementsRecord = {
+        typescript: [tsStatement],
+        c: [cStatement],
+    };
+    state.variables.typescript = { ...state.variables.typescript, [variableName]: tsStatement };
+    state.variables.c = { ...state.variables.c, [variableName]: cStatement };
     addStatements(state, declarations);
 }
 
-function getResolvedStatements(state: ChainState): Partial<Record<LanguageType, string>> {
-    const resolved: Partial<Record<LanguageType, string>> = {};
-    for (const [lang, statements] of Object.entries(state.statements)) {
-        if (statements?.length) {
-            resolved[lang as LanguageType] = statements.join("\n");
-        }
-    }
-    return resolved;
+function getResolvedStatements(state: ChainState): Record<LanguageType, string> {
+    return {
+        typescript: state.statements.typescript.join("\n"),
+        c: state.statements.c.join("\n"),
+    };
 }
 
 function runChain(values: ChainValue[], state: ChainState): unknown {
@@ -265,11 +248,20 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
     return state.result ?? getResolvedStatements(state);
 }
 
-export function generate(schema: SchemaType): string {
-    const statements: StatementsRecord = {};
-    const variables: VariablesRecord = {};
+export function generate(schema: SchemaType): Record<LanguageType, string> {
+    const statements: StatementsRecord = { typescript: [], c: [] };
+    const variables: VariablesRecord = { typescript: {}, c: {} };
 
-    const result = runChain(schema.schema.chain.chain.values, { statements, variables });
+    const result = runChain(schema.schema.chain.chain.values, { statements, variables }) as Record<LanguageType, unknown>;
 
-    return JSON.stringify(result, null, 2);
+    const resolved: Record<LanguageType, string> = { typescript: "", c: "" };
+    for (const lang of LANGUAGE_KEYS) {
+        const value = result[lang];
+        if (Array.isArray(value)) {
+            resolved[lang] = value.join("\n");
+        } else if (typeof value === "string") {
+            resolved[lang] = value;
+        }
+    }
+    return resolved;
 }

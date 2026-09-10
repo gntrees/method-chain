@@ -27,6 +27,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .cache
 *.tsbuildinfo
 
+# generated test output
+tests/.generated/
+
 # IntelliJ based IDEs
 .idea
 

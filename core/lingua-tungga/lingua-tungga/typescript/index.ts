@@ -1,6 +1,6 @@
 // Auto-generated index for lingua-tungga
 
-export type LanguageType = "typescript" | "javascript" | "c";
+export type LanguageType = "typescript" | "c";
 
 type StringType = {
   string: {
@@ -1144,7 +1144,7 @@ export class LinguaTungga {
       ),
     );
   }
-  generate(): Promise<string> {
+  generate(): Promise<Record<LanguageType, string>> {
     return import("../../lingua-tungga-implementation").then((m) =>
       m.generate(this.getSchema()),
     );

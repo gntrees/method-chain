@@ -1,6 +1,6 @@
 // Auto-generated index for gntrees-method-chain
 
-export type LanguageType = "typescript" | "javascript" | "c";
+export type LanguageType = "typescript" | "c";
 
 type StringType = {
   string: {
@@ -829,6 +829,9 @@ export class TypeConverter {
       ),
     );
   }
+  render(value: string): string {
+    return "type-converter:" + value;
+  }
 }
 
 // Auto-generated definition for string-formatter
@@ -992,6 +995,9 @@ export class StringFormatter {
         false,
       ),
     );
+  }
+  render(value: string): string {
+    return "string-formatter:" + value;
   }
 }
 
@@ -2701,6 +2707,9 @@ export class QueryBuilder {
         false,
       ),
     );
+  }
+  sign(): string {
+    return "query-builder-sign";
   }
 }
 

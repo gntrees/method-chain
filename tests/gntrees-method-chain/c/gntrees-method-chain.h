@@ -1508,6 +1508,35 @@ static const char *getJSONSchema_impl(const SchemaType *s)
 #define tags_() \
     tags_1(arr("default"))
 
+/*
+ * type-converter
+ *   param => value : string
+ *   return => char *
+ * 
+ * string-formatter
+ *   param => value : string
+ *   return => char *
+ */
+static char * type_converter_render_impl(Builder builder, ArgumentType *args, size_t count) {
+return "type-converter";
+}
+
+static char * string_formatter_render_impl(Builder builder, ArgumentType *args, size_t count) {
+return "string-formatter";
+}
+
+static const StructType type_converter_render_arg0 = { .kind = S_STRING };
+static const FunctionSignature type_converter_render_sig = { "render", 0, &type_converter_render_arg0, 1, "type-converter" };
+
+#define render(builder, value) \
+    ({ \
+        ArgumentType _args[] = { mkarg(v(value)) }; \
+        if (!(builder).schema.chain.typeName || !(strcmp((builder).schema.chain.typeName, "type-converter") == 0 || strcmp((builder).schema.chain.typeName, "string-formatter") == 0)) \
+            fail("custom function 'render' is not a member of structure '%s'", (builder).schema.chain.typeName ? (builder).schema.chain.typeName : "(none)"); \
+        validate_function_args(&(FunctionCallType){ .name = "render", .arguments = _args, .argumentCount = 1, .isTemplateLiteral = 0 }, &type_converter_render_sig, gntrees_structures, COUNT_OF(gntrees_structures)); \
+        strcmp((builder).schema.chain.typeName, "type-converter") == 0 ? type_converter_render_impl((builder), _args, 1) : string_formatter_render_impl((builder), _args, 1); \
+    })
+
 static const StructType type_converter_stringify_arg0 = { .kind = S_STRING };
 static const StructType type_converter_numerify_arg0 = { .kind = S_NUMBER };
 static const StructType type_converter_boolify_arg0 = { .kind = S_BOOL };
@@ -1962,6 +1991,22 @@ static const FunctionSignature string_formatter_functions[] = {
  */
 #define table(table) \
     builder_call("table", ((ArgumentType[]){ mkarg(v(table)) }), 1, 0)
+
+/**
+ * @return char *
+ */
+static char * query_builder_sign_impl(Builder builder, ArgumentType *args, size_t count) {
+return "query-builder-sign";
+}
+
+static const FunctionSignature query_builder_sign_sig = { "sign", 0, 0, 0, "query-builder" };
+
+#define sign(builder) \
+    ({ \
+        if (!(builder).schema.chain.typeName || !(strcmp((builder).schema.chain.typeName, "query-builder") == 0)) \
+            fail("custom function 'sign' is not a member of structure '%s'", (builder).schema.chain.typeName ? (builder).schema.chain.typeName : "(none)"); \
+        query_builder_sign_impl((builder), 0, 0); \
+    })
 
 static const StructType query_builder_select_arg0 = { .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } } } } } } };
 static const StructType query_builder_from_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };

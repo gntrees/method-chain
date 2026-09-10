@@ -39,7 +39,7 @@ export function normalizeName(name: string, target: "camel" | "pascal" | "snake"
 export async function prettierContent(content: string, language: LanguageType) {
     if (language === "c") return content;
     const languageKey = (() => {
-        if (language === "typescript" || language === "javascript") return "typescript";
+        if (language === "typescript") return "typescript";
         // if (language === "go") return "go";
         // if (language === "php") return "php";
         throw new Error("Unsupported language for prettier");

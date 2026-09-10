@@ -1480,6 +1480,22 @@ static const char *getJSONSchema_impl(const SchemaType *s)
 #define addVariable(variableName, value) \
     builder_call("add-variable", ((ArgumentType[]){ mkarg(v(variableName)), mkarg(v(value)) }), 2, 0)
 
+/**
+ * @return char *
+ */
+static char * lingua_tungga_generate_impl(Builder builder, ArgumentType *args, size_t count) {
+/* implemented externally */
+}
+
+static const FunctionSignature lingua_tungga_generate_sig = { "generate", 0, 0, 0, "lingua-tungga" };
+
+#define generate(builder) \
+    ({ \
+        if (!(builder).schema.chain.typeName || !(strcmp((builder).schema.chain.typeName, "lingua-tungga") == 0)) \
+            fail("custom function 'generate' is not a member of structure '%s'", (builder).schema.chain.typeName ? (builder).schema.chain.typeName : "(none)"); \
+        lingua_tungga_generate_impl((builder), 0, 0); \
+    })
+
 static const StructType lingua_tungga_set_statements_arg0 = { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } } } };
 static const StructType lingua_tungga_add_statements_arg0 = { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } } } };
 static const StructType lingua_tungga_get_statements_args[] = {  };
@@ -1533,12 +1549,6 @@ static const FunctionSignature lingua_tungga_functions[] = {
             }, \
             gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
-
-/**
- * @param arg ArgumentValue
- * @return ArgumentValue
- */
-extern ArgumentValue generate(const ArgumentValue *arg);
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif

@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
-import type { ArgumentValue, StructType } from "./gntrees-method-chain/typescript/index";
+import type {
+    ArgumentValue,
+    CopyType,
+    FunctionCallType,
+    PropertyCallType,
+    StructType,
+} from "./gntrees-method-chain/typescript/index";
 import {
     QueryBuilder,
     TypeConverter,
@@ -18,6 +24,16 @@ const firstArg = (schema: any): { argument: ArgumentValue; default: ArgumentValu
     const value = schema.schema.chain.chain.values[0];
     if (!("functionCall" in value)) throw new Error("expected a function call");
     return value.functionCall.arguments[0];
+};
+
+const copyValue = (value: FunctionCallType | PropertyCallType | CopyType): CopyType["copy"] => {
+    if (!("copy" in value)) throw new Error("expected a copy");
+    return value.copy;
+};
+
+const callValue = (value: FunctionCallType | PropertyCallType | CopyType): FunctionCallType["functionCall"] => {
+    if (!("functionCall" in value)) throw new Error("expected a function call");
+    return value.functionCall;
 };
 
 test("required param omitted throws", () => {
@@ -336,10 +352,10 @@ test("copy() records the source structure as a copy value", () => {
     const b = createTypeConverter("c", copy(f)).label("hello");
     const values = b.getSchema().schema.chain.chain.values;
     expect(values).toHaveLength(2);
-    expect(values[0].copy.structureName).toBe("type-converter");
-    expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
-    expect(values[0].copy.chain.chain.values[0].functionCall.name).toBe("label");
-    expect(values[1].functionCall.name).toBe("label");
+    expect(copyValue(values[0]!).structureName).toBe("type-converter");
+    expect(copyValue(values[0]!).chain.chain.initFunction.variableName).toBe("f");
+    expect(callValue(copyValue(values[0]!).chain.chain.values[0]!).name).toBe("label");
+    expect(callValue(values[1]!).name).toBe("label");
     expect(b.getSchema().schema.chain.chain.initFunction.variableName).toBe("c");
 });
 
@@ -348,7 +364,7 @@ test("copy of empty structure is valid", () => {
     const b = createTypeConverter("c", copy(e));
     const values = b.getSchema().schema.chain.chain.values;
     expect(values).toHaveLength(1);
-    expect(values[0].copy.chain.chain.values).toHaveLength(0);
+    expect(copyValue(values[0]!).chain.chain.values).toHaveLength(0);
 });
 
 test("copy rest args keep their order", () => {
@@ -373,6 +389,19 @@ test("copy source chain survives chaining on the target", () => {
     const f = createTypeConverter("f").label("custom");
     const b = createTypeConverter("c", copy(f)).numerify(42);
     const values = b.getSchema().schema.chain.chain.values;
-    expect(values[0].copy.chain.chain.values[0].functionCall.arguments[0].argument).toEqual({ string: { value: "custom" } });
-    expect(values[1].functionCall.name).toBe("numerify");
+    expect(callValue(copyValue(values[0]!).chain.chain.values[0]!).arguments[0]!.argument).toEqual({ string: { value: "custom" } });
+    expect(callValue(values[1]!).name).toBe("numerify");
+});
+
+test("custom function returns its typescript body result", () => {
+    expect((tc() as any).render("hello")).toBe("type-converter:hello");
+});
+
+test("custom function collision: each structure uses its own body", () => {
+    expect((tc() as any).render("a")).toBe("type-converter:a");
+    expect((createStringFormatter("s") as any).render("b")).toBe("string-formatter:b");
+});
+
+test("custom function without arguments works", () => {
+    expect((qb() as any).sign()).toBe("query-builder-sign");
 });

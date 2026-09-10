@@ -203,6 +203,20 @@ export const exampleProject: ProjectType = {
                                 isTemplateLiteral: false,
                             }
                         },
+                        {
+                            customFunction: {
+                                name: "render",
+                                arguments: [{ argument: { name: "value", struct: { struct: { string: { type: "string" } } } } }],
+                                body: {
+                                    typescript: 'return "type-converter:" + value;',
+                                    c: 'return "type-converter";',
+                                },
+                                return: {
+                                    typescript: "string",
+                                    c: "char *",
+                                },
+                            },
+                        },
                     ],
                 }
             },
@@ -283,6 +297,20 @@ export const exampleProject: ProjectType = {
                                 isTemplateLiteral: false,
                             }
                         },
+                        {
+                            customFunction: {
+                                name: "render",
+                                arguments: [{ argument: { name: "value", struct: { struct: { string: { type: "string" } } } } }],
+                                body: {
+                                    typescript: 'return "string-formatter:" + value;',
+                                    c: 'return "string-formatter";',
+                                },
+                                return: {
+                                    typescript: "string",
+                                    c: "char *",
+                                },
+                            },
+                        },
                     ],
                 }
             },
@@ -337,6 +365,20 @@ export const exampleProject: ProjectType = {
                         qbFn("as", [arg("alias", st)]),
                         qbFn("col", [arg("column", st)]),
                         qbFn("table", [arg("table", st)]),
+                        {
+                            customFunction: {
+                                name: "sign",
+                                arguments: [],
+                                body: {
+                                    typescript: 'return "query-builder-sign";',
+                                    c: 'return "query-builder-sign";',
+                                },
+                                return: {
+                                    typescript: "string",
+                                    c: "char *",
+                                },
+                            },
+                        },
                     ],
                 }
             },

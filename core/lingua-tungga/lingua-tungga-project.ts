@@ -112,12 +112,10 @@ const linguaTunggaStructure: StructureType = {
                     arguments: [],
                     body: {
                         typescript: 'return import("../../lingua-tungga-implementation").then((m) => m.generate(this.getSchema()));',
-                        javascript: "/* implemented externally */",
                         c: "/* implemented externally */",
                     },
                     return: {
-                        typescript: "Promise<string>",
-                        javascript: "string",
+                        typescript: "Promise<Record<LanguageType, string>>",
                         c: "char *",
                     },
                 },

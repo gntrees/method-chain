@@ -1,16 +1,15 @@
 // import type { StructType } from "./base-types/typescript"
 
 import type { ArrayType, BooleanType, ChainType, NullType, NumberType, ObjectType, StringType, StructType, StructureCallType } from "./base/typescript/base-types"
-import type { LinguaTungga } from "./lingua-tungga/lingua-tungga-legacy"
 
-export type StatementSourceType = Record<LanguageType, string> | LinguaTungga
+export type StatementSourceType = Record<LanguageType, string>
 
 export type CustomFunctionType = {
     customFunction: {
         name: string,
         arguments: ArgumentType[],
-        body: StatementSourceType,
-        return: StatementSourceType
+        body: Record<LanguageType, string>,
+        return: Record<LanguageType, string>
 
     }
 }
@@ -77,7 +76,6 @@ export type ConfigType = {
 
 export type LanguageType =
     | "typescript"
-    | "javascript"
     | "c"
 
 // export type {

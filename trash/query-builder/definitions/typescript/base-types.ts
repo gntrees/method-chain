@@ -1,6 +1,5 @@
 export type LanguageType =
     | "typescript"
-    | "javascript"
 
 type StringType = {
     string: {

@@ -1,5 +1,5 @@
 import { normalizeName } from "./utils";
-import type { ArgumentType, ProjectType, StructureType } from "./core.types";
+import type { ArgumentType, CustomFunctionType, ProjectType, StructureType } from "./core.types";
 import type { StructType } from "./base/typescript/base-types";
 
 type InitFunctionType = ProjectType["project"]["initFunctions"][number];
@@ -193,7 +193,9 @@ function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, 
         if ("structureCall" in struct) {
             return `mkarg(v(${param}))`;
         }
-        const argInner = "boolean" in struct ? `v_bool((${param}) ? 1 : 0)` : `v(${param})`;
+        const argInner = "boolean" in struct
+            ? `_Generic((${param}), ArgumentValue: v_pass, default: v_bool)(${param})`
+            : `v(${param})`;
         if (arg.argument.default === undefined) {
             return `mkarg(${argInner})`;
         }
@@ -205,8 +207,9 @@ function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, 
         const arg0 = args[0]!;
         const param = params[0]!;
         const struct = arg0.argument.struct.struct;
-        const argInner = "boolean" in struct ? `v_bool((${param}) ? 1 : 0)` : `v(${param})`;
-        const defExpr = cDefaultArgExpr(arg0.argument.default!, struct);
+        const argInner = "boolean" in struct
+            ? `_Generic((${param}), ArgumentValue: v_pass, default: v_bool)(${param})`
+            : `v(${param})`;
         const doc = compactComment(
             [{ name: param, type: cStructTypeName(struct), default: cDefaultDoc(arg0.argument.default!) }],
             returns,
@@ -316,6 +319,99 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
     })`;
 }
 
+type CustomFunctionOccurrence = {
+    structureName: string;
+    kebab: string;
+    snake: string;
+    customFunction: CustomFunctionType["customFunction"];
+};
+
+function customFunctionBlocks(occurrences: CustomFunctionOccurrence[]): { name: string, docs: { structure: string, doc: string }[], body: string } {
+    const first = occurrences[0]!.customFunction;
+    const name = first.name;
+    const macroName = normalizeName(name, "camel");
+    const nameSnake = normalizeName(name, "snake");
+    const argCount = first.arguments.length;
+    const params = first.arguments.map(arg => normalizeName(arg.argument.name, "camel"));
+
+    const unionArgStructs: string[] = [];
+    for (let i = 0; i < argCount; i++) {
+        const structs = occurrences.map(o => stringifyCStruct(o.customFunction.arguments[i]!.argument.struct.struct));
+        const unique = [...new Set(structs)];
+        unionArgStructs.push(unique.length === 1 ? unique[0]! : `{ .kind = S_UNION, .as.unionType = { .count = ${unique.length}, .types = (StructType[]){ ${unique.join(', ')} } } }`);
+    }
+
+    const impls = occurrences.map(o => {
+        const fnName = `${o.snake}_${nameSnake}_impl`;
+        return `static ${o.customFunction.return["c"]} ${fnName}(Builder builder, ArgumentType *args, size_t count) {\n${o.customFunction.body["c"]}\n}`;
+    }).join("\n\n");
+
+    const base = `${occurrences[0]!.snake}_${nameSnake}`;
+    let sigArgs = "0";
+    if (argCount === 1) {
+        sigArgs = `&${base}_arg0`;
+    } else if (argCount > 1) {
+        sigArgs = `${base}_args`;
+    }
+    const argStructs = argCount > 0
+        ? (argCount === 1
+            ? `static const StructType ${base}_arg0 = ${unionArgStructs[0]};\n`
+            : unionArgStructs.map((s, i) => `static const StructType ${base}_arg${i} = ${s};`).join("\n") + `\nstatic const StructType ${base}_args[] = { ${unionArgStructs.map((_, i) => `${base}_arg${i}`).join(", ")} };\n`)
+        : "";
+    const sigLine = `${argStructs}static const FunctionSignature ${base}_sig = { "${name}", 0, ${sigArgs}, ${argCount}, "${occurrences[0]!.kebab}" };`;
+
+    const mkargs = first.arguments.map((arg, index) => {
+        const param = params[index]!;
+        const struct = arg.argument.struct.struct;
+        const argInner = "boolean" in struct
+            ? `_Generic((${param}), ArgumentValue: v_pass, default: v_bool)(${param})`
+            : `v(${param})`;
+        if (arg.argument.default === undefined) return `mkarg(${argInner})`;
+        return `mkarg_def(${argInner}, ${cDefaultArgExpr(arg.argument.default, struct)})`;
+    }).join(", ");
+
+    const structureCheck = occurrences.map(o => `strcmp((builder).schema.chain.typeName, "${o.kebab}") == 0`).join(" || ");
+
+    const lines: string[] = [];
+    if (argCount > 0) lines.push(`ArgumentType _args[] = { ${mkargs} };`);
+    lines.push(`if (!(builder).schema.chain.typeName || !(${structureCheck}))`);
+    lines.push(`    fail("custom function '${name}' is not a member of structure '%s'", (builder).schema.chain.typeName ? (builder).schema.chain.typeName : "(none)");`);
+    if (argCount > 0) {
+        lines.push(`validate_function_args(&(FunctionCallType){ .name = "${name}", .arguments = _args, .argumentCount = ${argCount}, .isTemplateLiteral = 0 }, &${base}_sig, gntrees_structures, COUNT_OF(gntrees_structures));`);
+    }
+
+    const implArg = argCount > 0 ? `_args, ${argCount}` : "0, 0";
+    const dispatch = occurrences.length === 1
+        ? `${occurrences[0]!.snake}_${nameSnake}_impl((builder), ${implArg});`
+        : occurrences.map((o, i) => {
+            const call = `${o.snake}_${nameSnake}_impl((builder), ${implArg})`;
+            if (i === 0) return `strcmp((builder).schema.chain.typeName, "${o.kebab}") == 0 ? ${call}`;
+            if (i === occurrences.length - 1) return `: ${call};`;
+            return `: strcmp((builder).schema.chain.typeName, "${o.kebab}") == 0 ? ${call}`;
+        }).join(" ");
+    lines.push(dispatch);
+
+    const macro = `#define ${macroName}(${["builder", ...params].join(", ")}) \\\n    ({ \\\n        ${lines.join(" \\\n        ")} \\\n    })`;
+
+    const docs = occurrences.map(o => ({
+        structure: o.structureName,
+        doc: compactComment(
+            o.customFunction.arguments.map(arg => ({
+                name: normalizeName(arg.argument.name, "camel"),
+                type: cStructTypeName(arg.argument.struct.struct),
+                default: arg.argument.default !== undefined ? cDefaultDoc(arg.argument.default) : undefined,
+            })),
+            o.customFunction.return["c"],
+        ),
+    }));
+
+    return {
+        name: macroName,
+        docs,
+        body: `${impls}\n\n${sigLine}\n\n${macro}`,
+    };
+}
+
 function generateCDefinitionSection(
     definition: StructureType,
     project: ProjectType,
@@ -368,21 +464,13 @@ static Builder ${varName} = {
     } }
 };`;
         });
-    const customFunctions = definition.structure.functions
-        .filter(func => "customFunction" in func)
-        .map(func => `/**
- * @param arg ArgumentValue
- * @return ArgumentValue
- */
-extern ArgumentValue ${normalizeName(func.customFunction.name, "snake")}(const ArgumentValue *arg);`);
-
     const parts: string[] = [];
     if (macroSections.length) parts.push(macroSections.join("\n\n"));
     parts.push(registry);
     const propertyRegistry = generatePropertiesRegistry(definition);
     if (propertyRegistry) parts.push(propertyRegistry);
     if (creates) parts.push(creates);
-    const custom = [...customVariables, ...variables, ...customFunctions].join("\n");
+    const custom = [...customVariables, ...variables].join("\n");
     if (custom) parts.push(custom);
 
     return `// ==== ${structureName} ====\n\n` + parts.join("\n\n");
@@ -422,6 +510,33 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
                 }
             });
         });
+    });
+
+    const customFnGroups = new Map<string, CustomFunctionOccurrence[]>();
+    project.project.definitions.forEach((definition, index) => {
+        const structureName = definition.structure.name;
+        definition.structure.functions.forEach(func => {
+            if (!("customFunction" in func)) return;
+            const macroName = normalizeName(func.customFunction.name, "camel");
+            const entry = customFnGroups.get(macroName) ?? [];
+            entry.push({
+                structureName,
+                kebab: normalizeName(structureName, "kebab"),
+                snake: normalizeName(structureName, "snake"),
+                customFunction: func.customFunction,
+            });
+            customFnGroups.set(macroName, entry);
+        });
+    });
+    customFnGroups.forEach((occurrences, macroName) => {
+        const block = customFunctionBlocks(occurrences);
+        const entry = macroMap.get(block.name);
+        if (entry) {
+            entry.docs.push(...block.docs);
+        } else {
+            macroMap.set(block.name, { docs: block.docs, body: block.body });
+            macroOrder.push({ name: block.name, index: project.project.definitions.findIndex(d => d.structure.functions.some(f => "customFunction" in f && normalizeName(f.customFunction.name, "camel") === macroName)) });
+        }
     });
 
     const definitionSections = project.project.definitions
