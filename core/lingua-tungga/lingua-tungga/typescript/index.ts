@@ -942,7 +942,8 @@ export class LinguaTungga {
           | (string | number | boolean | null)[]
           | { [key: string]: string | number | boolean | null }
         )[]
-      | { [key: string]: string | number | boolean | null },
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
   ): LinguaTungga {
     return new LinguaTungga().initFromStructure<LinguaTungga>(
       createSchema(
@@ -1026,6 +1027,7 @@ export class LinguaTungga {
                       },
                     },
                   },
+                  { structureCall: { name: "lingua-tungga" } },
                 ],
               },
             },
@@ -1045,7 +1047,8 @@ export class LinguaTungga {
           | (string | number | boolean | null)[]
           | { [key: string]: string | number | boolean | null }
         )[]
-      | { [key: string]: string | number | boolean | null },
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
   ): LinguaTungga {
     return new LinguaTungga().initFromStructure<LinguaTungga>(
       createSchema(
@@ -1134,6 +1137,10258 @@ export class LinguaTungga {
                       },
                     },
                   },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  if(
+    condition:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "if",
+        [
+          {
+            arg: condition,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  elseIf(
+    condition:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "elseIf",
+        [
+          {
+            arg: condition,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  else(body: LinguaTungga): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "else",
+        [
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  while(
+    condition:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "while",
+        [
+          {
+            arg: condition,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  forEach(
+    array:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    variableName: string,
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "forEach",
+        [
+          {
+            arg: array,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: variableName,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 3,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  forCounter(
+    init:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    condition:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    update:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "forCounter",
+        [
+          {
+            arg: init,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: condition,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: update,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 3,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 4,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  variableForCounter(name: string): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "variableForCounter",
+        [
+          {
+            arg: name,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  declareForCounter(
+    variableName: string,
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "declareForCounter",
+        [
+          {
+            arg: variableName,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  incrementForCounter(
+    target:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "incrementForCounter",
+        [
+          {
+            arg: target,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  freeCVariables(): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(this.getSchema(), "freeCVariables", [], false),
+    );
+  }
+  stringConcat(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringConcat",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringLength(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringLength",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringUpper(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringUpper",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringLower(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringLower",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringTrim(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringTrim",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringSlice(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    start:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    end:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringSlice",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: start,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: end,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 3,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringReplace(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    search:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    replacement:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringReplace",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: search,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: replacement,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 3,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringSplit(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    separator:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringSplit",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: separator,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringIncludes(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    search:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringIncludes",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: search,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringRepeat(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    count:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringRepeat",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: count,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringCharAt(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    index:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringCharAt",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: index,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringStartsWith(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    prefix:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringStartsWith",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: prefix,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  stringEndsWith(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    suffix:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "stringEndsWith",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: suffix,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayGet(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    index:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayGet",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: index,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayLength(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayLength",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayAppend(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    item:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayAppend",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: item,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayConcat(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayConcat",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayJoin(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    separator:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayJoin",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: separator,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arraySlice(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    start:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    end:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arraySlice",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: start,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: end,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 3,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayIncludes(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    item:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayIncludes",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: item,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayIndexOf(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    item:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayIndexOf",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: item,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayReverse(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayReverse",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arraySort(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arraySort",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  arrayUnique(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "arrayUnique",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectGet(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    key:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectGet",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: key,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectSet(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    key:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    newValue:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectSet",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: key,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: newValue,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 3,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectKeys(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectKeys",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectValues(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectValues",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectHas(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    key:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectHas",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: key,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectMerge(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectMerge",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectDelete(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    key:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectDelete",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: key,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  objectEntries(
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "objectEntries",
+        [
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  add(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "add",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  subtract(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "subtract",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  multiply(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "multiply",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  divide(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "divide",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  modulo(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "modulo",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  equal(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "equal",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  notEqual(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "notEqual",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  greaterThan(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "greaterThan",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  lessThan(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "lessThan",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  greaterThanOrEqual(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "greaterThanOrEqual",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  lessThanOrEqual(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "lessThanOrEqual",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  and(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "and",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  or(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "or",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  xor(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "xor",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  not(
+    operand:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "not",
+        [
+          {
+            arg: operand,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  bitwiseAnd(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "bitwiseAnd",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  bitwiseOr(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "bitwiseOr",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  leftShift(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "leftShift",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  rightShift(
+    left:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+    right:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "rightShift",
+        [
+          {
+            arg: left,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: right,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
                 ],
               },
             },

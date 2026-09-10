@@ -17,6 +17,18 @@ function escapeCString(value: string): string {
     return value.replace(/"/g, '\\"');
 }
 
+const C_RESERVED_WORDS = new Set([
+    "auto", "break", "case", "char", "const", "continue", "default", "do",
+    "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline",
+    "int", "long", "register", "restrict", "return", "short", "signed",
+    "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned",
+    "void", "volatile", "while", "_Bool", "_Complex", "_Imaginary",
+]);
+
+function safeCMacroName(name: string): string {
+    return C_RESERVED_WORDS.has(name) ? `${name}_` : name;
+}
+
 export function stringifyCStruct(struct: StructType['struct']): string {
     if ("string" in struct) {
         return "{ .kind = S_STRING }";
@@ -150,7 +162,7 @@ function mergeDocs(docs: { structure: string, doc: string }[]): string {
 
 function functionMacroBlocks(func: ModelFunction): { name: string, doc: string, body: string }[] {
     const name = func.function.name;
-    const macroName = normalizeName(func.function.name, "camel", true);
+    const macroName = safeCMacroName(normalizeName(func.function.name, "camel", true));
     const args = func.function.arguments;
     const returnName = normalizeName(func.function.return.structureCall.name, "kebab");
     const returns = `Builder (function-call) : ${returnName}`;
@@ -329,7 +341,7 @@ type CustomFunctionOccurrence = {
 function customFunctionBlocks(occurrences: CustomFunctionOccurrence[]): { name: string, docs: { structure: string, doc: string }[], body: string } {
     const first = occurrences[0]!.customFunction;
     const name = first.name;
-    const macroName = normalizeName(name, "camel");
+    const macroName = safeCMacroName(normalizeName(name, "camel"));
     const nameSnake = normalizeName(name, "snake");
     const argCount = first.arguments.length;
     const params = first.arguments.map(arg => normalizeName(arg.argument.name, "camel"));
@@ -343,7 +355,12 @@ function customFunctionBlocks(occurrences: CustomFunctionOccurrence[]): { name: 
 
     const impls = occurrences.map(o => {
         const fnName = `${o.snake}_${nameSnake}_impl`;
-        return `static ${o.customFunction.return["c"]} ${fnName}(Builder builder, ArgumentType *args, size_t count) {\n${o.customFunction.body["c"]}\n}`;
+        const returnType = o.customFunction.return["c"];
+        const body = o.customFunction.body["c"];
+        const unusedParams = ["builder", "args", "count"].map(param => `(void)${param};`).join(" ");
+        const needsReturn = returnType.trim() !== "void" && !/\breturn\b/.test(body);
+        const fallback = needsReturn ? "\nreturn 0;" : "";
+        return `static ${returnType} ${fnName}(Builder builder, ArgumentType *args, size_t count) {\n${unusedParams}\n${body}${fallback}\n}`;
     }).join("\n\n");
 
     const base = `${occurrences[0]!.snake}_${nameSnake}`;

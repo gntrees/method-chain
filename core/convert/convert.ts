@@ -11,8 +11,10 @@ export async function convert(schema: SchemaType, target: LanguageType) {
         const mainValues = mainChain.chain.values;
         const leadingCopies: CopyType[] = [];
         let valueIndex = 0;
-        while (valueIndex < mainValues.length && "copy" in mainValues[valueIndex]) {
-            leadingCopies.push(mainValues[valueIndex] as CopyType);
+        while (valueIndex < mainValues.length) {
+            const current = mainValues[valueIndex];
+            if (!current || !("copy" in current)) break;
+            leadingCopies.push(current as CopyType);
             valueIndex++;
         }
         const restValues = mainValues.slice(valueIndex);

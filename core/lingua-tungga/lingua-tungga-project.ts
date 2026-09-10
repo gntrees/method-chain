@@ -23,13 +23,18 @@ const valueOrMap: StructType = {
     },
 };
 
-const valueOrArrayOrMap: StructType = {
+const valueOrArrayOrMapTypes: StructType["struct"][] = [
+    valueStruct,
+    { array: { type: valueOrMap.struct } },
+    { map: { type: valueStruct } },
+];
+
+const operatorOperand: StructType = {
     struct: {
         union: {
             types: [
-                valueStruct,
-                { array: { type: valueOrMap.struct } },
-                { map: { type: valueStruct } },
+                ...valueOrArrayOrMapTypes,
+                { structureCall: { name: "lingua-tungga" } },
             ],
         },
     },
@@ -63,6 +68,8 @@ const statementsStruct: StructType = {
 };
 
 const stringStruct: StructType = { struct: { string: { type: "string" } } };
+
+const bodyStruct: StructType = { struct: { structureCall: { name: "lingua-tungga" } } };
 
 const arg = (name: string, struct: StructType): ArgumentType => ({
     argument: { name, struct },
@@ -101,11 +108,108 @@ const linguaTunggaStructure: StructureType = {
                 argWithDefault("args", callArgArray, { array: { value: [] } }),
             ]),
             ltFunction("add-structure-variable-call", [arg("variable-name", stringStruct)]),
-            ltFunction("add-value", [arg("value", valueOrArrayOrMap)]),
+            ltFunction("add-value", [arg("value", operatorOperand)]),
             ltFunction("add-variable", [
                 arg("variable-name", stringStruct),
-                arg("value", valueOrArrayOrMap),
+                arg("value", operatorOperand),
             ]),
+            ltFunction("if", [arg("condition", operatorOperand), arg("body", bodyStruct)]),
+            ltFunction("else-if", [arg("condition", operatorOperand), arg("body", bodyStruct)]),
+            ltFunction("else", [arg("body", bodyStruct)]),
+            ltFunction("while", [arg("condition", operatorOperand), arg("body", bodyStruct)]),
+            ltFunction("for-each", [
+                arg("array", operatorOperand),
+                arg("variable-name", stringStruct),
+                arg("body", bodyStruct),
+            ]),
+            ltFunction("for-counter", [
+                arg("init", operatorOperand),
+                arg("condition", operatorOperand),
+                arg("update", operatorOperand),
+                arg("body", bodyStruct),
+            ]),
+            ltFunction("variable-for-counter", [arg("name", stringStruct)]),
+            ltFunction("declare-for-counter", [
+                arg("variable-name", stringStruct),
+                arg("value", operatorOperand),
+            ]),
+            ltFunction("increment-for-counter", [arg("target", operatorOperand)]),
+            ltFunction("free-c-variables"),
+            ltFunction("string-concat", [arg("left", operatorOperand), arg("right", operatorOperand)]),
+            ltFunction("string-length", [arg("value", operatorOperand)]),
+            ltFunction("string-upper", [arg("value", operatorOperand)]),
+            ltFunction("string-lower", [arg("value", operatorOperand)]),
+            ltFunction("string-trim", [arg("value", operatorOperand)]),
+            ltFunction("string-slice", [
+                arg("value", operatorOperand),
+                arg("start", operatorOperand),
+                arg("end", operatorOperand),
+            ]),
+            ltFunction("string-replace", [
+                arg("value", operatorOperand),
+                arg("search", operatorOperand),
+                arg("replacement", operatorOperand),
+            ]),
+            ltFunction("string-split", [arg("value", operatorOperand), arg("separator", operatorOperand)]),
+            ltFunction("string-includes", [arg("value", operatorOperand), arg("search", operatorOperand)]),
+            ltFunction("string-repeat", [arg("value", operatorOperand), arg("count", operatorOperand)]),
+            ltFunction("string-char-at", [arg("value", operatorOperand), arg("index", operatorOperand)]),
+            ltFunction("string-starts-with", [arg("value", operatorOperand), arg("prefix", operatorOperand)]),
+            ltFunction("string-ends-with", [arg("value", operatorOperand), arg("suffix", operatorOperand)]),
+            ltFunction("array-get", [arg("value", operatorOperand), arg("index", operatorOperand)]),
+            ltFunction("array-length", [arg("value", operatorOperand)]),
+            ltFunction("array-append", [arg("value", operatorOperand), arg("item", operatorOperand)]),
+            ltFunction("array-concat", [arg("left", operatorOperand), arg("right", operatorOperand)]),
+            ltFunction("array-join", [arg("value", operatorOperand), arg("separator", operatorOperand)]),
+            ltFunction("array-slice", [
+                arg("value", operatorOperand),
+                arg("start", operatorOperand),
+                arg("end", operatorOperand),
+            ]),
+            ltFunction("array-includes", [arg("value", operatorOperand), arg("item", operatorOperand)]),
+            ltFunction("array-index-of", [arg("value", operatorOperand), arg("item", operatorOperand)]),
+            ltFunction("array-reverse", [arg("value", operatorOperand)]),
+            ltFunction("array-sort", [arg("value", operatorOperand)]),
+            ltFunction("array-unique", [arg("value", operatorOperand)]),
+            ltFunction("object-get", [arg("value", operatorOperand), arg("key", operatorOperand)]),
+            ltFunction("object-set", [
+                arg("value", operatorOperand),
+                arg("key", operatorOperand),
+                arg("new-value", operatorOperand),
+            ]),
+            ltFunction("object-keys", [arg("value", operatorOperand)]),
+            ltFunction("object-values", [arg("value", operatorOperand)]),
+            ltFunction("object-has", [arg("value", operatorOperand), arg("key", operatorOperand)]),
+            ltFunction("object-merge", [arg("left", operatorOperand), arg("right", operatorOperand)]),
+            ltFunction("object-delete", [arg("value", operatorOperand), arg("key", operatorOperand)]),
+            ltFunction("object-entries", [arg("value", operatorOperand)]),
+            ...([
+                ["add", 2],
+                ["subtract", 2],
+                ["multiply", 2],
+                ["divide", 2],
+                ["modulo", 2],
+                ["equal", 2],
+                ["not-equal", 2],
+                ["greater-than", 2],
+                ["less-than", 2],
+                ["greater-than-or-equal", 2],
+                ["less-than-or-equal", 2],
+                ["and", 2],
+                ["or", 2],
+                ["xor", 2],
+                ["not", 1],
+                ["bitwise-and", 2],
+                ["bitwise-or", 2],
+                ["left-shift", 2],
+                ["right-shift", 2],
+            ] as [string, number][]).map(
+                ([name, arity]) =>
+                    ltFunction(name, [
+                        arg(arity === 1 ? "operand" : "left", operatorOperand),
+                        ...(arity === 2 ? [arg("right", operatorOperand)] : []),
+                    ]),
+            ),
             {
                 customFunction: {
                     name: "generate",
