@@ -86,32 +86,40 @@ test("heterogeneous array throws", () => {
     expect(() => tc().tags(["a", 1])).toThrow("Expected a string argument");
 });
 
-test("array of union items of different types throws", () => {
-    expect(() =>
-        createSchema(
-            tc().getSchema(),
-            "mixed",
-            [
-                {
-                    arg: ["a", 1],
-                    struct: {
-                        array: {
-                            type: {
-                                union: {
-                                    types: [
-                                        { string: { type: "string" } },
-                                        { number: { type: "number" } },
-                                    ],
-                                },
+test("array of union items accepts mixed types", () => {
+    const schema = createSchema(
+        tc().getSchema(),
+        "mixed",
+        [
+            {
+                arg: ["a", 1],
+                struct: {
+                    array: {
+                        type: {
+                            union: {
+                                types: [
+                                    { string: { type: "string" } },
+                                    { number: { type: "number" } },
+                                ],
                             },
                         },
                     },
-                    provided: true,
                 },
+                provided: true,
+            },
+        ],
+        false,
+    );
+    const value = schema.schema.chain.chain.values.at(-1)!;
+    expect(value).toEqual({
+        functionCall: {
+            name: "mixed",
+            arguments: [
+                { argument: { array: { value: [{ string: { value: "a" } }, { number: { value: 1 } }] } }, default: null },
             ],
-            false,
-        ),
-    ).toThrow("same argument type");
+            isTemplateLiteral: false,
+        },
+    });
 });
 
 test("non-finite number throws", () => {
@@ -696,6 +704,16 @@ test("parse builds values tuples", () => {
         sql: "VALUES ( $1, $2 ), ( $3, $4 )",
         param: ["a", "b", "c", "d"],
         sqlWithParam: "VALUES ( 'a', 'b' ), ( 'c', 'd' )",
+    });
+});
+
+test("parse builds values tuples with mixed row types", () => {
+    const c = qb();
+    const result = c.values([["a", 1], ["b", 2]]).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: "VALUES ( $1, $2 ), ( $3, $4 )",
+        param: ["a", 1, "b", 2],
+        sqlWithParam: "VALUES ( 'a', 1 ), ( 'b', 2 )",
     });
 });
 

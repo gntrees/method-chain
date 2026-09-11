@@ -31,14 +31,12 @@ type NullType = {
 
 type ArrayType = {
   array: {
-    value:
-      | StringType[]
-      | NumberType[]
-      | BooleanType[]
-      | NullType[]
-      | ArrayType[]
-      | ObjectType[]
-      | ChainType[];
+    /*
+     * Array boleh heterogen bila tipe elemennya union (mis. baris VALUES).
+     * Kontrak backend: `array<union>` wajib dipetakan ke union/any —
+     * C memakai ArgumentValue (tagged union), TypeScript memakai `(A | B)[]`.
+     */
+    value: ArgumentValue[];
   };
 };
 
@@ -421,41 +419,9 @@ function normalizeArgument(
     const normalizedItems = arg.map((item) =>
       normalizeArgument(item, itemType),
     );
-    const first = normalizedItems[0];
-    if (first == undefined)
+    if (normalizedItems[0] === undefined)
       throw new Error("Unexpected undefined value in array");
-    if ("string" in first && normalizedItems.every((it) => "string" in it)) {
-      return { array: { value: normalizedItems } };
-    } else if (
-      "number" in first &&
-      normalizedItems.every((it) => "number" in it)
-    ) {
-      return { array: { value: normalizedItems } };
-    } else if (
-      "boolean" in first &&
-      normalizedItems.every((it) => "boolean" in it)
-    ) {
-      return { array: { value: normalizedItems } };
-    } else if ("null" in first && normalizedItems.every((it) => "null" in it)) {
-      return { array: { value: normalizedItems } };
-    } else if (
-      "array" in first &&
-      normalizedItems.every((it) => "array" in it)
-    ) {
-      return { array: { value: normalizedItems } };
-    } else if (
-      "object" in first &&
-      normalizedItems.every((it) => "object" in it)
-    ) {
-      return { array: { value: normalizedItems } };
-    } else if (
-      "chain" in first &&
-      normalizedItems.every((it) => "chain" in it)
-    ) {
-      return { array: { value: normalizedItems } };
-    } else {
-      throw new Error("Array items must all be of the same argument type");
-    }
+    return { array: { value: normalizedItems } };
   } else if ("object" in struct) {
     if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
       throw new Error(`Expected an object argument, but got ${typeof arg}`);

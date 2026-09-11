@@ -222,6 +222,12 @@ const cases: Case[] = [
         values(arr(arr(v_string("a"), v_string("b")), arr(v_string("c"), v_string("d"))))`,
     },
     {
+        name: "postgres values tuples with mixed types",
+        query: (c) => c.values([["a", 1], ["b", 2]]).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        values(arr(arr(v_string("a"), v_int(1)), arr(v_string("b"), v_int(2))))`,
+    },
+    {
         name: "postgres on conflict do update",
         query: (c) =>
             c.insert(c.table("t"), { name: "x" })

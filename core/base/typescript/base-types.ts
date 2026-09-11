@@ -25,7 +25,12 @@ type NullType = {
 
 type ArrayType = {
     array: {
-        value: StringType[] | NumberType[] | BooleanType[] | NullType[] | ArrayType[] | ObjectType[] | ChainType[]
+        /*
+         * Array boleh heterogen bila tipe elemennya union (mis. baris VALUES).
+         * Kontrak backend: `array<union>` wajib dipetakan ke union/any —
+         * C memakai ArgumentValue (tagged union), TypeScript memakai `(A | B)[]`.
+         */
+        value: ArgumentValue[]
     }
 }
 
