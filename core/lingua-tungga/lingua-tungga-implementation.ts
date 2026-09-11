@@ -25,7 +25,12 @@ type ChainState = {
 const LANGUAGE_KEYS: LanguageType[] = ["typescript", "c"];
 
 function escapeCString(value: string): string {
-    return value.replace(/"/g, '\\"');
+    return value
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "\\r")
+        .replace(/\t/g, "\\t");
 }
 
 function isExpressionRecord(value: unknown): value is ExpressionRecord {
@@ -64,7 +69,7 @@ function unwrapArgumentValue(value: ArgumentValue): unknown {
 function renderValue(value: unknown): ExpressionRecord {
     if (typeof value === "string") {
         return {
-            typescript: `"${value}"`,
+            typescript: JSON.stringify(value),
             c: `v_string("${escapeCString(value)}")`,
         };
     }

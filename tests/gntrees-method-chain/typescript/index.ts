@@ -3156,7 +3156,7 @@ export class QueryBuilder {
     if (dialect === "mysql") {
       quote = "`";
     } else {
-      quote = "\x22";
+      quote = '"';
     }
     function emitLiteralPlaceholder(arg: any) {
       tmp = literalOf(arg);

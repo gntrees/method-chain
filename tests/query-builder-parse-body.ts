@@ -412,7 +412,7 @@ function buildParser(): LT {
 
     c = c
         .if(valEq(ref("dialect"), "mysql"), lt().setVariable("quote", "\x60"))
-        .else(lt().setVariable("quote", "\\x22"));
+        .else(lt().setVariable("quote", '"'));
 
     const keywordClause = (chain: LT, node: LT, keyword: string, emitFn: string, argTransform: (arg: LT) => LT) =>
         chain.addCallFunction("flushOrder", [])

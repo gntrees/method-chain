@@ -124,10 +124,18 @@ test("addValue producer renders values per language", async () => {
     expect(await linguaTungga().addValue({ k: "v" }).generate()).toEqual({ typescript: '{"k": "v"}', c: 'map(entry("k", v_string("v")))' });
 });
 
-test("addValue escapes quotes only for c strings", async () => {
-    const out = await linguaTungga().addValue('a"b').generate();
-    expect(out.typescript).toEqual('"a"b"');
-    expect(out.c).toEqual('v_string("a\\"b")');
+test("addValue escapes special characters for both languages", async () => {
+    const quote = await linguaTungga().addValue('a"b').generate();
+    expect(quote.typescript).toEqual('"a\\"b"');
+    expect(quote.c).toEqual('v_string("a\\"b")');
+
+    const backslash = await linguaTungga().addValue("a\\b").generate();
+    expect(backslash.typescript).toEqual('"a\\\\b"');
+    expect(backslash.c).toEqual('v_string("a\\\\b")');
+
+    const newline = await linguaTungga().addValue("a\nb").generate();
+    expect(newline.typescript).toEqual('"a\\nb"');
+    expect(newline.c).toEqual('v_string("a\\nb")');
 });
 
 test("math operators render infix expressions", async () => {

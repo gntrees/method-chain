@@ -3468,7 +3468,7 @@ if (lt_value_equals(dialect, v_string("mysql"))) {
   quote = v_string("`");
 }
 else {
-  quote = v_string("\x22");
+  quote = v_string("\"");
 }
 ArgumentValue emitLiteralPlaceholder(ArgumentValue arg) {
   tmp = literalOf(arg);
