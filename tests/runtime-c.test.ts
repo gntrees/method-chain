@@ -966,19 +966,31 @@ int main(void) {
     expect(stderr).toContain("type mismatch");
 });
 
-test("custom function without arguments works", () => {
+test("parse builds sql with dialect placeholders", () => {
     const runner = `#include "gntrees-method-chain.h"
 #include <stdio.h>
 int main(void) {
-    Builder qb = queryBuilder(variableName("q"));
-    printf("%s\\n", sign(qb));
+    Builder qb = queryBuilder(
+        variableName("q"),
+        setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(table(v_string("users"))),
+        where(chain(col(v_string("active")), eq(v_bool(1)))),
+        limit(v_int(10)));
+    ParseResult r = parse(qb);
+    printf("%s\\n", r.sql);
+    printf("%s\\n", r.sqlWithParam);
+    printf("%zu %d\\n", r.paramCount, (int)r.param[0].type);
+    lt_free_value((ArgumentValue){0});
     return 0;
 }
 `;
     const { status, stderr, stdout } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-    expect(stdout).toContain("query-builder-sign");
+    expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = $1 LIMIT 10');
+    expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10');
+    expect(stdout).toContain("1 2");
 });
 
 test("valid literal string argument passes", () => {

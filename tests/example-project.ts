@@ -1,5 +1,6 @@
 import type { ArgumentType, ConfigType, FunctionType, ProjectType } from "../core/core.types";
 import type { StructType } from "../core/base/typescript/base-types";
+import { queryBuilderParseBody } from "./query-builder-parse-body";
 
 const stType: StructType["struct"] = {
     union: {
@@ -79,6 +80,29 @@ export const exampleProject: ProjectType = {
         projectName: "gntrees-method-chain",
         importPaths: {
             typescript: "../../../gntrees-method-chain/typescript/index",
+        },
+        beforeScript: {
+            typescript: `export type ParseResult = {
+    sql: string;
+    param: (string | number | boolean | null)[];
+    sqlWithParam: string;
+};`,
+            c: `#include <stddef.h>
+typedef enum { PARSE_STRING, PARSE_NUMBER, PARSE_BOOL, PARSE_NULL } ParseParamType;
+typedef struct ParseParam {
+    ParseParamType type;
+    union {
+        const char *s;
+        double n;
+        int b;
+    } value;
+} ParseParam;
+typedef struct ParseResult {
+    const char *sql;
+    const char *sqlWithParam;
+    size_t paramCount;
+    ParseParam *param;
+} ParseResult;`,
         },
         definitions: [
             {
@@ -383,15 +407,15 @@ export const exampleProject: ProjectType = {
                         qbFn("set-dialect", [arg("db", dialect)]),
                         {
                             customFunction: {
-                                name: "sign",
+                                name: "parse",
                                 arguments: [],
                                 body: {
-                                    typescript: 'return "query-builder-sign";',
-                                    c: 'return "query-builder-sign";',
+                                    typescript: queryBuilderParseBody.typescript,
+                                    c: queryBuilderParseBody.c,
                                 },
                                 return: {
-                                    typescript: "string",
-                                    c: "char *",
+                                    typescript: "ParseResult",
+                                    c: "ParseResult",
                                 },
                             },
                         },

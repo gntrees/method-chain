@@ -589,6 +589,9 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
     const baseUtilsH = stripLocalIncludes(base["base-utils.h"]);
     const baseUtilsC = stripPosixDefine(stripLocalIncludes(base["base-utils.c"]));
 
+    const beforeScript = project.project.beforeScript?.c;
+    const afterScript = project.project.afterScript?.c;
+
     const implPragmaOn = `#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -612,7 +615,7 @@ export function generateCSingleHeader(project: ProjectType, base: BaseCFiles): s
 #endif
 
 #include "cJSON.h"
-
+${beforeScript !== undefined ? `\n${beforeScript}\n` : ""}
 ${baseTypes}
 
 /* ---- base utilities (di-inline sebagai header-only) ---- */
@@ -628,7 +631,7 @@ ${implPragmaOff}
 
 /* ---- structure registry ---- */
 ${structureRegistry}
-
+${afterScript !== undefined ? `\n${afterScript}\n` : ""}
 #endif /* ${guard} */
 `;
 }

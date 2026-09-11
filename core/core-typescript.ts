@@ -240,6 +240,8 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
     }
     `;
     const baseUtilsInlined = stripRelativeImports(baseUtils);
+    const beforeScript = project.project.beforeScript?.typescript;
+    const afterScript = project.project.afterScript?.typescript;
     const parts = [
         `// Auto-generated index for ${project.project.projectName}`,
         baseTypes,
@@ -249,5 +251,7 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
         ...definitionsContent,
     ];
     if (initFunctionsContent) parts.push(initFunctionsContent);
+    if (beforeScript !== undefined) parts.unshift(beforeScript);
+    if (afterScript !== undefined) parts.push(afterScript);
     return parts.join("\n\n");
 }

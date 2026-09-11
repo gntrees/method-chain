@@ -402,8 +402,46 @@ test("custom function collision: each structure uses its own body", () => {
     expect((createStringFormatter("s") as any).render("b")).toBe("string-formatter:b");
 });
 
-test("custom function without arguments works", () => {
-    expect((qb() as any).sign()).toBe("query-builder-sign");
+test("parse builds postgres sql with placeholders and params", () => {
+    const c = qb();
+    const result = c
+        .select(c.col("id"))
+        .from(c.table("users"))
+        .where(c.col("active").eq(true))
+        .limit(10)
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" WHERE "active" = $1 LIMIT 10',
+        param: [true],
+        sqlWithParam: 'SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10',
+    });
+});
+
+test("parse builds mysql sql with question-mark placeholders", () => {
+    const c = qb();
+    const result = c
+        .select([c.col("id"), c.col("name")])
+        .from(c.table("users"))
+        .where(c.col("age").gte(18))
+        .orderBy(c.col("name").desc())
+        .setDialect("mysql")
+        .parse();
+    expect(result).toEqual({
+        sql: "SELECT `id`, `name` FROM `users` WHERE `age` >= ? ORDER BY `name` DESC",
+        param: [18],
+        sqlWithParam: "SELECT `id`, `name` FROM `users` WHERE `age` >= 18 ORDER BY `name` DESC",
+    });
+});
+
+test("parse requires setDialect before parse", () => {
+    const c = qb();
+    expect(() => c.select(c.col("id")).parse()).toThrow(/setDialect/);
+});
+
+test("parse rejects unsupported dialect", () => {
+    const c = qb();
+    expect(() => c.select(c.col("id")).setDialect("sqlite").parse()).toThrow(/unsupported dialect/);
 });
 
 test("literal string argument accepts matching value", () => {

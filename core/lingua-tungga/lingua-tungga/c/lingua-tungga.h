@@ -2967,6 +2967,99 @@ static const char *getJSONSchema_impl(const SchemaType *s)
     builder_call("right-shift", ((ArgumentType[]){ mkarg(v(left)), mkarg(v(right)) }), 2, 0)
 
 /**
+ * @param left string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @param right string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define valueEqual(left, right) \
+    builder_call("value-equal", ((ArgumentType[]){ mkarg(v(left)), mkarg(v(right)) }), 2, 0)
+
+/**
+ * @param left string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @param right string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define valueNotEqual(left, right) \
+    builder_call("value-not-equal", ((ArgumentType[]){ mkarg(v(left)), mkarg(v(right)) }), 2, 0)
+
+/**
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define truthy(value) \
+    builder_call("truthy", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
+
+/**
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define stringOf(value) \
+    builder_call("string-of", ((ArgumentType[]){ mkarg(v(value)) }), 1, 0)
+
+/**
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @param path string
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define member(value, path) \
+    builder_call("member", ((ArgumentType[]){ mkarg(v(value)), mkarg(v(path)) }), 2, 0)
+
+/**
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define loopBreak() \
+    builder_call("loop-break", ((ArgumentType[]){  }), 0, 0)
+
+/**
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define loopContinue() \
+    builder_call("loop-continue", ((ArgumentType[]){  }), 0, 0)
+
+/**
+ * @param message string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define throwError(message) \
+    builder_call("throw-error", ((ArgumentType[]){ mkarg(v(message)) }), 1, 0)
+
+/**
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga> (default: null)
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define returnRaw(...) \
+    CAT(returnRaw_, __VA_OPT__(1))(__VA_ARGS__)
+#define returnRaw_1(value) \
+    builder_call("return-raw", ((ArgumentType[]){ mkarg_def(v(value), v(NULL)) }), 1, 0)
+#define returnRaw_() \
+    returnRaw_1(NULL)
+
+/**
+ * @param name string
+ * @param args array<string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string> | chain<lingua-tungga>> (default: [])
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define callFunction(name, args) \
+    builder_call("call-function", ((ArgumentType[]){ mkarg(v(name)), mkarg_def(v(args), v(((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 }))) }), 2, 0)
+
+/**
+ * @param name string
+ * @param args array<string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string> | chain<lingua-tungga>> (default: [])
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addCallFunction(name, args) \
+    builder_call("add-call-function", ((ArgumentType[]){ mkarg(v(name)), mkarg_def(v(args), v(((ArgumentValue){ .type = D_ARRAY, .count = 0, .as.data = 0 }))) }), 2, 0)
+
+/**
+ * @param name string
+ * @param params array<string>
+ * @param body chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define localFunction(name, params, body) \
+    builder_call("local-function", ((ArgumentType[]){ mkarg(v(name)), mkarg(v(params)), mkarg(v(body)) }), 3, 0)
+
+/**
  * @return char *
  */
 static char * lingua_tungga_generate_impl(Builder builder, ArgumentType *args, size_t count) {
@@ -3166,6 +3259,31 @@ static const StructType lingua_tungga_left_shift_args[] = { lingua_tungga_left_s
 static const StructType lingua_tungga_right_shift_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
 static const StructType lingua_tungga_right_shift_arg1 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
 static const StructType lingua_tungga_right_shift_args[] = { lingua_tungga_right_shift_arg0, lingua_tungga_right_shift_arg1 };
+static const StructType lingua_tungga_value_equal_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_value_equal_arg1 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_value_equal_args[] = { lingua_tungga_value_equal_arg0, lingua_tungga_value_equal_arg1 };
+static const StructType lingua_tungga_value_not_equal_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_value_not_equal_arg1 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_value_not_equal_args[] = { lingua_tungga_value_not_equal_arg0, lingua_tungga_value_not_equal_arg1 };
+static const StructType lingua_tungga_truthy_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_string_of_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_member_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_member_arg1 = { .kind = S_STRING };
+static const StructType lingua_tungga_member_args[] = { lingua_tungga_member_arg0, lingua_tungga_member_arg1 };
+static const StructType lingua_tungga_loop_break_args[] = {  };
+static const StructType lingua_tungga_loop_continue_args[] = {  };
+static const StructType lingua_tungga_throw_error_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_return_raw_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_call_function_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_call_function_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 7, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_STRING } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } } } };
+static const StructType lingua_tungga_call_function_args[] = { lingua_tungga_call_function_arg0, lingua_tungga_call_function_arg1 };
+static const StructType lingua_tungga_add_call_function_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_call_function_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 7, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_STRING } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } } } };
+static const StructType lingua_tungga_add_call_function_args[] = { lingua_tungga_add_call_function_arg0, lingua_tungga_add_call_function_arg1 };
+static const StructType lingua_tungga_local_function_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_local_function_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } };
+static const StructType lingua_tungga_local_function_arg2 = { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } };
+static const StructType lingua_tungga_local_function_args[] = { lingua_tungga_local_function_arg0, lingua_tungga_local_function_arg1, lingua_tungga_local_function_arg2 };
 
 static const FunctionSignature lingua_tungga_functions[] = {
     { "set-statements", 0, &lingua_tungga_set_statements_arg0, 1, "lingua-tungga" },
@@ -3242,6 +3360,18 @@ static const FunctionSignature lingua_tungga_functions[] = {
     { "bitwise-or", 0, lingua_tungga_bitwise_or_args, 2, "lingua-tungga" },
     { "left-shift", 0, lingua_tungga_left_shift_args, 2, "lingua-tungga" },
     { "right-shift", 0, lingua_tungga_right_shift_args, 2, "lingua-tungga" },
+    { "value-equal", 0, lingua_tungga_value_equal_args, 2, "lingua-tungga" },
+    { "value-not-equal", 0, lingua_tungga_value_not_equal_args, 2, "lingua-tungga" },
+    { "truthy", 0, &lingua_tungga_truthy_arg0, 1, "lingua-tungga" },
+    { "string-of", 0, &lingua_tungga_string_of_arg0, 1, "lingua-tungga" },
+    { "member", 0, lingua_tungga_member_args, 2, "lingua-tungga" },
+    { "loop-break", 0, lingua_tungga_loop_break_args, 0, "lingua-tungga" },
+    { "loop-continue", 0, lingua_tungga_loop_continue_args, 0, "lingua-tungga" },
+    { "throw-error", 0, &lingua_tungga_throw_error_arg0, 1, "lingua-tungga" },
+    { "return-raw", 0, &lingua_tungga_return_raw_arg0, 1, "lingua-tungga" },
+    { "call-function", 0, lingua_tungga_call_function_args, 2, "lingua-tungga" },
+    { "add-call-function", 0, lingua_tungga_add_call_function_args, 2, "lingua-tungga" },
+    { "local-function", 0, lingua_tungga_local_function_args, 3, "lingua-tungga" },
 };
 
 /**

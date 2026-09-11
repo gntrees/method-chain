@@ -64,6 +64,8 @@ export type ProjectType = {
     project: {
         projectName: string
         importPaths: Partial<Record<LanguageType, string>>
+        beforeScript?: Record<LanguageType, string>
+        afterScript?: Record<LanguageType, string>
         definitions: StructureType[]
         initFunctions: InitFunctionType[]
     }

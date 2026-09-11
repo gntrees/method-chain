@@ -1,3 +1,9 @@
+export type ParseResult = {
+  sql: string;
+  param: (string | number | boolean | null)[];
+  sqlWithParam: string;
+};
+
 // Auto-generated index for gntrees-method-chain
 
 export type LanguageType = "typescript" | "c";
@@ -2799,8 +2805,443 @@ export class QueryBuilder {
       ),
     );
   }
-  sign(): string {
-    return "query-builder-sign";
+  parse(): ParseResult {
+    const root: any = this.getSchema();
+    let dialect = "";
+    let quote = "";
+    let sql = "";
+    let wsql = "";
+    let params = [] as any[];
+    let orderSql = "";
+    let orderW = "";
+    let hasOrder = false;
+    let tmp = "";
+    let tmp2 = "";
+    let tmpRef = "";
+    function normName(n: any) {
+      return n.replaceAll("-", "").toLowerCase();
+    }
+    function pushSql(text: any) {
+      sql = sql + (" " + text);
+      return null;
+    }
+    function pushW(text: any) {
+      wsql = wsql + (" " + text);
+      return null;
+    }
+    function asString(arg: any) {
+      return arg["string"]["value"];
+    }
+    function identStr(name: any) {
+      return quote + (name.replaceAll(quote, quote + quote) + quote);
+    }
+    function literalOf(arg: any) {
+      let outLiteral = "";
+      if (!!Object.prototype.hasOwnProperty.call(arg, "string")) {
+        outLiteral = "'" + (asString(arg).replaceAll("'", "''") + "'");
+      } else if (!!Object.prototype.hasOwnProperty.call(arg, "number")) {
+        outLiteral = String(arg["number"]["value"]);
+      } else if (!!Object.prototype.hasOwnProperty.call(arg, "boolean")) {
+        if (!!arg["boolean"]["value"]) {
+          outLiteral = "TRUE";
+        } else {
+          outLiteral = "FALSE";
+        }
+      } else {
+        outLiteral = "NULL";
+      }
+      return outLiteral;
+    }
+    function opOf(n: any) {
+      let o = "";
+      if (n === "eq") {
+        o = "=";
+      } else if (n === "gt") {
+        o = ">";
+      } else if (n === "gte") {
+        o = ">=";
+      } else if (n === "lt") {
+        o = "<";
+      } else if (n === "lte") {
+        o = "<=";
+      } else if (n === "like") {
+        o = "LIKE";
+      } else if (n === "ilike") {
+        o = "ILIKE";
+      }
+      return o;
+    }
+    function itemsOf(arg: any) {
+      if (!!Object.prototype.hasOwnProperty.call(arg, "array")) {
+        return arg["array"]["value"];
+      }
+      return [...[], arg];
+    }
+    function isRef(chainValues: any) {
+      tmpRef = "";
+      if (
+        chainValues.length === 1 &&
+        !!Object.prototype.hasOwnProperty.call(chainValues[0], "functionCall")
+      ) {
+        let firstName = chainValues[0]["functionCall"]["name"];
+        if (firstName === "col" || firstName === "table") {
+          tmpRef = asString(
+            chainValues[0]["functionCall"]["arguments"][0]["argument"],
+          );
+        }
+      }
+      return tmpRef;
+    }
+    function emitParam(arg: any) {
+      params = [...params, arg];
+      if (dialect === "postgres") {
+        tmp = "$" + String(params.length);
+      } else {
+        tmp = "?";
+      }
+      pushSql(tmp);
+      tmp2 = literalOf(arg);
+      pushW(tmp2);
+      return null;
+    }
+    function emitIdent(name: any) {
+      tmp = identStr(name);
+      pushSql(tmp);
+      pushW(tmp);
+      return null;
+    }
+    function emitPredicate(chainValues: any) {
+      let first = true;
+      let left = "";
+      let hasLeft = false;
+      let base = "";
+      for (const node of chainValues) {
+        let pn = normName(node["functionCall"]["name"]);
+        if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
+          if (pn === "col" || pn === "table") {
+            left = identStr(
+              asString(node["functionCall"]["arguments"][0]["argument"]),
+            );
+            hasLeft = true;
+          } else if (!!opOf(pn)) {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql(opOf(pn));
+            pushW(opOf(pn));
+            emitParam(node["functionCall"]["arguments"][0]["argument"]);
+            hasLeft = false;
+          } else if (pn === "in") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql("IN (");
+            pushW("IN (");
+            let inFirst = true;
+            for (const iv of itemsOf(
+              node["functionCall"]["arguments"][0]["argument"],
+            )) {
+              if (inFirst === false) {
+                sql = sql + ",";
+                wsql = wsql + ",";
+              }
+              inFirst = false;
+              emitParam(iv);
+            }
+            pushSql(")");
+            pushW(")");
+            hasLeft = false;
+          } else if (pn === "between") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql("BETWEEN");
+            pushW("BETWEEN");
+            emitParam(node["functionCall"]["arguments"][0]["argument"]);
+            pushSql("AND");
+            pushW("AND");
+            emitParam(node["functionCall"]["arguments"][1]["argument"]);
+            hasLeft = false;
+          } else if (pn === "isnull") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql("IS NULL");
+            pushW("IS NULL");
+            hasLeft = false;
+          } else if (pn === "not") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            pushSql("NOT (");
+            pushW("NOT (");
+            emitPredicate(
+              node["functionCall"]["arguments"][0]["argument"]["chain"][
+                "values"
+              ],
+            );
+            pushSql(")");
+            pushW(")");
+            hasLeft = false;
+          } else if (pn === "and" || pn === "or") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            pushSql("(");
+            pushW("(");
+            let boolFirst = true;
+            for (const bv of itemsOf(
+              node["functionCall"]["arguments"][0]["argument"],
+            )) {
+              if (boolFirst === false) {
+                tmp = pn.toUpperCase();
+                pushSql(tmp);
+                pushW(tmp);
+              }
+              boolFirst = false;
+              if (!!Object.prototype.hasOwnProperty.call(bv, "chain")) {
+                emitPredicate(bv["chain"]["values"]);
+              } else {
+                emitParam(bv);
+              }
+            }
+            pushSql(")");
+            pushW(")");
+            hasLeft = false;
+          } else {
+            throw new Error(
+              String("query-builder parse: unsupported predicate"),
+            );
+          }
+        }
+      }
+      return null;
+    }
+    function emitOperand(arg: any) {
+      if (!!Object.prototype.hasOwnProperty.call(arg, "chain")) {
+        tmpRef = isRef(arg["chain"]["values"]);
+        if (tmpRef !== "") {
+          emitIdent(tmpRef);
+        } else {
+          emitPredicate(arg["chain"]["values"]);
+        }
+      } else {
+        emitParam(arg);
+      }
+      return null;
+    }
+    function emitColumnList(arg: any) {
+      let firstItem = true;
+      for (const item of itemsOf(arg)) {
+        if (firstItem === false) {
+          sql = sql + ",";
+          wsql = wsql + ",";
+        }
+        firstItem = false;
+        emitOperand(item);
+      }
+      return null;
+    }
+    function emitOrderItem(item: any) {
+      let dir = "";
+      let ordName = "";
+      if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
+        for (const on of item["chain"]["values"]) {
+          let onn = normName(on["functionCall"]["name"]);
+          if (onn === "asc") {
+            dir = " ASC";
+          } else if (onn === "desc") {
+            dir = " DESC";
+          } else if (onn === "col" || onn === "table") {
+            ordName = asString(on["functionCall"]["arguments"][0]["argument"]);
+          }
+        }
+      }
+      if (ordName !== "") {
+        tmp = identStr(ordName);
+        orderSql = orderSql + (tmp + dir);
+        orderW = orderW + (tmp + dir);
+      }
+      return null;
+    }
+    function emitOrderList(arg: any) {
+      let firstOrder = true;
+      for (const item of itemsOf(arg)) {
+        if (firstOrder === false) {
+          orderSql = orderSql + ", ";
+          orderW = orderW + ", ";
+        }
+        firstOrder = false;
+        emitOrderItem(item);
+      }
+      return null;
+    }
+    function flushOrder() {
+      if (!!hasOrder) {
+        pushSql("ORDER");
+        pushSql("BY");
+        pushW("ORDER");
+        pushW("BY");
+        tmp = orderSql;
+        if (tmp !== "") {
+          pushSql(tmp);
+        }
+        tmp2 = orderW;
+        if (tmp2 !== "") {
+          pushW(tmp2);
+        }
+        hasOrder = false;
+      }
+      return null;
+    }
+    for (const dialectNode of root["schema"]["chain"]["chain"]["values"]) {
+      if (normName(dialectNode["functionCall"]["name"]) === "setdialect") {
+        dialect =
+          dialectNode["functionCall"]["arguments"][0]["argument"]["string"][
+            "value"
+          ];
+      }
+    }
+    if (dialect === "") {
+      throw new Error(
+        String(
+          "query-builder parse: setDialect(...) must be called before parse()",
+        ),
+      );
+    } else if (dialect !== "postgres" && dialect !== "mysql") {
+      throw new Error(
+        String("query-builder parse: unsupported dialect " + dialect),
+      );
+    }
+    if (dialect === "mysql") {
+      quote = "`";
+    } else {
+      quote = "\x22";
+    }
+    function emitLiteralPlaceholder(arg: any) {
+      tmp = literalOf(arg);
+      pushSql(tmp);
+      pushW(tmp);
+      return null;
+    }
+    for (const node of root["schema"]["chain"]["chain"]["values"]) {
+      if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
+        let name = node["functionCall"]["name"];
+        let nameNorm = normName(name);
+        if (nameNorm === "setdialect") {
+          continue;
+        } else if (nameNorm === "asc" || nameNorm === "desc") {
+          if (!!hasOrder) {
+            tmp = nameNorm.toUpperCase();
+            orderSql = orderSql + (" " + tmp);
+            orderW = orderW + (" " + tmp);
+          }
+        } else {
+          if (nameNorm === "select") {
+            flushOrder();
+            pushSql("SELECT");
+            pushW("SELECT");
+            emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
+          } else if (nameNorm === "from") {
+            flushOrder();
+            pushSql("FROM");
+            pushW("FROM");
+            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+          } else if (nameNorm === "where") {
+            flushOrder();
+            pushSql("WHERE");
+            pushW("WHERE");
+            emitPredicate(
+              node["functionCall"]["arguments"][0]["argument"]["chain"][
+                "values"
+              ],
+            );
+          } else if (nameNorm === "groupby") {
+            flushOrder();
+            pushSql("GROUP BY");
+            pushW("GROUP BY");
+            emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
+          } else if (nameNorm === "orderby") {
+            hasOrder = true;
+            orderSql = "";
+            orderW = "";
+            emitOrderList(node["functionCall"]["arguments"][0]["argument"]);
+          } else if (nameNorm === "limit") {
+            flushOrder();
+            pushSql("LIMIT");
+            pushW("LIMIT");
+            emitLiteralPlaceholder(
+              node["functionCall"]["arguments"][0]["argument"],
+            );
+          } else if (nameNorm === "offset") {
+            flushOrder();
+            pushSql("OFFSET");
+            pushW("OFFSET");
+            emitLiteralPlaceholder(
+              node["functionCall"]["arguments"][0]["argument"],
+            );
+          } else {
+            throw new Error(
+              String("query-builder parse: unsupported clause " + name),
+            );
+          }
+        }
+      }
+    }
+    flushOrder();
+    return {
+      sql: sql.trim(),
+      sqlWithParam: wsql.trim(),
+      param: params.map((p) =>
+        p.string
+          ? p.string.value
+          : p.number
+            ? p.number.value
+            : p.boolean
+              ? p.boolean.value
+              : null,
+      ),
+    };
   }
 }
 

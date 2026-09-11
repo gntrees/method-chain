@@ -184,6 +184,97 @@ test("operators accept nested sub-builder as operand", async () => {
     expect(out).toEqual({ typescript: "(this.total + 1)", c: "(total + 1)" });
 });
 
+test("value-equal and value-not-equal compare runtime values", async () => {
+    const out = await linguaTungga()
+        .addVariable("name", "select")
+        .if(
+            linguaTungga().valueEqual(linguaTungga().variableForCounter("name"), "select"),
+            linguaTungga().addStatements({ typescript: ["hit();"], c: ["hit();"] }),
+        )
+        .if(
+            linguaTungga().valueNotEqual(linguaTungga().variableForCounter("name"), "insert"),
+            linguaTungga().addStatements({ typescript: ["miss();"], c: ["miss();"] }),
+        )
+        .generate();
+    expect(out.typescript).toContain('if (name === "select")');
+    expect(out.typescript).toContain('if (name !== "insert")');
+    expect(out.c).toContain('lt_value_equals(name, v_string("select"))');
+    expect(out.c).toContain('!lt_value_equals(name, v_string("insert"))');
+});
+
+test("truthy coerces runtime values in conditions", async () => {
+    const out = await linguaTungga()
+        .addVariable("flag", true)
+        .if(
+            linguaTungga().truthy(linguaTungga().variableForCounter("flag")),
+            linguaTungga().addStatements({ typescript: ["yes();"], c: ["yes();"] }),
+        )
+        .generate();
+    expect(out.typescript).toContain("if (!!(flag))");
+    expect(out.c).toContain("(flag).type == D_BOOL");
+    expect(out.c).toContain("flag");
+});
+
+test("member reads nested paths per language", async () => {
+    const out = await linguaTungga()
+        .member(linguaTungga().variableForCounter("node"), "functionCall.name")
+        .generate();
+    expect(out).toEqual({
+        typescript: 'node["functionCall"]["name"]',
+        c: 'lt_get(lt_get(node, v_string("functionCall")), v_string("name"))',
+    });
+});
+
+test("loop-break and loop-continue emit loop control statements", async () => {
+    const out = await linguaTungga()
+        .while(linguaTungga().truthy(1), linguaTungga()
+            .if(linguaTungga().valueEqual(1, 1), linguaTungga().loopContinue())
+            .loopBreak())
+        .generate();
+    expect(out.typescript).toContain("continue;");
+    expect(out.typescript).toContain("break;");
+    expect(out.c).toContain("continue;");
+    expect(out.c).toContain("break;");
+});
+
+test("throw-error emits throw for typescript and fail for c", async () => {
+    const out = await linguaTungga().throwError("boom").generate();
+    expect(out.typescript).toContain('throw new Error(String("boom"));');
+    expect(out.c).toContain('fail("%s", lt_as_string(&__lt_m));');
+});
+
+test("local-function emits a nested function definition", async () => {
+    const out = await linguaTungga()
+        .localFunction("double", ["value"], linguaTungga()
+            .return(linguaTungga().stringConcat(linguaTungga().variableForCounter("value"), linguaTungga().variableForCounter("value"))))
+        .generate();
+    expect(out.typescript).toContain("function double(value: any) {");
+    expect(out.typescript).toContain("return (value + value);");
+    expect(out.c).toContain("ArgumentValue double(ArgumentValue value) {");
+    expect(out.c).toContain("return lt_detach_copy(lt_str_concat(value, value));");
+});
+
+test("string-of converts runtime values to strings", async () => {
+    const out = await linguaTungga().stringOf(5).generate();
+    expect(out.typescript).toEqual("String(5)");
+    expect(out.c).toContain("lt_repr");
+    expect(out.c).toContain("v_string");
+});
+
+test("local-function can be called from the body", async () => {
+    const out = await linguaTungga()
+        .localFunction("double", ["value"], linguaTungga()
+            .returnRaw(linguaTungga().stringConcat(linguaTungga().variableForCounter("value"), linguaTungga().variableForCounter("value"))))
+        .addVariable("x", "a")
+        .addCallFunction("double", [linguaTungga().variableForCounter("x")])
+        .setVariable("x", linguaTungga().callFunction("double", [linguaTungga().variableForCounter("x")]))
+        .generate();
+    expect(out.typescript).toContain("function double(value: any)");
+    expect(out.typescript).toContain("double(x);");
+    expect(out.typescript).toContain("x = double(x);");
+    expect(out.c).toContain("x = double(x);");
+});
+
 test("if renders a guarded block", async () => {
     const out = await linguaTungga()
         .if(linguaTungga().equal(1, 2), linguaTungga().addStatements({ typescript: ["doThing();"], c: ["do_thing();"] }))

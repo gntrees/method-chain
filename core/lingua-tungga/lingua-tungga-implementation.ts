@@ -257,6 +257,52 @@ function buildOperatorExpression(name: string, op: OperatorDef, operands: Expres
     };
 }
 
+function renderValueEqual(left: unknown, right: unknown): ExpressionRecord {
+    const l = renderCallArgument(left);
+    const r = renderCallArgument(right);
+    return {
+        typescript: `(${l.typescript} === ${r.typescript})`,
+        c: `lt_value_equals(${l.c}, ${r.c})`,
+    };
+}
+
+function renderValueNotEqual(left: unknown, right: unknown): ExpressionRecord {
+    const l = renderCallArgument(left);
+    const r = renderCallArgument(right);
+    return {
+        typescript: `(${l.typescript} !== ${r.typescript})`,
+        c: `!lt_value_equals(${l.c}, ${r.c})`,
+    };
+}
+
+function renderTruthy(value: unknown): ExpressionRecord {
+    const v = renderCallArgument(value);
+    const cv = v.c;
+    return {
+        typescript: `!!(${v.typescript})`,
+        c: `((${cv}).type == D_NULL ? 0 : ((${cv}).type == D_BOOL || (${cv}).type == D_INT) ? ((${cv}).as.i != 0) : (${cv}).type == D_FLOAT ? ((${cv}).as.f != 0) : (${cv}).type == D_STRING ? ((${cv}).as.s && (${cv}).as.s[0] != 0) : ((${cv}).count != 0))`,
+    };
+}
+
+function renderToString(value: unknown): ExpressionRecord {
+    const v = renderCallArgument(value);
+    return {
+        typescript: `String(${v.typescript})`,
+        c: `({ char __lt_b[64]; const char *__lt_r = lt_repr((${v.c}), __lt_b, sizeof(__lt_b)); size_t __lt_n = strlen(__lt_r); char *__lt_o = lt_alloc(__lt_n + 1); memcpy(__lt_o, __lt_r, __lt_n + 1); v_string(__lt_o); })`,
+    };
+}
+
+function renderMember(value: unknown, path: string): ExpressionRecord {
+    const v = renderCallArgument(value);
+    let ts = v.typescript;
+    let c = v.c;
+    for (const part of path.split(".")) {
+        ts = `${ts}[${JSON.stringify(part)}]`;
+        c = `lt_get(${c}, v_string(${JSON.stringify(part)}))`;
+    }
+    return { typescript: ts, c };
+}
+
 type ManipulationDef = {
     arity: number;
     render: (...args: ExpressionRecord[]) => ExpressionRecord;
@@ -410,6 +456,14 @@ function structureVariableCall(variableName: string): ExpressionRecord {
     };
 }
 
+function renderBareCall(functionName: string, args: unknown[]): ExpressionRecord {
+    const renderedArgs = args.map((arg) => renderCallArgument(arg));
+    return {
+        typescript: `${functionName}(${renderedArgs.map((arg) => pickExpression(arg, ["typescript"])).join(", ")})`,
+        c: `${functionName}(${renderedArgs.map((arg) => pickExpression(arg, ["c"])).join(", ")})`,
+    };
+}
+
 function addStatements(state: ChainState, statements: StatementsRecord): void {
     for (const [lang, newStatements] of Object.entries(statements)) {
         if (!state.statements[lang as LanguageType]) {
@@ -489,6 +543,43 @@ function addGlobalFunction(
     state.globals.c.push(
         `ArgumentValue ${functionName}(${cParams}) {${cBody ? `\n${cBody}\n` : ""}}`,
     );
+}
+
+function addLocalFunction(
+    state: ChainState,
+    functionName: string,
+    params: string[],
+    bodyValue: unknown,
+): void {
+    if (!isChainArgument(bodyValue)) {
+        throw new Error(
+            "localFunction body must be a builder built from statements, e.g. addStatements(...)",
+        );
+    }
+    const bodyState: ChainState = {
+        statements: { typescript: [], c: [] },
+        variables: {
+            typescript: { ...state.variables.typescript },
+            c: { ...state.variables.c },
+        },
+        globals: state.globals,
+    };
+    for (const param of params) {
+        bodyState.variables.typescript[param] = param;
+        bodyState.variables.c[param] = param;
+    }
+    runChain(bodyValue.chain.values, bodyState);
+
+    const typescriptParams = params.map((param) => `${param}: any`).join(", ");
+    const cParams = params.length
+        ? params.map((param) => `ArgumentValue ${param}`).join(", ")
+        : "void";
+    const typescriptBody = indentLines(bodyState.statements.typescript).join("\n");
+    const cBody = indentLines(bodyState.statements.c).join("\n");
+    addStatements(state, {
+        typescript: [`function ${functionName}(${typescriptParams}) {${typescriptBody ? `\n${typescriptBody}\n` : ""}}`],
+        c: [`ArgumentValue ${functionName}(${cParams}) {${cBody ? `\n${cBody}\n` : ""}}`],
+    });
 }
 
 function stripOuterParens(expression: string): string {
@@ -669,6 +760,48 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
                 c: `(${target.c}++)`,
             };
             state.resultKind = "expression";
+        } else if (functionName === "valueEqual") {
+            state.result = renderValueEqual(args[0], args[1]);
+            state.resultKind = "expression";
+        } else if (functionName === "valueNotEqual") {
+            state.result = renderValueNotEqual(args[0], args[1]);
+            state.resultKind = "expression";
+        } else if (functionName === "truthy") {
+            state.result = renderTruthy(args[0]);
+            state.resultKind = "expression";
+        } else if (functionName === "stringOf") {
+            state.result = renderToString(args[0]);
+            state.resultKind = "expression";
+        } else if (functionName === "member") {
+            state.result = renderMember(args[0], args[1] as string);
+            state.resultKind = "expression";
+        } else if (functionName === "loopBreak") {
+            addStatements(state, { typescript: ["break;"], c: ["break;"] });
+        } else if (functionName === "loopContinue") {
+            addStatements(state, { typescript: ["continue;"], c: ["continue;"] });
+        } else if (functionName === "throwError") {
+            const message = renderCallArgument(args[0]);
+            addStatements(state, {
+                typescript: [`throw new Error(String(${message.typescript}));`],
+                c: [`({ ArgumentValue __lt_m = (${message.c}); fail("%s", lt_as_string(&__lt_m)); });`],
+            });
+        } else if (functionName === "returnRaw") {
+            if (args[0] === null || args[0] === undefined) {
+                addStatements(state, { typescript: ["return;"], c: ["return;"] });
+            } else {
+                const value = renderCallArgument(args[0]);
+                addStatements(state, {
+                    typescript: [`return ${value.typescript};`],
+                    c: [`return ${value.c};`],
+                });
+            }
+        } else if (functionName === "localFunction") {
+            addLocalFunction(state, args[0] as string, (args[1] as string[]) ?? [], args[2]);
+        } else if (functionName === "callFunction") {
+            state.result = renderBareCall(args[0] as string, (args[1] as unknown[]) ?? []);
+            state.resultKind = "expression";
+        } else if (functionName === "addCallFunction") {
+            addExpressionStatements(state, renderBareCall(args[0] as string, (args[1] as unknown[]) ?? []));
         } else {
             const manipulation = MANIPULATIONS[functionName];
             const op = OPERATORS[functionName];

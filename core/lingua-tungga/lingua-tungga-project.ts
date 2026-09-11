@@ -224,6 +224,28 @@ const linguaTunggaStructure: StructureType = {
                         ...(arity === 2 ? [arg("right", operatorOperand)] : []),
                     ]),
             ),
+            ltFunction("value-equal", [arg("left", operatorOperand), arg("right", operatorOperand)]),
+            ltFunction("value-not-equal", [arg("left", operatorOperand), arg("right", operatorOperand)]),
+            ltFunction("truthy", [arg("value", operatorOperand)]),
+            ltFunction("string-of", [arg("value", operatorOperand)]),
+            ltFunction("member", [arg("value", operatorOperand), arg("path", stringStruct)]),
+            ltFunction("loop-break"),
+            ltFunction("loop-continue"),
+            ltFunction("throw-error", [arg("message", operatorOperand)]),
+            ltFunction("return-raw", [argWithDefault("value", operatorOperand, { null: { value: null } })]),
+            ltFunction("call-function", [
+                arg("name", stringStruct),
+                argWithDefault("args", callArgArray, { array: { value: [] } }),
+            ]),
+            ltFunction("add-call-function", [
+                arg("name", stringStruct),
+                argWithDefault("args", callArgArray, { array: { value: [] } }),
+            ]),
+            ltFunction("local-function", [
+                arg("name", stringStruct),
+                arg("params", stringArrayStruct),
+                arg("body", bodyStruct),
+            ]),
             {
                 customFunction: {
                     name: "generate",
