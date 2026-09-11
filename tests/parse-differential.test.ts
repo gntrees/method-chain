@@ -163,6 +163,40 @@ const cases: Case[] = [
         select(col(v_string("id"))),
         where(chain(col(v_string("a")), op(v_string("~"), v_string("x"))))`,
     },
+    {
+        name: "postgres single CTE",
+        query: (c) =>
+            c.with(c.select(c.col("id")).from(c.table("users")), "cte")
+                .select(c.col("id"))
+                .from(c.table("cte"))
+                .setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        with(chain(select(col(v_string("id"))), from(table(v_string("users")))), v_string("cte")),
+        select(col(v_string("id"))),
+        from(table(v_string("cte")))`,
+    },
+    {
+        name: "postgres CTE parameters precede outer parameters",
+        query: (c) =>
+            c.with(c.select(c.col("id")).from(c.table("users")).where(c.col("active").eq(true)), "cte")
+                .select(c.col("id"))
+                .from(c.table("cte"))
+                .where(c.col("id").gt(5))
+                .setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        with(chain(select(col(v_string("id"))), from(table(v_string("users"))), where(chain(col(v_string("active")), eq(v_bool(1))))), v_string("cte")),
+        select(col(v_string("id"))),
+        from(table(v_string("cte"))),
+        where(chain(col(v_string("id")), gt(v_int(5))))`,
+    },
+    {
+        name: "postgres returning clause",
+        query: (c) => c.select(c.col("id")).from(c.table("t")).returning(c.col("id")).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(table(v_string("t"))),
+        returning(col(v_string("id")))`,
+    },
 ];
 
 for (const { name, query, cArgs } of cases) {

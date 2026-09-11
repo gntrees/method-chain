@@ -186,7 +186,8 @@ function buildParser(): LT {
         .addVariable("hasOrder", false)
         .addVariable("tmp", "")
         .addVariable("tmp2", "")
-        .addVariable("tmpRef", "");
+        .addVariable("tmpRef", "")
+        .addVariable("withFirst", true);
 
     // local functions
     c = localFn(c, "normName", ["n"], () =>
@@ -450,8 +451,40 @@ function buildParser(): LT {
             .addCallFunction("pushW", ["ON"])
             .addCallFunction("emitPredicate", [member(argAt(node, 1), "chain.values")]);
 
+    const withClause = (node: LT): LT =>
+        lt().addVariable("savedSql", ref("sql"))
+            .addVariable("savedW", ref("wsql"))
+            .addVariable("savedOrderSql", ref("orderSql"))
+            .addVariable("savedOrderW", ref("orderW"))
+            .addVariable("savedHasOrder", ref("hasOrder"))
+            .setVariable("sql", "")
+            .setVariable("wsql", "")
+            .setVariable("orderSql", "")
+            .setVariable("orderW", "")
+            .setVariable("hasOrder", false)
+            .addCallFunction("renderChain", [member(argAt(node, 0), "chain.values")])
+            .addVariable("subSql", lt().stringTrim(ref("sql")))
+            .addVariable("subW", lt().stringTrim(ref("wsql")))
+            .setVariable("sql", ref("savedSql"))
+            .setVariable("wsql", ref("savedW"))
+            .setVariable("orderSql", ref("savedOrderSql"))
+            .setVariable("orderW", ref("savedOrderW"))
+            .setVariable("hasOrder", ref("savedHasOrder"))
+            .if(valEq(ref("withFirst"), false),
+                lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+            .else(lt().setVariable("withFirst", false)
+                .addCallFunction("pushSql", ["WITH"])
+                .addCallFunction("pushW", ["WITH"]))
+            .addCallFunction("pushSql", [callExpr("identStr", [callExpr("asString", [argAt(node, 1)])])])
+            .addCallFunction("pushW", [callExpr("identStr", [callExpr("asString", [argAt(node, 1)])])])
+            .addCallFunction("pushSql", ["AS"])
+            .addCallFunction("pushW", ["AS"])
+            .addCallFunction("pushSql", [strCat("(", strCat(ref("subSql"), ")"))])
+            .addCallFunction("pushW", [strCat("(", strCat(ref("subW"), ")"))]);
+
     const clauseBody = (node: LT): LT => {
         const specs: { names: string[]; build: (node: LT) => LT }[] = [
+            { names: ["with"], build: (n) => withClause(n) },
             { names: ["select"], build: (n) => keywordClause(lt(), n, "SELECT", "emitColumnList", (a) => a) },
             { names: ["from"], build: (n) => keywordClause(lt(), n, "FROM", "emitOperand", (a) => a) },
             { names: ["join"], build: (n) => joinClause(n, "JOIN") },
@@ -463,6 +496,7 @@ function buildParser(): LT {
             { names: ["where"], build: (n) => keywordClause(lt(), n, "WHERE", "emitPredicate", (a) => member(a, "chain.values")) },
             { names: ["groupby"], build: (n) => keywordClause(lt(), n, "GROUP BY", "emitColumnList", (a) => a) },
             { names: ["having"], build: (n) => keywordClause(lt(), n, "HAVING", "emitPredicate", (a) => member(a, "chain.values")) },
+            { names: ["returning"], build: (n) => keywordClause(lt(), n, "RETURNING", "emitColumnList", (a) => a) },
             {
                 names: ["orderby"],
                 build: (n) => lt().setVariable("hasOrder", true)
@@ -491,20 +525,22 @@ function buildParser(): LT {
             .addCallFunction("pushW", [ref("tmp")])
             .returnRaw(NULL_EXPR()));
 
-    c = c.forEach(member(ref("root"), "schema.chain.chain.values"), "node",
-        lt().if(objHas(ref("node"), "functionCall"),
-            lt().addVariable("name", member(ref("node"), "functionCall.name"))
-                .addVariable("nameNorm", callExpr("normName", [ref("name")]))
-                .if(valEq(ref("nameNorm"), "setdialect"), lt().loopContinue())
-                .elseIf(lt().or(valEq(ref("nameNorm"), "asc"), valEq(ref("nameNorm"), "desc")),
-                    lt().if(truthy(ref("hasOrder")),
-                        lt().setVariable("tmp", strUpper(ref("nameNorm")))
-                            .setVariable("orderSql", strCat(ref("orderSql"), strCat(" ", ref("tmp"))))
-                            .setVariable("orderW", strCat(ref("orderW"), strCat(" ", ref("tmp"))))))
-                .else(clauseBody(ref("node"))))
-    );
+    c = localFn(c, "renderChain", ["chainValues"], () =>
+        lt().forEach(ref("chainValues"), "node",
+            lt().if(objHas(ref("node"), "functionCall"),
+                lt().addVariable("name", member(ref("node"), "functionCall.name"))
+                    .addVariable("nameNorm", callExpr("normName", [ref("name")]))
+                    .if(valEq(ref("nameNorm"), "setdialect"), lt().loopContinue())
+                    .elseIf(lt().or(valEq(ref("nameNorm"), "asc"), valEq(ref("nameNorm"), "desc")),
+                        lt().if(truthy(ref("hasOrder")),
+                            lt().setVariable("tmp", strUpper(ref("nameNorm")))
+                                .setVariable("orderSql", strCat(ref("orderSql"), strCat(" ", ref("tmp"))))
+                                .setVariable("orderW", strCat(ref("orderW"), strCat(" ", ref("tmp"))))))
+                    .else(clauseBody(ref("node"))))
+        ).addCallFunction("flushOrder", [])
+         .returnRaw(NULL_EXPR()));
 
-    c = callStmt(c, "flushOrder", []);
+    c = callStmt(c, "renderChain", [member(ref("root"), "schema.chain.chain.values")]);
     return c;
 }
 

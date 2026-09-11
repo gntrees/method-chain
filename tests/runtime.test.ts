@@ -617,6 +617,48 @@ test("parse renders generic operator with literal and column", () => {
     );
 });
 
+test("parse builds a single CTE", () => {
+    const c = qb();
+    const sub = c.select(c.col("id")).from(c.table("users"));
+    const result = c.with(sub, "cte").select(c.col("id")).from(c.table("cte")).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'WITH "cte" AS (SELECT "id" FROM "users") SELECT "id" FROM "cte"',
+        param: [],
+        sqlWithParam: 'WITH "cte" AS (SELECT "id" FROM "users") SELECT "id" FROM "cte"',
+    });
+});
+
+test("parse numbers CTE parameters before outer parameters", () => {
+    const c = qb();
+    const sub = c.select(c.col("id")).from(c.table("users")).where(c.col("active").eq(true));
+    const result = c
+        .with(sub, "cte")
+        .select(c.col("id"))
+        .from(c.table("cte"))
+        .where(c.col("id").gt(5))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'WITH "cte" AS (SELECT "id" FROM "users" WHERE "active" = $1) SELECT "id" FROM "cte" WHERE "id" > $2',
+        param: [true, 5],
+        sqlWithParam: 'WITH "cte" AS (SELECT "id" FROM "users" WHERE "active" = TRUE) SELECT "id" FROM "cte" WHERE "id" > 5',
+    });
+});
+
+test("parse joins multiple CTEs with commas", () => {
+    const c = qb();
+    const first = c.select(c.col("id")).from(c.table("users"));
+    const second = c.select(c.col("x")).from(c.table("b"));
+    const result = c.with(first, "a").with(second, "b").select(c.col("x")).from(c.table("a")).setDialect("mysql").parse();
+    expect(result.sql).toBe("WITH `a` AS (SELECT `id` FROM `users`), `b` AS (SELECT `x` FROM `b`) SELECT `x` FROM `a`");
+});
+
+test("parse appends returning clause", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).from(c.table("t")).returning(c.col("id")).setDialect("postgres").parse();
+    expect(result.sql).toBe('SELECT "id" FROM "t" RETURNING "id"');
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });

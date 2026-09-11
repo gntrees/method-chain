@@ -2818,6 +2818,7 @@ export class QueryBuilder {
     let tmp = "";
     let tmp2 = "";
     let tmpRef = "";
+    let withFirst = true;
     function normName(n: any) {
       return n.replaceAll("-", "").toLowerCase();
     }
@@ -3209,152 +3210,206 @@ export class QueryBuilder {
       pushW(tmp);
       return null;
     }
-    for (const node of root["schema"]["chain"]["chain"]["values"]) {
-      if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
-        let name = node["functionCall"]["name"];
-        let nameNorm = normName(name);
-        if (nameNorm === "setdialect") {
-          continue;
-        } else if (nameNorm === "asc" || nameNorm === "desc") {
-          if (!!hasOrder) {
-            tmp = nameNorm.toUpperCase();
-            orderSql = orderSql + (" " + tmp);
-            orderW = orderW + (" " + tmp);
-          }
-        } else {
-          if (nameNorm === "select") {
-            flushOrder();
-            pushSql("SELECT");
-            pushW("SELECT");
-            emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
-          } else if (nameNorm === "from") {
-            flushOrder();
-            pushSql("FROM");
-            pushW("FROM");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-          } else if (nameNorm === "join") {
-            flushOrder();
-            pushSql("JOIN");
-            pushW("JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "leftjoin") {
-            flushOrder();
-            pushSql("LEFT JOIN");
-            pushW("LEFT JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "rightjoin") {
-            flushOrder();
-            pushSql("RIGHT JOIN");
-            pushW("RIGHT JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "innerjoin") {
-            flushOrder();
-            pushSql("INNER JOIN");
-            pushW("INNER JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "fulljoin") {
-            flushOrder();
-            pushSql("FULL JOIN");
-            pushW("FULL JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "crossjoin") {
-            flushOrder();
-            pushSql("CROSS JOIN");
-            pushW("CROSS JOIN");
-            emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("ON");
-            pushW("ON");
-            emitPredicate(
-              node["functionCall"]["arguments"][1]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "where") {
-            flushOrder();
-            pushSql("WHERE");
-            pushW("WHERE");
-            emitPredicate(
-              node["functionCall"]["arguments"][0]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "groupby") {
-            flushOrder();
-            pushSql("GROUP BY");
-            pushW("GROUP BY");
-            emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
-          } else if (nameNorm === "having") {
-            flushOrder();
-            pushSql("HAVING");
-            pushW("HAVING");
-            emitPredicate(
-              node["functionCall"]["arguments"][0]["argument"]["chain"][
-                "values"
-              ],
-            );
-          } else if (nameNorm === "orderby") {
-            hasOrder = true;
-            orderSql = "";
-            orderW = "";
-            emitOrderList(node["functionCall"]["arguments"][0]["argument"]);
-          } else if (nameNorm === "limit") {
-            flushOrder();
-            pushSql("LIMIT");
-            pushW("LIMIT");
-            emitLiteralPlaceholder(
-              node["functionCall"]["arguments"][0]["argument"],
-            );
-          } else if (nameNorm === "offset") {
-            flushOrder();
-            pushSql("OFFSET");
-            pushW("OFFSET");
-            emitLiteralPlaceholder(
-              node["functionCall"]["arguments"][0]["argument"],
-            );
+    function renderChain(chainValues: any) {
+      for (const node of chainValues) {
+        if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
+          let name = node["functionCall"]["name"];
+          let nameNorm = normName(name);
+          if (nameNorm === "setdialect") {
+            continue;
+          } else if (nameNorm === "asc" || nameNorm === "desc") {
+            if (!!hasOrder) {
+              tmp = nameNorm.toUpperCase();
+              orderSql = orderSql + (" " + tmp);
+              orderW = orderW + (" " + tmp);
+            }
           } else {
-            throw new Error(
-              String("query-builder parse: unsupported clause " + name),
-            );
+            if (nameNorm === "with") {
+              let savedSql = sql;
+              let savedW = wsql;
+              let savedOrderSql = orderSql;
+              let savedOrderW = orderW;
+              let savedHasOrder = hasOrder;
+              sql = "";
+              wsql = "";
+              orderSql = "";
+              orderW = "";
+              hasOrder = false;
+              renderChain(
+                node["functionCall"]["arguments"][0]["argument"]["chain"][
+                  "values"
+                ],
+              );
+              let subSql = sql.trim();
+              let subW = wsql.trim();
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              if (withFirst === false) {
+                sql = sql + ",";
+                wsql = wsql + ",";
+              } else {
+                withFirst = false;
+                pushSql("WITH");
+                pushW("WITH");
+              }
+              pushSql(
+                identStr(
+                  asString(node["functionCall"]["arguments"][1]["argument"]),
+                ),
+              );
+              pushW(
+                identStr(
+                  asString(node["functionCall"]["arguments"][1]["argument"]),
+                ),
+              );
+              pushSql("AS");
+              pushW("AS");
+              pushSql("(" + (subSql + ")"));
+              pushW("(" + (subW + ")"));
+            } else if (nameNorm === "select") {
+              flushOrder();
+              pushSql("SELECT");
+              pushW("SELECT");
+              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "from") {
+              flushOrder();
+              pushSql("FROM");
+              pushW("FROM");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "join") {
+              flushOrder();
+              pushSql("JOIN");
+              pushW("JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "leftjoin") {
+              flushOrder();
+              pushSql("LEFT JOIN");
+              pushW("LEFT JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "rightjoin") {
+              flushOrder();
+              pushSql("RIGHT JOIN");
+              pushW("RIGHT JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "innerjoin") {
+              flushOrder();
+              pushSql("INNER JOIN");
+              pushW("INNER JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "fulljoin") {
+              flushOrder();
+              pushSql("FULL JOIN");
+              pushW("FULL JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "crossjoin") {
+              flushOrder();
+              pushSql("CROSS JOIN");
+              pushW("CROSS JOIN");
+              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("ON");
+              pushW("ON");
+              emitPredicate(
+                node["functionCall"]["arguments"][1]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "where") {
+              flushOrder();
+              pushSql("WHERE");
+              pushW("WHERE");
+              emitPredicate(
+                node["functionCall"]["arguments"][0]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "groupby") {
+              flushOrder();
+              pushSql("GROUP BY");
+              pushW("GROUP BY");
+              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "having") {
+              flushOrder();
+              pushSql("HAVING");
+              pushW("HAVING");
+              emitPredicate(
+                node["functionCall"]["arguments"][0]["argument"]["chain"][
+                  "values"
+                ],
+              );
+            } else if (nameNorm === "returning") {
+              flushOrder();
+              pushSql("RETURNING");
+              pushW("RETURNING");
+              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "orderby") {
+              hasOrder = true;
+              orderSql = "";
+              orderW = "";
+              emitOrderList(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "limit") {
+              flushOrder();
+              pushSql("LIMIT");
+              pushW("LIMIT");
+              emitLiteralPlaceholder(
+                node["functionCall"]["arguments"][0]["argument"],
+              );
+            } else if (nameNorm === "offset") {
+              flushOrder();
+              pushSql("OFFSET");
+              pushW("OFFSET");
+              emitLiteralPlaceholder(
+                node["functionCall"]["arguments"][0]["argument"],
+              );
+            } else {
+              throw new Error(
+                String("query-builder parse: unsupported clause " + name),
+              );
+            }
           }
         }
       }
+      flushOrder();
+      return null;
     }
-    flushOrder();
+    renderChain(root["schema"]["chain"]["chain"]["values"]);
     return {
       sql: sql.trim(),
       sqlWithParam: wsql.trim(),
