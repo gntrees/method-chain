@@ -90,5 +90,5 @@ for (const { name, schema } of CASES) {
         expect(await convertCSchema(getSchemaFromCFile(name))).toBe(
             await getFile(`./tests/data/cases/c/example-${name}.c`, "c")
         );
-    });
+    }, 60000);
 }

@@ -7,6 +7,7 @@ type Case = {
     name: string;
     query: (c: any) => any;
     cArgs: string;
+    cSetup?: string;
 };
 
 const cases: Case[] = [
@@ -243,13 +244,93 @@ const cases: Case[] = [
         cArgs: `setDialect("mysql"),
         raw("SELECT ", col(v_string("id")), " FROM ", table(v_string("t")))`,
     },
+    {
+        name: "postgres exists subquery",
+        query: (c) =>
+            c.select(c.col("id"))
+                .from(c.table("users"))
+                .where(c.exists(c.select(c.col("id")).from(c.table("posts")).where(c.col("posts.user_id").eq(c.col("users.id")))))
+                .setDialect("postgres"),
+        cSetup: `Builder existsSub = chain(select(col(v_string("id"))), from(table(v_string("posts"))), where(chain(col(v_string("posts.user_id")), eq(chain(col(v_string("users.id")))))));`,
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(table(v_string("users"))),
+        where(chain(exists(existsSub)))`,
+    },
+    {
+        name: "postgres in subquery",
+        query: (c) =>
+            c.select(c.col("id"))
+                .from(c.table("users"))
+                .where(c.col("id").in(c.select(c.col("uid")).from(c.table("members"))))
+                .setDialect("postgres"),
+        cSetup: `Builder inSub = chain(select(col(v_string("uid"))), from(table(v_string("members"))));`,
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(table(v_string("users"))),
+        where(chain(col(v_string("id")), in(inSub)))`,
+    },
+    {
+        name: "postgres scalar subquery with alias",
+        query: (c) =>
+            c.select(c.select(c.col("cnt")).from(c.table("t")).as("c"))
+                .from(c.table("u"))
+                .setDialect("postgres"),
+        cSetup: `Builder scalarSub = chain(select(col(v_string("cnt"))), from(table(v_string("t"))), as(v_string("c")));`,
+        cArgs: `setDialect("postgres"),
+        select(scalarSub),
+        from(table(v_string("u")))`,
+    },
+    {
+        name: "postgres from subquery with alias",
+        query: (c) =>
+            c.select(c.col("id"))
+                .from(c.select(c.col("id")).from(c.table("users")).as("u"))
+                .setDialect("postgres"),
+        cSetup: `Builder fromSub = chain(select(col(v_string("id"))), from(table(v_string("users"))), as(v_string("u")));`,
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(fromSub)`,
+    },
+    {
+        name: "postgres exists subquery parameter order",
+        query: (c) =>
+            c.select(c.col("id"))
+                .from(c.table("users"))
+                .where(c.exists(c.select(c.col("id")).from(c.table("orders")).where(c.col("total").gt(100))))
+                .where(c.col("active").eq(true))
+                .setDialect("postgres"),
+        cSetup: `Builder orderSub = chain(select(col(v_string("id"))), from(table(v_string("orders"))), where(chain(col(v_string("total")), gt(v_int(100)))));`,
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        from(table(v_string("users"))),
+        where(chain(exists(orderSub))),
+        where(chain(col(v_string("active")), eq(v_bool(1))))`,
+    },
+    {
+        name: "mysql nested subquery",
+        query: (c) =>
+            c.select(c.col("id"))
+                .where(c.col("id").in(
+                    c.select(c.col("uid")).from(c.table("m")).where(
+                        c.col("uid").in(c.select(c.col("id")).from(c.table("b")).where(c.col("ok").eq(true))),
+                    ),
+                ))
+                .setDialect("mysql"),
+        cSetup: `Builder bSub = chain(select(col(v_string("id"))), from(table(v_string("b"))), where(chain(col(v_string("ok")), eq(v_bool(1)))));
+    Builder mSub = chain(select(col(v_string("uid"))), from(table(v_string("m"))), where(chain(col(v_string("uid")), in(bSub))));`,
+        cArgs: `setDialect("mysql"),
+        select(col(v_string("id"))),
+        where(chain(col(v_string("id")), in(mSub)))`,
+    },
 ];
 
-for (const { name, query, cArgs } of cases) {
+for (const { name, query, cArgs, cSetup } of cases) {
     test(`differential TS<->C: ${name}`, () => {
         const c = queryBuilder("q") as any;
         const expected: ParseOutput = query(c).parse();
-        const runner = cParseProgram(`Builder qb = queryBuilder(variableName("q"), ${cArgs});`);
+        const setup = cSetup ? `${cSetup}\n    ` : "";
+        const runner = cParseProgram(`${setup}Builder qb = queryBuilder(variableName("q"), ${cArgs});`);
         const { status, stderr, stdout } = compileAndRun(runner);
         expect(stderr).not.toContain("validate:");
         expect(status).toBe(0);

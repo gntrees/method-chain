@@ -751,6 +751,92 @@ test("parse renders raw template literals", () => {
     });
 });
 
+test("parse builds exists subquery", () => {
+    const c = qb();
+    const result = c.select(c.col("id"))
+        .from(c.table("users"))
+        .where(c.exists(c.select(c.col("id")).from(c.table("posts")).where(c.col("posts.user_id").eq(c.col("users.id")))))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" WHERE EXISTS (SELECT "id" FROM "posts" WHERE "posts.user_id" = "users.id")',
+        param: [],
+        sqlWithParam: 'SELECT "id" FROM "users" WHERE EXISTS (SELECT "id" FROM "posts" WHERE "posts.user_id" = "users.id")',
+    });
+});
+
+test("parse builds in subquery", () => {
+    const c = qb();
+    const result = c.select(c.col("id"))
+        .from(c.table("users"))
+        .where(c.col("id").in(c.select(c.col("uid")).from(c.table("members"))))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" WHERE "id" IN (SELECT "uid" FROM "members")',
+        param: [],
+        sqlWithParam: 'SELECT "id" FROM "users" WHERE "id" IN (SELECT "uid" FROM "members")',
+    });
+});
+
+test("parse builds scalar subquery with alias", () => {
+    const c = qb();
+    const result = c.select(c.select(c.col("cnt")).from(c.table("t")).as("c"))
+        .from(c.table("u"))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT (SELECT "cnt" FROM "t") AS "c" FROM "u"',
+        param: [],
+        sqlWithParam: 'SELECT (SELECT "cnt" FROM "t") AS "c" FROM "u"',
+    });
+});
+
+test("parse builds from subquery with alias", () => {
+    const c = qb();
+    const result = c.select(c.col("id"))
+        .from(c.select(c.col("id")).from(c.table("users")).as("u"))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM (SELECT "id" FROM "users") AS "u"',
+        param: [],
+        sqlWithParam: 'SELECT "id" FROM (SELECT "id" FROM "users") AS "u"',
+    });
+});
+
+test("parse numbers subquery parameters before outer parameters", () => {
+    const c = qb();
+    const result = c.select(c.col("id"))
+        .from(c.table("users"))
+        .where(c.exists(c.select(c.col("id")).from(c.table("orders")).where(c.col("total").gt(100))))
+        .where(c.col("active").eq(true))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" WHERE EXISTS (SELECT "id" FROM "orders" WHERE "total" > $1) WHERE "active" = $2',
+        param: [100, true],
+        sqlWithParam: 'SELECT "id" FROM "users" WHERE EXISTS (SELECT "id" FROM "orders" WHERE "total" > 100) WHERE "active" = TRUE',
+    });
+});
+
+test("parse builds nested subquery with mysql quoting", () => {
+    const c = qb();
+    const result = c.select(c.col("id"))
+        .where(c.col("id").in(
+            c.select(c.col("uid")).from(c.table("m")).where(
+                c.col("uid").in(c.select(c.col("id")).from(c.table("b")).where(c.col("ok").eq(true))),
+            ),
+        ))
+        .setDialect("mysql")
+        .parse();
+    expect(result).toEqual({
+        sql: "SELECT `id` WHERE `id` IN (SELECT `uid` FROM `m` WHERE `uid` IN (SELECT `id` FROM `b` WHERE `ok` = ?))",
+        param: [true],
+        sqlWithParam: "SELECT `id` WHERE `id` IN (SELECT `uid` FROM `m` WHERE `uid` IN (SELECT `id` FROM `b` WHERE `ok` = TRUE))",
+    });
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });

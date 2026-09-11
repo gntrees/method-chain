@@ -3113,6 +3113,7 @@ ArgumentValue hasOrder = v_bool(0);
 ArgumentValue tmp = v_string("");
 ArgumentValue tmp2 = v_string("");
 ArgumentValue tmpRef = v_string("");
+ArgumentValue subAlias = v_string("");
 ArgumentValue withFirst = v_bool(1);
 ArgumentValue normName(ArgumentValue n) {
   return lt_to_lower(lt_replace(n, v_string("-"), v_string("")));
@@ -3394,224 +3395,12 @@ ArgumentValue conflictTarget(ArgumentValue arg) {
   }
   return ct;
 }
-ArgumentValue emitPredicate(ArgumentValue chainValues) {
-  ArgumentValue first = v_bool(1);
-  ArgumentValue left = v_string("");
-  ArgumentValue hasLeft = v_bool(0);
-  ArgumentValue base = v_string("");
-  ArgumentValue nodeArray = chainValues;
-  for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
-    ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
-    ArgumentValue pn = normName(lt_get(lt_get(node, v_string("functionCall")), v_string("name")));
-    ArgumentValue op = opOf(pn);
-    if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-      if (lt_value_equals(pn, v_string("col")) || lt_value_equals(pn, v_string("table"))) {
-        left = identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-        hasLeft = v_bool(1);
-      }
-      else if (({ ArgumentValue __lt_t = (op); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(op);
-        pushW(op);
-        emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("in"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(v_string("IN ("));
-        pushW(v_string("IN ("));
-        ArgumentValue inFirst = v_bool(1);
-        ArgumentValue ivArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        for (size_t ivIndex = 0; ivIndex < ivArray.count; ivIndex++) {
-          ArgumentValue iv = ((const ArgumentValue *)ivArray.as.data)[ivIndex];
-          if (lt_value_equals(inFirst, v_bool(0))) {
-            sql = lt_str_concat(sql, v_string(","));
-            wsql = lt_str_concat(wsql, v_string(","));
-          }
-          inFirst = v_bool(0);
-          emitRhs(iv);
-        }
-        pushSql(v_string(")"));
-        pushW(v_string(")"));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("between"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(v_string("BETWEEN"));
-        pushW(v_string("BETWEEN"));
-        emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        pushSql(v_string("AND"));
-        pushW(v_string("AND"));
-        emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("isnull"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(v_string("IS NULL"));
-        pushW(v_string("IS NULL"));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("not"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        pushSql(v_string("NOT ("));
-        pushW(v_string("NOT ("));
-        emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
-        pushSql(v_string(")"));
-        pushW(v_string(")"));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("and")) || lt_value_equals(pn, v_string("or"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        pushSql(v_string("("));
-        pushW(v_string("("));
-        ArgumentValue boolFirst = v_bool(1);
-        ArgumentValue bvArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        for (size_t bvIndex = 0; bvIndex < bvArray.count; bvIndex++) {
-          ArgumentValue bv = ((const ArgumentValue *)bvArray.as.data)[bvIndex];
-          if (lt_value_equals(boolFirst, v_bool(0))) {
-            tmp = lt_to_upper(pn);
-            pushSql(tmp);
-            pushW(tmp);
-          }
-          boolFirst = v_bool(0);
-          if (({ ArgumentValue __lt_t = (lt_has(bv, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-            emitPredicate(lt_get(lt_get(bv, v_string("chain")), v_string("values")));
-          }
-          else {
-            emitParam(bv);
-          }
-        }
-        pushSql(v_string(")"));
-        pushW(v_string(")"));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("as"))) {
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(v_string("AS"));
-        pushW(v_string("AS"));
-        emitIdent(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("op"))) {
-        if (lt_value_equals(first, v_bool(0))) {
-          pushSql(v_string("AND"));
-          pushW(v_string("AND"));
-        }
-        first = v_bool(0);
-        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          base = left;
-        }
-        else {
-          base = v_string("?");
-        }
-        pushSql(base);
-        pushW(base);
-        pushSql(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-        pushW(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-        emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
-        hasLeft = v_bool(0);
-      }
-      else if (lt_value_equals(pn, v_string("raw"))) {
-        emitRaw(node);
-      }
-      else {
-        ({ ArgumentValue __lt_m = (v_string("query-builder parse: unsupported predicate")); fail("%s", lt_as_string(&__lt_m)); });
-      }
-    }
+ArgumentValue firstKind(ArgumentValue chainValues) {
+  ArgumentValue kind = v_string("");
+  if (!lt_value_equals(lt_len(chainValues), v_int(0)) && ({ ArgumentValue __lt_t = (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+    kind = normName(lt_get(lt_get(lt_index(chainValues, v_int(0)), v_string("functionCall")), v_string("name")));
   }
-  return v_null();
-}
-ArgumentValue emitOperand(ArgumentValue arg) {
-  if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-    tmpRef = isRef(lt_get(lt_get(arg, v_string("chain")), v_string("values")));
-    if (!lt_value_equals(tmpRef, v_string(""))) {
-      emitIdent(tmpRef);
-    }
-    else {
-      emitPredicate(lt_get(lt_get(arg, v_string("chain")), v_string("values")));
-    }
-  }
-  else {
-    emitParam(arg);
-  }
-  return v_null();
-}
-ArgumentValue emitColumnList(ArgumentValue arg) {
-  ArgumentValue firstItem = v_bool(1);
-  ArgumentValue itemArray = itemsOf(arg);
-  for (size_t itemIndex = 0; itemIndex < itemArray.count; itemIndex++) {
-    ArgumentValue item = ((const ArgumentValue *)itemArray.as.data)[itemIndex];
-    if (lt_value_equals(firstItem, v_bool(0))) {
-      sql = lt_str_concat(sql, v_string(","));
-      wsql = lt_str_concat(wsql, v_string(","));
-    }
-    firstItem = v_bool(0);
-    emitOperand(item);
-  }
-  return v_null();
+  return kind;
 }
 ArgumentValue emitOrderItem(ArgumentValue item) {
   ArgumentValue dir = v_string("");
@@ -3696,235 +3485,1252 @@ ArgumentValue emitLiteralPlaceholder(ArgumentValue arg) {
   pushW(tmp);
   return v_null();
 }
-ArgumentValue renderChain(ArgumentValue chainValues) {
-  ArgumentValue nodeArray = chainValues;
-  for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
-    ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
-    if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-      ArgumentValue name = lt_get(lt_get(node, v_string("functionCall")), v_string("name"));
-      ArgumentValue nameNorm = normName(name);
-      if (lt_value_equals(nameNorm, v_string("setdialect"))) {
-        continue;
-      }
-      else if (lt_value_equals(nameNorm, v_string("asc")) || lt_value_equals(nameNorm, v_string("desc"))) {
-        if (({ ArgumentValue __lt_t = (hasOrder); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
-          tmp = lt_to_upper(nameNorm);
-          orderSql = lt_str_concat(orderSql, lt_str_concat(v_string(" "), tmp));
-          orderW = lt_str_concat(orderW, lt_str_concat(v_string(" "), tmp));
+ArgumentValue renderNodes(ArgumentValue nodes, ArgumentValue mode) {
+  ArgumentValue savedSql = v_string("");
+  ArgumentValue savedW = v_string("");
+  ArgumentValue savedOrderSql = v_string("");
+  ArgumentValue savedOrderW = v_string("");
+  ArgumentValue savedHasOrder = v_bool(0);
+  ArgumentValue savedAlias = v_string("");
+  ArgumentValue subSql = v_string("");
+  ArgumentValue subW = v_string("");
+  ArgumentValue subAliasText = v_string("");
+  ArgumentValue first = v_bool(1);
+  ArgumentValue left = v_string("");
+  ArgumentValue hasLeft = v_bool(0);
+  ArgumentValue base = v_string("");
+  if (lt_value_equals(mode, v_int(0))) {
+    ArgumentValue nodeArray = nodes;
+    for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
+      ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
+      if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+        ArgumentValue name = lt_get(lt_get(node, v_string("functionCall")), v_string("name"));
+        ArgumentValue nameNorm = normName(name);
+        if (lt_value_equals(nameNorm, v_string("setdialect"))) {
+          continue;
         }
-      }
-      else {
-        if (lt_value_equals(nameNorm, v_string("with"))) {
-          ArgumentValue savedSql = sql;
-          ArgumentValue savedW = wsql;
-          ArgumentValue savedOrderSql = orderSql;
-          ArgumentValue savedOrderW = orderW;
-          ArgumentValue savedHasOrder = hasOrder;
-          sql = v_string("");
-          wsql = v_string("");
-          orderSql = v_string("");
-          orderW = v_string("");
-          hasOrder = v_bool(0);
-          renderChain(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
-          ArgumentValue subSql = lt_trim(sql);
-          ArgumentValue subW = lt_trim(wsql);
-          sql = savedSql;
-          wsql = savedW;
-          orderSql = savedOrderSql;
-          orderW = savedOrderW;
-          hasOrder = savedHasOrder;
-          if (lt_value_equals(withFirst, v_bool(0))) {
-            sql = lt_str_concat(sql, v_string(","));
-            wsql = lt_str_concat(wsql, v_string(","));
+        else if (lt_value_equals(nameNorm, v_string("asc")) || lt_value_equals(nameNorm, v_string("desc"))) {
+          if (({ ArgumentValue __lt_t = (hasOrder); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            tmp = lt_to_upper(nameNorm);
+            orderSql = lt_str_concat(orderSql, lt_str_concat(v_string(" "), tmp));
+            orderW = lt_str_concat(orderW, lt_str_concat(v_string(" "), tmp));
           }
-          else {
-            withFirst = v_bool(0);
-            pushSql(v_string("WITH"));
-            pushW(v_string("WITH"));
-          }
-          pushSql(identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")))));
-          pushW(identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")))));
-          pushSql(v_string("AS"));
-          pushW(v_string("AS"));
-          pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
-          pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
-        }
-        else if (lt_value_equals(nameNorm, v_string("select"))) {
-          flushOrder();
-          pushSql(v_string("SELECT"));
-          pushW(v_string("SELECT"));
-          emitColumnList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("from"))) {
-          flushOrder();
-          pushSql(v_string("FROM"));
-          pushW(v_string("FROM"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("join"))) {
-          flushOrder();
-          pushSql(v_string("JOIN"));
-          pushW(v_string("JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("leftjoin"))) {
-          flushOrder();
-          pushSql(v_string("LEFT JOIN"));
-          pushW(v_string("LEFT JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("rightjoin"))) {
-          flushOrder();
-          pushSql(v_string("RIGHT JOIN"));
-          pushW(v_string("RIGHT JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("innerjoin"))) {
-          flushOrder();
-          pushSql(v_string("INNER JOIN"));
-          pushW(v_string("INNER JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("fulljoin"))) {
-          flushOrder();
-          pushSql(v_string("FULL JOIN"));
-          pushW(v_string("FULL JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("crossjoin"))) {
-          flushOrder();
-          pushSql(v_string("CROSS JOIN"));
-          pushW(v_string("CROSS JOIN"));
-          emitOperand(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("where"))) {
-          flushOrder();
-          pushSql(v_string("WHERE"));
-          pushW(v_string("WHERE"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("groupby"))) {
-          flushOrder();
-          pushSql(v_string("GROUP BY"));
-          pushW(v_string("GROUP BY"));
-          emitColumnList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("having"))) {
-          flushOrder();
-          pushSql(v_string("HAVING"));
-          pushW(v_string("HAVING"));
-          emitPredicate(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("returning"))) {
-          flushOrder();
-          pushSql(v_string("RETURNING"));
-          pushW(v_string("RETURNING"));
-          emitColumnList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("orderby"))) {
-          hasOrder = v_bool(1);
-          orderSql = v_string("");
-          orderW = v_string("");
-          emitOrderList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("limit"))) {
-          flushOrder();
-          pushSql(v_string("LIMIT"));
-          pushW(v_string("LIMIT"));
-          emitLiteralPlaceholder(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("offset"))) {
-          flushOrder();
-          pushSql(v_string("OFFSET"));
-          pushW(v_string("OFFSET"));
-          emitLiteralPlaceholder(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("raw"))) {
-          emitRaw(node);
-        }
-        else if (lt_value_equals(nameNorm, v_string("update"))) {
-          pushSql(v_string("UPDATE"));
-          pushW(v_string("UPDATE"));
-          emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-          pushSql(v_string("SET"));
-          pushW(v_string("SET"));
-          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("insert"))) {
-          emitInsert(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("delete"))) {
-          pushSql(v_string("DELETE"));
-          pushW(v_string("DELETE"));
-          pushSql(v_string("FROM"));
-          pushW(v_string("FROM"));
-          emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("set"))) {
-          pushSql(v_string("SET"));
-          pushW(v_string("SET"));
-          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("values"))) {
-          pushSql(v_string("VALUES"));
-          pushW(v_string("VALUES"));
-          emitTupleList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
-        }
-        else if (lt_value_equals(nameNorm, v_string("onconflictdonothing"))) {
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          pushSql(v_string("CONFLICT"));
-          pushW(v_string("CONFLICT"));
-          pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-          pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-          pushSql(v_string("DO"));
-          pushW(v_string("DO"));
-          pushSql(v_string("NOTHING"));
-          pushW(v_string("NOTHING"));
-        }
-        else if (lt_value_equals(nameNorm, v_string("onconflictdoupdate"))) {
-          pushSql(v_string("ON"));
-          pushW(v_string("ON"));
-          pushSql(v_string("CONFLICT"));
-          pushW(v_string("CONFLICT"));
-          pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-          pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
-          pushSql(v_string("DO"));
-          pushW(v_string("DO"));
-          pushSql(v_string("UPDATE"));
-          pushW(v_string("UPDATE"));
-          pushSql(v_string("SET"));
-          pushW(v_string("SET"));
-          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
         }
         else {
-          ({ ArgumentValue __lt_m = (lt_str_concat(v_string("query-builder parse: unsupported clause "), name)); fail("%s", lt_as_string(&__lt_m)); });
+          if (lt_value_equals(nameNorm, v_string("with"))) {
+            savedSql = sql;
+            savedW = wsql;
+            savedOrderSql = orderSql;
+            savedOrderW = orderW;
+            savedHasOrder = hasOrder;
+            sql = v_string("");
+            wsql = v_string("");
+            orderSql = v_string("");
+            orderW = v_string("");
+            hasOrder = v_bool(0);
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+            subSql = lt_trim(sql);
+            subW = lt_trim(wsql);
+            sql = savedSql;
+            wsql = savedW;
+            orderSql = savedOrderSql;
+            orderW = savedOrderW;
+            hasOrder = savedHasOrder;
+            if (lt_value_equals(withFirst, v_bool(0))) {
+              sql = lt_str_concat(sql, v_string(","));
+              wsql = lt_str_concat(wsql, v_string(","));
+            }
+            else {
+              withFirst = v_bool(0);
+              pushSql(v_string("WITH"));
+              pushW(v_string("WITH"));
+            }
+            pushSql(identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")))));
+            pushW(identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")))));
+            pushSql(v_string("AS"));
+            pushW(v_string("AS"));
+            pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+            pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+          }
+          else if (lt_value_equals(nameNorm, v_string("select"))) {
+            flushOrder();
+            pushSql(v_string("SELECT"));
+            pushW(v_string("SELECT"));
+            ArgumentValue firstItem = v_bool(1);
+            ArgumentValue itemArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            for (size_t itemIndex = 0; itemIndex < itemArray.count; itemIndex++) {
+              ArgumentValue item = ((const ArgumentValue *)itemArray.as.data)[itemIndex];
+              if (lt_value_equals(firstItem, v_bool(0))) {
+                sql = lt_str_concat(sql, v_string(","));
+                wsql = lt_str_concat(wsql, v_string(","));
+              }
+              firstItem = v_bool(0);
+              if (({ ArgumentValue __lt_t = (lt_has(item, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                tmpRef = isRef(lt_get(lt_get(item, v_string("chain")), v_string("values")));
+                if (!lt_value_equals(tmpRef, v_string(""))) {
+                  emitIdent(tmpRef);
+                }
+                else if ((lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = v_string("");
+                  wsql = v_string("");
+                  orderSql = v_string("");
+                  orderW = v_string("");
+                  hasOrder = v_bool(0);
+                  subAlias = v_string("");
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(0));
+                  subSql = lt_trim(sql);
+                  subW = lt_trim(wsql);
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                  pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                  if (!lt_value_equals(subAliasText, v_string(""))) {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                }
+                else {
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(1));
+                }
+              }
+              else {
+                emitParam(item);
+              }
+            }
+          }
+          else if (lt_value_equals(nameNorm, v_string("from"))) {
+            flushOrder();
+            pushSql(v_string("FROM"));
+            pushW(v_string("FROM"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+          }
+          else if (lt_value_equals(nameNorm, v_string("join"))) {
+            flushOrder();
+            pushSql(v_string("JOIN"));
+            pushW(v_string("JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("leftjoin"))) {
+            flushOrder();
+            pushSql(v_string("LEFT JOIN"));
+            pushW(v_string("LEFT JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("rightjoin"))) {
+            flushOrder();
+            pushSql(v_string("RIGHT JOIN"));
+            pushW(v_string("RIGHT JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("innerjoin"))) {
+            flushOrder();
+            pushSql(v_string("INNER JOIN"));
+            pushW(v_string("INNER JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("fulljoin"))) {
+            flushOrder();
+            pushSql(v_string("FULL JOIN"));
+            pushW(v_string("FULL JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("crossjoin"))) {
+            flushOrder();
+            pushSql(v_string("CROSS JOIN"));
+            pushW(v_string("CROSS JOIN"));
+            if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+              if (!lt_value_equals(tmpRef, v_string(""))) {
+                emitIdent(tmpRef);
+              }
+              else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = v_string("");
+                wsql = v_string("");
+                orderSql = v_string("");
+                orderW = v_string("");
+                hasOrder = v_bool(0);
+                subAlias = v_string("");
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+                subSql = lt_trim(sql);
+                subW = lt_trim(wsql);
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                if (!lt_value_equals(subAliasText, v_string(""))) {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              }
+              else {
+                renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("where"))) {
+            flushOrder();
+            pushSql(v_string("WHERE"));
+            pushW(v_string("WHERE"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("groupby"))) {
+            flushOrder();
+            pushSql(v_string("GROUP BY"));
+            pushW(v_string("GROUP BY"));
+            ArgumentValue firstItem = v_bool(1);
+            ArgumentValue itemArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            for (size_t itemIndex = 0; itemIndex < itemArray.count; itemIndex++) {
+              ArgumentValue item = ((const ArgumentValue *)itemArray.as.data)[itemIndex];
+              if (lt_value_equals(firstItem, v_bool(0))) {
+                sql = lt_str_concat(sql, v_string(","));
+                wsql = lt_str_concat(wsql, v_string(","));
+              }
+              firstItem = v_bool(0);
+              if (({ ArgumentValue __lt_t = (lt_has(item, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                tmpRef = isRef(lt_get(lt_get(item, v_string("chain")), v_string("values")));
+                if (!lt_value_equals(tmpRef, v_string(""))) {
+                  emitIdent(tmpRef);
+                }
+                else if ((lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = v_string("");
+                  wsql = v_string("");
+                  orderSql = v_string("");
+                  orderW = v_string("");
+                  hasOrder = v_bool(0);
+                  subAlias = v_string("");
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(0));
+                  subSql = lt_trim(sql);
+                  subW = lt_trim(wsql);
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                  pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                  if (!lt_value_equals(subAliasText, v_string(""))) {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                }
+                else {
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(1));
+                }
+              }
+              else {
+                emitParam(item);
+              }
+            }
+          }
+          else if (lt_value_equals(nameNorm, v_string("having"))) {
+            flushOrder();
+            pushSql(v_string("HAVING"));
+            pushW(v_string("HAVING"));
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          }
+          else if (lt_value_equals(nameNorm, v_string("returning"))) {
+            flushOrder();
+            pushSql(v_string("RETURNING"));
+            pushW(v_string("RETURNING"));
+            ArgumentValue firstItem = v_bool(1);
+            ArgumentValue itemArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            for (size_t itemIndex = 0; itemIndex < itemArray.count; itemIndex++) {
+              ArgumentValue item = ((const ArgumentValue *)itemArray.as.data)[itemIndex];
+              if (lt_value_equals(firstItem, v_bool(0))) {
+                sql = lt_str_concat(sql, v_string(","));
+                wsql = lt_str_concat(wsql, v_string(","));
+              }
+              firstItem = v_bool(0);
+              if (({ ArgumentValue __lt_t = (lt_has(item, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                tmpRef = isRef(lt_get(lt_get(item, v_string("chain")), v_string("values")));
+                if (!lt_value_equals(tmpRef, v_string(""))) {
+                  emitIdent(tmpRef);
+                }
+                else if ((lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(item, v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = v_string("");
+                  wsql = v_string("");
+                  orderSql = v_string("");
+                  orderW = v_string("");
+                  hasOrder = v_bool(0);
+                  subAlias = v_string("");
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(0));
+                  subSql = lt_trim(sql);
+                  subW = lt_trim(wsql);
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                  pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                  if (!lt_value_equals(subAliasText, v_string(""))) {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                }
+                else {
+                  renderNodes(lt_get(lt_get(item, v_string("chain")), v_string("values")), v_int(1));
+                }
+              }
+              else {
+                emitParam(item);
+              }
+            }
+          }
+          else if (lt_value_equals(nameNorm, v_string("orderby"))) {
+            hasOrder = v_bool(1);
+            orderSql = v_string("");
+            orderW = v_string("");
+            emitOrderList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("limit"))) {
+            flushOrder();
+            pushSql(v_string("LIMIT"));
+            pushW(v_string("LIMIT"));
+            emitLiteralPlaceholder(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("offset"))) {
+            flushOrder();
+            pushSql(v_string("OFFSET"));
+            pushW(v_string("OFFSET"));
+            emitLiteralPlaceholder(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("raw"))) {
+            emitRaw(node);
+          }
+          else if (lt_value_equals(nameNorm, v_string("as"))) {
+            subAlias = lt_str_concat(v_string("AS "), identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")))));
+          }
+          else if (lt_value_equals(nameNorm, v_string("update"))) {
+            pushSql(v_string("UPDATE"));
+            pushW(v_string("UPDATE"));
+            emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            pushSql(v_string("SET"));
+            pushW(v_string("SET"));
+            emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("insert"))) {
+            emitInsert(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("delete"))) {
+            pushSql(v_string("DELETE"));
+            pushW(v_string("DELETE"));
+            pushSql(v_string("FROM"));
+            pushW(v_string("FROM"));
+            emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("set"))) {
+            pushSql(v_string("SET"));
+            pushW(v_string("SET"));
+            emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("values"))) {
+            pushSql(v_string("VALUES"));
+            pushW(v_string("VALUES"));
+            emitTupleList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          else if (lt_value_equals(nameNorm, v_string("onconflictdonothing"))) {
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            pushSql(v_string("CONFLICT"));
+            pushW(v_string("CONFLICT"));
+            pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+            pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+            pushSql(v_string("DO"));
+            pushW(v_string("DO"));
+            pushSql(v_string("NOTHING"));
+            pushW(v_string("NOTHING"));
+          }
+          else if (lt_value_equals(nameNorm, v_string("onconflictdoupdate"))) {
+            pushSql(v_string("ON"));
+            pushW(v_string("ON"));
+            pushSql(v_string("CONFLICT"));
+            pushW(v_string("CONFLICT"));
+            pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+            pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+            pushSql(v_string("DO"));
+            pushW(v_string("DO"));
+            pushSql(v_string("UPDATE"));
+            pushW(v_string("UPDATE"));
+            pushSql(v_string("SET"));
+            pushW(v_string("SET"));
+            emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+          }
+          else {
+            ({ ArgumentValue __lt_m = (lt_str_concat(v_string("query-builder parse: unsupported clause "), name)); fail("%s", lt_as_string(&__lt_m)); });
+          }
         }
       }
     }
+    flushOrder();
+    return v_null();
   }
-  flushOrder();
+  else {
+    first = v_bool(1);
+    left = v_string("");
+    hasLeft = v_bool(0);
+    base = v_string("");
+    ArgumentValue nodeArray = nodes;
+    for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
+      ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
+      ArgumentValue pn = normName(lt_get(lt_get(node, v_string("functionCall")), v_string("name")));
+      ArgumentValue op = opOf(pn);
+      if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+        if (lt_value_equals(pn, v_string("col")) || lt_value_equals(pn, v_string("table"))) {
+          left = identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          hasLeft = v_bool(1);
+        }
+        else if (({ ArgumentValue __lt_t = (op); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            base = left;
+          }
+          else {
+            base = v_string("?");
+          }
+          pushSql(base);
+          pushW(base);
+          pushSql(op);
+          pushW(op);
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+            if (!lt_value_equals(tmpRef, v_string(""))) {
+              emitIdent(tmpRef);
+            }
+            else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+              savedSql = sql;
+              savedW = wsql;
+              savedOrderSql = orderSql;
+              savedOrderW = orderW;
+              savedHasOrder = hasOrder;
+              savedAlias = subAlias;
+              sql = v_string("");
+              wsql = v_string("");
+              orderSql = v_string("");
+              orderW = v_string("");
+              hasOrder = v_bool(0);
+              subAlias = v_string("");
+              renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+              subSql = lt_trim(sql);
+              subW = lt_trim(wsql);
+              subAliasText = subAlias;
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              subAlias = savedAlias;
+              pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+              pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+              if (!lt_value_equals(subAliasText, v_string(""))) {
+                pushSql(subAliasText);
+                pushW(subAliasText);
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+          }
+          else {
+            emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("exists"))) {
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            if (lt_value_equals(first, v_bool(0))) {
+              pushSql(v_string("AND"));
+              pushW(v_string("AND"));
+            }
+            first = v_bool(0);
+            pushSql(v_string("EXISTS"));
+            pushW(v_string("EXISTS"));
+            savedSql = sql;
+            savedW = wsql;
+            savedOrderSql = orderSql;
+            savedOrderW = orderW;
+            savedHasOrder = hasOrder;
+            savedAlias = subAlias;
+            sql = v_string("");
+            wsql = v_string("");
+            orderSql = v_string("");
+            orderW = v_string("");
+            hasOrder = v_bool(0);
+            subAlias = v_string("");
+            renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+            subSql = lt_trim(sql);
+            subW = lt_trim(wsql);
+            subAliasText = subAlias;
+            sql = savedSql;
+            wsql = savedW;
+            orderSql = savedOrderSql;
+            orderW = savedOrderW;
+            hasOrder = savedHasOrder;
+            subAlias = savedAlias;
+            pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+            pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+            if (!lt_value_equals(subAliasText, v_string(""))) {
+              pushSql(subAliasText);
+              pushW(subAliasText);
+            }
+          }
+          else {
+            ({ ArgumentValue __lt_m = (v_string("query-builder parse: exists expects a subquery")); fail("%s", lt_as_string(&__lt_m)); });
+          }
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("in"))) {
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+              if (lt_value_equals(first, v_bool(0))) {
+                pushSql(v_string("AND"));
+                pushW(v_string("AND"));
+              }
+              first = v_bool(0);
+              if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                base = left;
+              }
+              else {
+                base = v_string("?");
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql(v_string("IN"));
+              pushW(v_string("IN"));
+              savedSql = sql;
+              savedW = wsql;
+              savedOrderSql = orderSql;
+              savedOrderW = orderW;
+              savedHasOrder = hasOrder;
+              savedAlias = subAlias;
+              sql = v_string("");
+              wsql = v_string("");
+              orderSql = v_string("");
+              orderW = v_string("");
+              hasOrder = v_bool(0);
+              subAlias = v_string("");
+              renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+              subSql = lt_trim(sql);
+              subW = lt_trim(wsql);
+              subAliasText = subAlias;
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              subAlias = savedAlias;
+              pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+              pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+              if (!lt_value_equals(subAliasText, v_string(""))) {
+                pushSql(subAliasText);
+                pushW(subAliasText);
+              }
+            }
+            else {
+              if (lt_value_equals(first, v_bool(0))) {
+                pushSql(v_string("AND"));
+                pushW(v_string("AND"));
+              }
+              first = v_bool(0);
+              if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                base = left;
+              }
+              else {
+                base = v_string("?");
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql(v_string("IN ("));
+              pushW(v_string("IN ("));
+              ArgumentValue inFirst = v_bool(1);
+              ArgumentValue ivArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+              for (size_t ivIndex = 0; ivIndex < ivArray.count; ivIndex++) {
+                ArgumentValue iv = ((const ArgumentValue *)ivArray.as.data)[ivIndex];
+                if (lt_value_equals(inFirst, v_bool(0))) {
+                  sql = lt_str_concat(sql, v_string(","));
+                  wsql = lt_str_concat(wsql, v_string(","));
+                }
+                inFirst = v_bool(0);
+                if (({ ArgumentValue __lt_t = (lt_has(iv, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                  tmpRef = isRef(lt_get(lt_get(iv, v_string("chain")), v_string("values")));
+                  if (!lt_value_equals(tmpRef, v_string(""))) {
+                    emitIdent(tmpRef);
+                  }
+                  else if ((lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = v_string("");
+                    wsql = v_string("");
+                    orderSql = v_string("");
+                    orderW = v_string("");
+                    hasOrder = v_bool(0);
+                    subAlias = v_string("");
+                    renderNodes(lt_get(lt_get(iv, v_string("chain")), v_string("values")), v_int(0));
+                    subSql = lt_trim(sql);
+                    subW = lt_trim(wsql);
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                    pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                    if (!lt_value_equals(subAliasText, v_string(""))) {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  }
+                  else {
+                    emitParam(iv);
+                  }
+                }
+                else {
+                  emitParam(iv);
+                }
+              }
+              pushSql(v_string(")"));
+              pushW(v_string(")"));
+            }
+          }
+          else {
+            if (lt_value_equals(first, v_bool(0))) {
+              pushSql(v_string("AND"));
+              pushW(v_string("AND"));
+            }
+            first = v_bool(0);
+            if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              base = left;
+            }
+            else {
+              base = v_string("?");
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql(v_string("IN ("));
+            pushW(v_string("IN ("));
+            ArgumentValue inFirst = v_bool(1);
+            ArgumentValue ivArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            for (size_t ivIndex = 0; ivIndex < ivArray.count; ivIndex++) {
+              ArgumentValue iv = ((const ArgumentValue *)ivArray.as.data)[ivIndex];
+              if (lt_value_equals(inFirst, v_bool(0))) {
+                sql = lt_str_concat(sql, v_string(","));
+                wsql = lt_str_concat(wsql, v_string(","));
+              }
+              inFirst = v_bool(0);
+              if (({ ArgumentValue __lt_t = (lt_has(iv, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+                tmpRef = isRef(lt_get(lt_get(iv, v_string("chain")), v_string("values")));
+                if (!lt_value_equals(tmpRef, v_string(""))) {
+                  emitIdent(tmpRef);
+                }
+                else if ((lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(iv, v_string("chain")), v_string("values"))), v_string("delete")))))) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = v_string("");
+                  wsql = v_string("");
+                  orderSql = v_string("");
+                  orderW = v_string("");
+                  hasOrder = v_bool(0);
+                  subAlias = v_string("");
+                  renderNodes(lt_get(lt_get(iv, v_string("chain")), v_string("values")), v_int(0));
+                  subSql = lt_trim(sql);
+                  subW = lt_trim(wsql);
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+                  pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+                  if (!lt_value_equals(subAliasText, v_string(""))) {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                }
+                else {
+                  emitParam(iv);
+                }
+              }
+              else {
+                emitParam(iv);
+              }
+            }
+            pushSql(v_string(")"));
+            pushW(v_string(")"));
+          }
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("between"))) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            base = left;
+          }
+          else {
+            base = v_string("?");
+          }
+          pushSql(base);
+          pushW(base);
+          pushSql(v_string("BETWEEN"));
+          pushW(v_string("BETWEEN"));
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")));
+            if (!lt_value_equals(tmpRef, v_string(""))) {
+              emitIdent(tmpRef);
+            }
+            else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+              savedSql = sql;
+              savedW = wsql;
+              savedOrderSql = orderSql;
+              savedOrderW = orderW;
+              savedHasOrder = hasOrder;
+              savedAlias = subAlias;
+              sql = v_string("");
+              wsql = v_string("");
+              orderSql = v_string("");
+              orderW = v_string("");
+              hasOrder = v_bool(0);
+              subAlias = v_string("");
+              renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+              subSql = lt_trim(sql);
+              subW = lt_trim(wsql);
+              subAliasText = subAlias;
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              subAlias = savedAlias;
+              pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+              pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+              if (!lt_value_equals(subAliasText, v_string(""))) {
+                pushSql(subAliasText);
+                pushW(subAliasText);
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+            }
+          }
+          else {
+            emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          }
+          pushSql(v_string("AND"));
+          pushW(v_string("AND"));
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
+            if (!lt_value_equals(tmpRef, v_string(""))) {
+              emitIdent(tmpRef);
+            }
+            else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+              savedSql = sql;
+              savedW = wsql;
+              savedOrderSql = orderSql;
+              savedOrderW = orderW;
+              savedHasOrder = hasOrder;
+              savedAlias = subAlias;
+              sql = v_string("");
+              wsql = v_string("");
+              orderSql = v_string("");
+              orderW = v_string("");
+              hasOrder = v_bool(0);
+              subAlias = v_string("");
+              renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+              subSql = lt_trim(sql);
+              subW = lt_trim(wsql);
+              subAliasText = subAlias;
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              subAlias = savedAlias;
+              pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+              pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+              if (!lt_value_equals(subAliasText, v_string(""))) {
+                pushSql(subAliasText);
+                pushW(subAliasText);
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+            }
+          }
+          else {
+            emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+          }
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("isnull"))) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            base = left;
+          }
+          else {
+            base = v_string("?");
+          }
+          pushSql(base);
+          pushW(base);
+          pushSql(v_string("IS NULL"));
+          pushW(v_string("IS NULL"));
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("not"))) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          pushSql(v_string("NOT ("));
+          pushW(v_string("NOT ("));
+          renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), v_string("chain")), v_string("values")), v_int(1));
+          pushSql(v_string(")"));
+          pushW(v_string(")"));
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("and")) || lt_value_equals(pn, v_string("or"))) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          pushSql(v_string("("));
+          pushW(v_string("("));
+          ArgumentValue boolFirst = v_bool(1);
+          ArgumentValue bvArray = itemsOf(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          for (size_t bvIndex = 0; bvIndex < bvArray.count; bvIndex++) {
+            ArgumentValue bv = ((const ArgumentValue *)bvArray.as.data)[bvIndex];
+            if (lt_value_equals(boolFirst, v_bool(0))) {
+              tmp = lt_to_upper(pn);
+              pushSql(tmp);
+              pushW(tmp);
+            }
+            boolFirst = v_bool(0);
+            if (({ ArgumentValue __lt_t = (lt_has(bv, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+              renderNodes(lt_get(lt_get(bv, v_string("chain")), v_string("values")), v_int(1));
+            }
+            else {
+              emitParam(bv);
+            }
+          }
+          pushSql(v_string(")"));
+          pushW(v_string(")"));
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("as"))) {
+          if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            base = left;
+          }
+          else {
+            base = v_string("?");
+          }
+          pushSql(base);
+          pushW(base);
+          pushSql(v_string("AS"));
+          pushW(v_string("AS"));
+          emitIdent(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("op"))) {
+          if (lt_value_equals(first, v_bool(0))) {
+            pushSql(v_string("AND"));
+            pushW(v_string("AND"));
+          }
+          first = v_bool(0);
+          if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            base = left;
+          }
+          else {
+            base = v_string("?");
+          }
+          pushSql(base);
+          pushW(base);
+          pushSql(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          pushW(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          if (({ ArgumentValue __lt_t = (lt_has(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+            tmpRef = isRef(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")));
+            if (!lt_value_equals(tmpRef, v_string(""))) {
+              emitIdent(tmpRef);
+            }
+            else if ((lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("select")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("with"))) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("values")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("insert")) || (lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("update")) || lt_value_equals(firstKind(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values"))), v_string("delete")))))) {
+              savedSql = sql;
+              savedW = wsql;
+              savedOrderSql = orderSql;
+              savedOrderW = orderW;
+              savedHasOrder = hasOrder;
+              savedAlias = subAlias;
+              sql = v_string("");
+              wsql = v_string("");
+              orderSql = v_string("");
+              orderW = v_string("");
+              hasOrder = v_bool(0);
+              subAlias = v_string("");
+              renderNodes(lt_get(lt_get(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")), v_string("chain")), v_string("values")), v_int(0));
+              subSql = lt_trim(sql);
+              subW = lt_trim(wsql);
+              subAliasText = subAlias;
+              sql = savedSql;
+              wsql = savedW;
+              orderSql = savedOrderSql;
+              orderW = savedOrderW;
+              hasOrder = savedHasOrder;
+              subAlias = savedAlias;
+              pushSql(lt_str_concat(v_string("("), lt_str_concat(subSql, v_string(")"))));
+              pushW(lt_str_concat(v_string("("), lt_str_concat(subW, v_string(")"))));
+              if (!lt_value_equals(subAliasText, v_string(""))) {
+                pushSql(subAliasText);
+                pushW(subAliasText);
+              }
+            }
+            else {
+              emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+            }
+          }
+          else {
+            emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+          }
+          hasLeft = v_bool(0);
+        }
+        else if (lt_value_equals(pn, v_string("raw"))) {
+          emitRaw(node);
+        }
+        else {
+          ({ ArgumentValue __lt_m = (v_string("query-builder parse: unsupported predicate")); fail("%s", lt_as_string(&__lt_m)); });
+        }
+      }
+    }
+    return v_null();
+  }
   return v_null();
 }
-renderChain(lt_get(lt_get(lt_get(lt_get(root, v_string("schema")), v_string("chain")), v_string("chain")), v_string("values")));
+renderNodes(lt_get(lt_get(lt_get(lt_get(root, v_string("schema")), v_string("chain")), v_string("chain")), v_string("values")), v_int(0));
 
   ArgumentValue qbSql = lt_trim(sql);
   ArgumentValue qbWsql = lt_trim(wsql);

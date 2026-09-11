@@ -2784,6 +2784,7 @@ export class QueryBuilder {
     let tmp = "";
     let tmp2 = "";
     let tmpRef = "";
+    let subAlias = "";
     let withFirst = true;
     function normName(n: any) {
       return n.replaceAll("-", "").toLowerCase();
@@ -3039,211 +3040,15 @@ export class QueryBuilder {
       }
       return ct;
     }
-    function emitPredicate(chainValues: any) {
-      let first = true;
-      let left = "";
-      let hasLeft = false;
-      let base = "";
-      for (const node of chainValues) {
-        let pn = normName(node["functionCall"]["name"]);
-        let op = opOf(pn);
-        if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
-          if (pn === "col" || pn === "table") {
-            left = identStr(
-              asString(node["functionCall"]["arguments"][0]["argument"]),
-            );
-            hasLeft = true;
-          } else if (!!op) {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql(op);
-            pushW(op);
-            emitRhs(node["functionCall"]["arguments"][0]["argument"]);
-            hasLeft = false;
-          } else if (pn === "in") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql("IN (");
-            pushW("IN (");
-            let inFirst = true;
-            for (const iv of itemsOf(
-              node["functionCall"]["arguments"][0]["argument"],
-            )) {
-              if (inFirst === false) {
-                sql = sql + ",";
-                wsql = wsql + ",";
-              }
-              inFirst = false;
-              emitRhs(iv);
-            }
-            pushSql(")");
-            pushW(")");
-            hasLeft = false;
-          } else if (pn === "between") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql("BETWEEN");
-            pushW("BETWEEN");
-            emitRhs(node["functionCall"]["arguments"][0]["argument"]);
-            pushSql("AND");
-            pushW("AND");
-            emitRhs(node["functionCall"]["arguments"][1]["argument"]);
-            hasLeft = false;
-          } else if (pn === "isnull") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql("IS NULL");
-            pushW("IS NULL");
-            hasLeft = false;
-          } else if (pn === "not") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            pushSql("NOT (");
-            pushW("NOT (");
-            emitPredicate(
-              node["functionCall"]["arguments"][0]["argument"]["chain"][
-                "values"
-              ],
-            );
-            pushSql(")");
-            pushW(")");
-            hasLeft = false;
-          } else if (pn === "and" || pn === "or") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            pushSql("(");
-            pushW("(");
-            let boolFirst = true;
-            for (const bv of itemsOf(
-              node["functionCall"]["arguments"][0]["argument"],
-            )) {
-              if (boolFirst === false) {
-                tmp = pn.toUpperCase();
-                pushSql(tmp);
-                pushW(tmp);
-              }
-              boolFirst = false;
-              if (!!Object.prototype.hasOwnProperty.call(bv, "chain")) {
-                emitPredicate(bv["chain"]["values"]);
-              } else {
-                emitParam(bv);
-              }
-            }
-            pushSql(")");
-            pushW(")");
-            hasLeft = false;
-          } else if (pn === "as") {
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql("AS");
-            pushW("AS");
-            emitIdent(
-              asString(node["functionCall"]["arguments"][0]["argument"]),
-            );
-            hasLeft = false;
-          } else if (pn === "op") {
-            if (first === false) {
-              pushSql("AND");
-              pushW("AND");
-            }
-            first = false;
-            if (!!hasLeft) {
-              base = left;
-            } else {
-              base = "?";
-            }
-            pushSql(base);
-            pushW(base);
-            pushSql(asString(node["functionCall"]["arguments"][0]["argument"]));
-            pushW(asString(node["functionCall"]["arguments"][0]["argument"]));
-            emitRhs(node["functionCall"]["arguments"][1]["argument"]);
-            hasLeft = false;
-          } else if (pn === "raw") {
-            emitRaw(node);
-          } else {
-            throw new Error(
-              String("query-builder parse: unsupported predicate"),
-            );
-          }
-        }
+    function firstKind(chainValues: any) {
+      let kind = "";
+      if (
+        chainValues.length !== 0 &&
+        !!Object.prototype.hasOwnProperty.call(chainValues[0], "functionCall")
+      ) {
+        kind = normName(chainValues[0]["functionCall"]["name"]);
       }
-      return null;
-    }
-    function emitOperand(arg: any) {
-      if (!!Object.prototype.hasOwnProperty.call(arg, "chain")) {
-        tmpRef = isRef(arg["chain"]["values"]);
-        if (tmpRef !== "") {
-          emitIdent(tmpRef);
-        } else {
-          emitPredicate(arg["chain"]["values"]);
-        }
-      } else {
-        emitParam(arg);
-      }
-      return null;
-    }
-    function emitColumnList(arg: any) {
-      let firstItem = true;
-      for (const item of itemsOf(arg)) {
-        if (firstItem === false) {
-          sql = sql + ",";
-          wsql = wsql + ",";
-        }
-        firstItem = false;
-        emitOperand(item);
-      }
-      return null;
+      return kind;
     }
     function emitOrderItem(item: any) {
       let dir = "";
@@ -3327,275 +3132,1867 @@ export class QueryBuilder {
       pushW(tmp);
       return null;
     }
-    function renderChain(chainValues: any) {
-      for (const node of chainValues) {
-        if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
-          let name = node["functionCall"]["name"];
-          let nameNorm = normName(name);
-          if (nameNorm === "setdialect") {
-            continue;
-          } else if (nameNorm === "asc" || nameNorm === "desc") {
-            if (!!hasOrder) {
-              tmp = nameNorm.toUpperCase();
-              orderSql = orderSql + (" " + tmp);
-              orderW = orderW + (" " + tmp);
+    function renderNodes(nodes: any, mode: any) {
+      let savedSql = "";
+      let savedW = "";
+      let savedOrderSql = "";
+      let savedOrderW = "";
+      let savedHasOrder = false;
+      let savedAlias = "";
+      let subSql = "";
+      let subW = "";
+      let subAliasText = "";
+      let first = true;
+      let left = "";
+      let hasLeft = false;
+      let base = "";
+      if (mode === 0) {
+        for (const node of nodes) {
+          if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
+            let name = node["functionCall"]["name"];
+            let nameNorm = normName(name);
+            if (nameNorm === "setdialect") {
+              continue;
+            } else if (nameNorm === "asc" || nameNorm === "desc") {
+              if (!!hasOrder) {
+                tmp = nameNorm.toUpperCase();
+                orderSql = orderSql + (" " + tmp);
+                orderW = orderW + (" " + tmp);
+              }
+            } else {
+              if (nameNorm === "with") {
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                sql = "";
+                wsql = "";
+                orderSql = "";
+                orderW = "";
+                hasOrder = false;
+                renderNodes(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                  0,
+                );
+                subSql = sql.trim();
+                subW = wsql.trim();
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                if (withFirst === false) {
+                  sql = sql + ",";
+                  wsql = wsql + ",";
+                } else {
+                  withFirst = false;
+                  pushSql("WITH");
+                  pushW("WITH");
+                }
+                pushSql(
+                  identStr(
+                    asString(node["functionCall"]["arguments"][1]["argument"]),
+                  ),
+                );
+                pushW(
+                  identStr(
+                    asString(node["functionCall"]["arguments"][1]["argument"]),
+                  ),
+                );
+                pushSql("AS");
+                pushW("AS");
+                pushSql("(" + (subSql + ")"));
+                pushW("(" + (subW + ")"));
+              } else if (nameNorm === "select") {
+                flushOrder();
+                pushSql("SELECT");
+                pushW("SELECT");
+                let firstItem = true;
+                for (const item of itemsOf(
+                  node["functionCall"]["arguments"][0]["argument"],
+                )) {
+                  if (firstItem === false) {
+                    sql = sql + ",";
+                    wsql = wsql + ",";
+                  }
+                  firstItem = false;
+                  if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
+                    tmpRef = isRef(item["chain"]["values"]);
+                    if (tmpRef !== "") {
+                      emitIdent(tmpRef);
+                    } else if (
+                      firstKind(item["chain"]["values"]) === "select" ||
+                      firstKind(item["chain"]["values"]) === "with" ||
+                      firstKind(item["chain"]["values"]) === "values" ||
+                      firstKind(item["chain"]["values"]) === "insert" ||
+                      firstKind(item["chain"]["values"]) === "update" ||
+                      firstKind(item["chain"]["values"]) === "delete"
+                    ) {
+                      savedSql = sql;
+                      savedW = wsql;
+                      savedOrderSql = orderSql;
+                      savedOrderW = orderW;
+                      savedHasOrder = hasOrder;
+                      savedAlias = subAlias;
+                      sql = "";
+                      wsql = "";
+                      orderSql = "";
+                      orderW = "";
+                      hasOrder = false;
+                      subAlias = "";
+                      renderNodes(item["chain"]["values"], 0);
+                      subSql = sql.trim();
+                      subW = wsql.trim();
+                      subAliasText = subAlias;
+                      sql = savedSql;
+                      wsql = savedW;
+                      orderSql = savedOrderSql;
+                      orderW = savedOrderW;
+                      hasOrder = savedHasOrder;
+                      subAlias = savedAlias;
+                      pushSql("(" + (subSql + ")"));
+                      pushW("(" + (subW + ")"));
+                      if (subAliasText !== "") {
+                        pushSql(subAliasText);
+                        pushW(subAliasText);
+                      }
+                    } else {
+                      renderNodes(item["chain"]["values"], 1);
+                    }
+                  } else {
+                    emitParam(item);
+                  }
+                }
+              } else if (nameNorm === "from") {
+                flushOrder();
+                pushSql("FROM");
+                pushW("FROM");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+              } else if (nameNorm === "join") {
+                flushOrder();
+                pushSql("JOIN");
+                pushW("JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "leftjoin") {
+                flushOrder();
+                pushSql("LEFT JOIN");
+                pushW("LEFT JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "rightjoin") {
+                flushOrder();
+                pushSql("RIGHT JOIN");
+                pushW("RIGHT JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "innerjoin") {
+                flushOrder();
+                pushSql("INNER JOIN");
+                pushW("INNER JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "fulljoin") {
+                flushOrder();
+                pushSql("FULL JOIN");
+                pushW("FULL JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "crossjoin") {
+                flushOrder();
+                pushSql("CROSS JOIN");
+                pushW("CROSS JOIN");
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      1,
+                    );
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+                pushSql("ON");
+                pushW("ON");
+                renderNodes(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "where") {
+                flushOrder();
+                pushSql("WHERE");
+                pushW("WHERE");
+                renderNodes(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "groupby") {
+                flushOrder();
+                pushSql("GROUP BY");
+                pushW("GROUP BY");
+                let firstItem = true;
+                for (const item of itemsOf(
+                  node["functionCall"]["arguments"][0]["argument"],
+                )) {
+                  if (firstItem === false) {
+                    sql = sql + ",";
+                    wsql = wsql + ",";
+                  }
+                  firstItem = false;
+                  if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
+                    tmpRef = isRef(item["chain"]["values"]);
+                    if (tmpRef !== "") {
+                      emitIdent(tmpRef);
+                    } else if (
+                      firstKind(item["chain"]["values"]) === "select" ||
+                      firstKind(item["chain"]["values"]) === "with" ||
+                      firstKind(item["chain"]["values"]) === "values" ||
+                      firstKind(item["chain"]["values"]) === "insert" ||
+                      firstKind(item["chain"]["values"]) === "update" ||
+                      firstKind(item["chain"]["values"]) === "delete"
+                    ) {
+                      savedSql = sql;
+                      savedW = wsql;
+                      savedOrderSql = orderSql;
+                      savedOrderW = orderW;
+                      savedHasOrder = hasOrder;
+                      savedAlias = subAlias;
+                      sql = "";
+                      wsql = "";
+                      orderSql = "";
+                      orderW = "";
+                      hasOrder = false;
+                      subAlias = "";
+                      renderNodes(item["chain"]["values"], 0);
+                      subSql = sql.trim();
+                      subW = wsql.trim();
+                      subAliasText = subAlias;
+                      sql = savedSql;
+                      wsql = savedW;
+                      orderSql = savedOrderSql;
+                      orderW = savedOrderW;
+                      hasOrder = savedHasOrder;
+                      subAlias = savedAlias;
+                      pushSql("(" + (subSql + ")"));
+                      pushW("(" + (subW + ")"));
+                      if (subAliasText !== "") {
+                        pushSql(subAliasText);
+                        pushW(subAliasText);
+                      }
+                    } else {
+                      renderNodes(item["chain"]["values"], 1);
+                    }
+                  } else {
+                    emitParam(item);
+                  }
+                }
+              } else if (nameNorm === "having") {
+                flushOrder();
+                pushSql("HAVING");
+                pushW("HAVING");
+                renderNodes(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                  1,
+                );
+              } else if (nameNorm === "returning") {
+                flushOrder();
+                pushSql("RETURNING");
+                pushW("RETURNING");
+                let firstItem = true;
+                for (const item of itemsOf(
+                  node["functionCall"]["arguments"][0]["argument"],
+                )) {
+                  if (firstItem === false) {
+                    sql = sql + ",";
+                    wsql = wsql + ",";
+                  }
+                  firstItem = false;
+                  if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
+                    tmpRef = isRef(item["chain"]["values"]);
+                    if (tmpRef !== "") {
+                      emitIdent(tmpRef);
+                    } else if (
+                      firstKind(item["chain"]["values"]) === "select" ||
+                      firstKind(item["chain"]["values"]) === "with" ||
+                      firstKind(item["chain"]["values"]) === "values" ||
+                      firstKind(item["chain"]["values"]) === "insert" ||
+                      firstKind(item["chain"]["values"]) === "update" ||
+                      firstKind(item["chain"]["values"]) === "delete"
+                    ) {
+                      savedSql = sql;
+                      savedW = wsql;
+                      savedOrderSql = orderSql;
+                      savedOrderW = orderW;
+                      savedHasOrder = hasOrder;
+                      savedAlias = subAlias;
+                      sql = "";
+                      wsql = "";
+                      orderSql = "";
+                      orderW = "";
+                      hasOrder = false;
+                      subAlias = "";
+                      renderNodes(item["chain"]["values"], 0);
+                      subSql = sql.trim();
+                      subW = wsql.trim();
+                      subAliasText = subAlias;
+                      sql = savedSql;
+                      wsql = savedW;
+                      orderSql = savedOrderSql;
+                      orderW = savedOrderW;
+                      hasOrder = savedHasOrder;
+                      subAlias = savedAlias;
+                      pushSql("(" + (subSql + ")"));
+                      pushW("(" + (subW + ")"));
+                      if (subAliasText !== "") {
+                        pushSql(subAliasText);
+                        pushW(subAliasText);
+                      }
+                    } else {
+                      renderNodes(item["chain"]["values"], 1);
+                    }
+                  } else {
+                    emitParam(item);
+                  }
+                }
+              } else if (nameNorm === "orderby") {
+                hasOrder = true;
+                orderSql = "";
+                orderW = "";
+                emitOrderList(node["functionCall"]["arguments"][0]["argument"]);
+              } else if (nameNorm === "limit") {
+                flushOrder();
+                pushSql("LIMIT");
+                pushW("LIMIT");
+                emitLiteralPlaceholder(
+                  node["functionCall"]["arguments"][0]["argument"],
+                );
+              } else if (nameNorm === "offset") {
+                flushOrder();
+                pushSql("OFFSET");
+                pushW("OFFSET");
+                emitLiteralPlaceholder(
+                  node["functionCall"]["arguments"][0]["argument"],
+                );
+              } else if (nameNorm === "raw") {
+                emitRaw(node);
+              } else if (nameNorm === "as") {
+                subAlias =
+                  "AS " +
+                  identStr(
+                    asString(node["functionCall"]["arguments"][0]["argument"]),
+                  );
+              } else if (nameNorm === "update") {
+                pushSql("UPDATE");
+                pushW("UPDATE");
+                emitRhs(node["functionCall"]["arguments"][0]["argument"]);
+                pushSql("SET");
+                pushW("SET");
+                emitAssignments(
+                  node["functionCall"]["arguments"][1]["argument"],
+                );
+              } else if (nameNorm === "insert") {
+                emitInsert(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  node["functionCall"]["arguments"][1]["argument"],
+                );
+              } else if (nameNorm === "delete") {
+                pushSql("DELETE");
+                pushW("DELETE");
+                pushSql("FROM");
+                pushW("FROM");
+                emitRhs(node["functionCall"]["arguments"][0]["argument"]);
+              } else if (nameNorm === "set") {
+                pushSql("SET");
+                pushW("SET");
+                emitAssignments(
+                  node["functionCall"]["arguments"][0]["argument"],
+                );
+              } else if (nameNorm === "values") {
+                pushSql("VALUES");
+                pushW("VALUES");
+                emitTupleList(node["functionCall"]["arguments"][0]["argument"]);
+              } else if (nameNorm === "onconflictdonothing") {
+                pushSql("ON");
+                pushW("ON");
+                pushSql("CONFLICT");
+                pushW("CONFLICT");
+                pushSql(
+                  conflictTarget(
+                    node["functionCall"]["arguments"][0]["argument"],
+                  ),
+                );
+                pushW(
+                  conflictTarget(
+                    node["functionCall"]["arguments"][0]["argument"],
+                  ),
+                );
+                pushSql("DO");
+                pushW("DO");
+                pushSql("NOTHING");
+                pushW("NOTHING");
+              } else if (nameNorm === "onconflictdoupdate") {
+                pushSql("ON");
+                pushW("ON");
+                pushSql("CONFLICT");
+                pushW("CONFLICT");
+                pushSql(
+                  conflictTarget(
+                    node["functionCall"]["arguments"][0]["argument"],
+                  ),
+                );
+                pushW(
+                  conflictTarget(
+                    node["functionCall"]["arguments"][0]["argument"],
+                  ),
+                );
+                pushSql("DO");
+                pushW("DO");
+                pushSql("UPDATE");
+                pushW("UPDATE");
+                pushSql("SET");
+                pushW("SET");
+                emitAssignments(
+                  node["functionCall"]["arguments"][1]["argument"],
+                );
+              } else {
+                throw new Error(
+                  String("query-builder parse: unsupported clause " + name),
+                );
+              }
             }
-          } else {
-            if (nameNorm === "with") {
-              let savedSql = sql;
-              let savedW = wsql;
-              let savedOrderSql = orderSql;
-              let savedOrderW = orderW;
-              let savedHasOrder = hasOrder;
-              sql = "";
-              wsql = "";
-              orderSql = "";
-              orderW = "";
-              hasOrder = false;
-              renderChain(
+          }
+        }
+        flushOrder();
+        return null;
+      } else {
+        first = true;
+        left = "";
+        hasLeft = false;
+        base = "";
+        for (const node of nodes) {
+          let pn = normName(node["functionCall"]["name"]);
+          let op = opOf(pn);
+          if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
+            if (pn === "col" || pn === "table") {
+              left = identStr(
+                asString(node["functionCall"]["arguments"][0]["argument"]),
+              );
+              hasLeft = true;
+            } else if (!!op) {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
+              }
+              first = false;
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql(op);
+              pushW(op);
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  "chain",
+                )
+              ) {
+                tmpRef = isRef(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                );
+                if (tmpRef !== "") {
+                  emitIdent(tmpRef);
+                } else if (
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "select" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "with" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "values" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "insert" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "update" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "delete"
+                ) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = "";
+                  wsql = "";
+                  orderSql = "";
+                  orderW = "";
+                  hasOrder = false;
+                  subAlias = "";
+                  renderNodes(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                    0,
+                  );
+                  subSql = sql.trim();
+                  subW = wsql.trim();
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql("(" + (subSql + ")"));
+                  pushW("(" + (subW + ")"));
+                  if (subAliasText !== "") {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+              } else {
+                emitParam(node["functionCall"]["arguments"][0]["argument"]);
+              }
+              hasLeft = false;
+            } else if (pn === "exists") {
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  "chain",
+                )
+              ) {
+                if (first === false) {
+                  pushSql("AND");
+                  pushW("AND");
+                }
+                first = false;
+                pushSql("EXISTS");
+                pushW("EXISTS");
+                savedSql = sql;
+                savedW = wsql;
+                savedOrderSql = orderSql;
+                savedOrderW = orderW;
+                savedHasOrder = hasOrder;
+                savedAlias = subAlias;
+                sql = "";
+                wsql = "";
+                orderSql = "";
+                orderW = "";
+                hasOrder = false;
+                subAlias = "";
+                renderNodes(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                  0,
+                );
+                subSql = sql.trim();
+                subW = wsql.trim();
+                subAliasText = subAlias;
+                sql = savedSql;
+                wsql = savedW;
+                orderSql = savedOrderSql;
+                orderW = savedOrderW;
+                hasOrder = savedHasOrder;
+                subAlias = savedAlias;
+                pushSql("(" + (subSql + ")"));
+                pushW("(" + (subW + ")"));
+                if (subAliasText !== "") {
+                  pushSql(subAliasText);
+                  pushW(subAliasText);
+                }
+              } else {
+                throw new Error(
+                  String("query-builder parse: exists expects a subquery"),
+                );
+              }
+              hasLeft = false;
+            } else if (pn === "in") {
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  "chain",
+                )
+              ) {
+                if (
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "select" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "with" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "values" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "insert" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "update" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "delete"
+                ) {
+                  if (first === false) {
+                    pushSql("AND");
+                    pushW("AND");
+                  }
+                  first = false;
+                  if (!!hasLeft) {
+                    base = left;
+                  } else {
+                    base = "?";
+                  }
+                  pushSql(base);
+                  pushW(base);
+                  pushSql("IN");
+                  pushW("IN");
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = "";
+                  wsql = "";
+                  orderSql = "";
+                  orderW = "";
+                  hasOrder = false;
+                  subAlias = "";
+                  renderNodes(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                    0,
+                  );
+                  subSql = sql.trim();
+                  subW = wsql.trim();
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql("(" + (subSql + ")"));
+                  pushW("(" + (subW + ")"));
+                  if (subAliasText !== "") {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                } else {
+                  if (first === false) {
+                    pushSql("AND");
+                    pushW("AND");
+                  }
+                  first = false;
+                  if (!!hasLeft) {
+                    base = left;
+                  } else {
+                    base = "?";
+                  }
+                  pushSql(base);
+                  pushW(base);
+                  pushSql("IN (");
+                  pushW("IN (");
+                  let inFirst = true;
+                  for (const iv of itemsOf(
+                    node["functionCall"]["arguments"][0]["argument"],
+                  )) {
+                    if (inFirst === false) {
+                      sql = sql + ",";
+                      wsql = wsql + ",";
+                    }
+                    inFirst = false;
+                    if (!!Object.prototype.hasOwnProperty.call(iv, "chain")) {
+                      tmpRef = isRef(iv["chain"]["values"]);
+                      if (tmpRef !== "") {
+                        emitIdent(tmpRef);
+                      } else if (
+                        firstKind(iv["chain"]["values"]) === "select" ||
+                        firstKind(iv["chain"]["values"]) === "with" ||
+                        firstKind(iv["chain"]["values"]) === "values" ||
+                        firstKind(iv["chain"]["values"]) === "insert" ||
+                        firstKind(iv["chain"]["values"]) === "update" ||
+                        firstKind(iv["chain"]["values"]) === "delete"
+                      ) {
+                        savedSql = sql;
+                        savedW = wsql;
+                        savedOrderSql = orderSql;
+                        savedOrderW = orderW;
+                        savedHasOrder = hasOrder;
+                        savedAlias = subAlias;
+                        sql = "";
+                        wsql = "";
+                        orderSql = "";
+                        orderW = "";
+                        hasOrder = false;
+                        subAlias = "";
+                        renderNodes(iv["chain"]["values"], 0);
+                        subSql = sql.trim();
+                        subW = wsql.trim();
+                        subAliasText = subAlias;
+                        sql = savedSql;
+                        wsql = savedW;
+                        orderSql = savedOrderSql;
+                        orderW = savedOrderW;
+                        hasOrder = savedHasOrder;
+                        subAlias = savedAlias;
+                        pushSql("(" + (subSql + ")"));
+                        pushW("(" + (subW + ")"));
+                        if (subAliasText !== "") {
+                          pushSql(subAliasText);
+                          pushW(subAliasText);
+                        }
+                      } else {
+                        emitParam(iv);
+                      }
+                    } else {
+                      emitParam(iv);
+                    }
+                  }
+                  pushSql(")");
+                  pushW(")");
+                }
+              } else {
+                if (first === false) {
+                  pushSql("AND");
+                  pushW("AND");
+                }
+                first = false;
+                if (!!hasLeft) {
+                  base = left;
+                } else {
+                  base = "?";
+                }
+                pushSql(base);
+                pushW(base);
+                pushSql("IN (");
+                pushW("IN (");
+                let inFirst = true;
+                for (const iv of itemsOf(
+                  node["functionCall"]["arguments"][0]["argument"],
+                )) {
+                  if (inFirst === false) {
+                    sql = sql + ",";
+                    wsql = wsql + ",";
+                  }
+                  inFirst = false;
+                  if (!!Object.prototype.hasOwnProperty.call(iv, "chain")) {
+                    tmpRef = isRef(iv["chain"]["values"]);
+                    if (tmpRef !== "") {
+                      emitIdent(tmpRef);
+                    } else if (
+                      firstKind(iv["chain"]["values"]) === "select" ||
+                      firstKind(iv["chain"]["values"]) === "with" ||
+                      firstKind(iv["chain"]["values"]) === "values" ||
+                      firstKind(iv["chain"]["values"]) === "insert" ||
+                      firstKind(iv["chain"]["values"]) === "update" ||
+                      firstKind(iv["chain"]["values"]) === "delete"
+                    ) {
+                      savedSql = sql;
+                      savedW = wsql;
+                      savedOrderSql = orderSql;
+                      savedOrderW = orderW;
+                      savedHasOrder = hasOrder;
+                      savedAlias = subAlias;
+                      sql = "";
+                      wsql = "";
+                      orderSql = "";
+                      orderW = "";
+                      hasOrder = false;
+                      subAlias = "";
+                      renderNodes(iv["chain"]["values"], 0);
+                      subSql = sql.trim();
+                      subW = wsql.trim();
+                      subAliasText = subAlias;
+                      sql = savedSql;
+                      wsql = savedW;
+                      orderSql = savedOrderSql;
+                      orderW = savedOrderW;
+                      hasOrder = savedHasOrder;
+                      subAlias = savedAlias;
+                      pushSql("(" + (subSql + ")"));
+                      pushW("(" + (subW + ")"));
+                      if (subAliasText !== "") {
+                        pushSql(subAliasText);
+                        pushW(subAliasText);
+                      }
+                    } else {
+                      emitParam(iv);
+                    }
+                  } else {
+                    emitParam(iv);
+                  }
+                }
+                pushSql(")");
+                pushW(")");
+              }
+              hasLeft = false;
+            } else if (pn === "between") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
+              }
+              first = false;
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql("BETWEEN");
+              pushW("BETWEEN");
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  "chain",
+                )
+              ) {
+                tmpRef = isRef(
+                  node["functionCall"]["arguments"][0]["argument"]["chain"][
+                    "values"
+                  ],
+                );
+                if (tmpRef !== "") {
+                  emitIdent(tmpRef);
+                } else if (
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "select" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "with" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "values" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "insert" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "update" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "delete"
+                ) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = "";
+                  wsql = "";
+                  orderSql = "";
+                  orderW = "";
+                  hasOrder = false;
+                  subAlias = "";
+                  renderNodes(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                    0,
+                  );
+                  subSql = sql.trim();
+                  subW = wsql.trim();
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql("(" + (subSql + ")"));
+                  pushW("(" + (subW + ")"));
+                  if (subAliasText !== "") {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
+              } else {
+                emitParam(node["functionCall"]["arguments"][0]["argument"]);
+              }
+              pushSql("AND");
+              pushW("AND");
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][1]["argument"],
+                  "chain",
+                )
+              ) {
+                tmpRef = isRef(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                );
+                if (tmpRef !== "") {
+                  emitIdent(tmpRef);
+                } else if (
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "select" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "with" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "values" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "insert" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "update" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "delete"
+                ) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = "";
+                  wsql = "";
+                  orderSql = "";
+                  orderW = "";
+                  hasOrder = false;
+                  subAlias = "";
+                  renderNodes(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                    0,
+                  );
+                  subSql = sql.trim();
+                  subW = wsql.trim();
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql("(" + (subSql + ")"));
+                  pushW("(" + (subW + ")"));
+                  if (subAliasText !== "") {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][1]["argument"]);
+                }
+              } else {
+                emitParam(node["functionCall"]["arguments"][1]["argument"]);
+              }
+              hasLeft = false;
+            } else if (pn === "isnull") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
+              }
+              first = false;
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql("IS NULL");
+              pushW("IS NULL");
+              hasLeft = false;
+            } else if (pn === "not") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
+              }
+              first = false;
+              pushSql("NOT (");
+              pushW("NOT (");
+              renderNodes(
                 node["functionCall"]["arguments"][0]["argument"]["chain"][
                   "values"
                 ],
+                1,
               );
-              let subSql = sql.trim();
-              let subW = wsql.trim();
-              sql = savedSql;
-              wsql = savedW;
-              orderSql = savedOrderSql;
-              orderW = savedOrderW;
-              hasOrder = savedHasOrder;
-              if (withFirst === false) {
-                sql = sql + ",";
-                wsql = wsql + ",";
-              } else {
-                withFirst = false;
-                pushSql("WITH");
-                pushW("WITH");
+              pushSql(")");
+              pushW(")");
+              hasLeft = false;
+            } else if (pn === "and" || pn === "or") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
               }
-              pushSql(
-                identStr(
-                  asString(node["functionCall"]["arguments"][1]["argument"]),
-                ),
-              );
-              pushW(
-                identStr(
-                  asString(node["functionCall"]["arguments"][1]["argument"]),
-                ),
-              );
+              first = false;
+              pushSql("(");
+              pushW("(");
+              let boolFirst = true;
+              for (const bv of itemsOf(
+                node["functionCall"]["arguments"][0]["argument"],
+              )) {
+                if (boolFirst === false) {
+                  tmp = pn.toUpperCase();
+                  pushSql(tmp);
+                  pushW(tmp);
+                }
+                boolFirst = false;
+                if (!!Object.prototype.hasOwnProperty.call(bv, "chain")) {
+                  renderNodes(bv["chain"]["values"], 1);
+                } else {
+                  emitParam(bv);
+                }
+              }
+              pushSql(")");
+              pushW(")");
+              hasLeft = false;
+            } else if (pn === "as") {
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
               pushSql("AS");
               pushW("AS");
-              pushSql("(" + (subSql + ")"));
-              pushW("(" + (subW + ")"));
-            } else if (nameNorm === "select") {
-              flushOrder();
-              pushSql("SELECT");
-              pushW("SELECT");
-              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "from") {
-              flushOrder();
-              pushSql("FROM");
-              pushW("FROM");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "join") {
-              flushOrder();
-              pushSql("JOIN");
-              pushW("JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
+              emitIdent(
+                asString(node["functionCall"]["arguments"][0]["argument"]),
               );
-            } else if (nameNorm === "leftjoin") {
-              flushOrder();
-              pushSql("LEFT JOIN");
-              pushW("LEFT JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
+              hasLeft = false;
+            } else if (pn === "op") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
+              }
+              first = false;
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql(
+                asString(node["functionCall"]["arguments"][0]["argument"]),
               );
-            } else if (nameNorm === "rightjoin") {
-              flushOrder();
-              pushSql("RIGHT JOIN");
-              pushW("RIGHT JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "innerjoin") {
-              flushOrder();
-              pushSql("INNER JOIN");
-              pushW("INNER JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "fulljoin") {
-              flushOrder();
-              pushSql("FULL JOIN");
-              pushW("FULL JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "crossjoin") {
-              flushOrder();
-              pushSql("CROSS JOIN");
-              pushW("CROSS JOIN");
-              emitOperand(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("ON");
-              pushW("ON");
-              emitPredicate(
-                node["functionCall"]["arguments"][1]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "where") {
-              flushOrder();
-              pushSql("WHERE");
-              pushW("WHERE");
-              emitPredicate(
-                node["functionCall"]["arguments"][0]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "groupby") {
-              flushOrder();
-              pushSql("GROUP BY");
-              pushW("GROUP BY");
-              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "having") {
-              flushOrder();
-              pushSql("HAVING");
-              pushW("HAVING");
-              emitPredicate(
-                node["functionCall"]["arguments"][0]["argument"]["chain"][
-                  "values"
-                ],
-              );
-            } else if (nameNorm === "returning") {
-              flushOrder();
-              pushSql("RETURNING");
-              pushW("RETURNING");
-              emitColumnList(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "orderby") {
-              hasOrder = true;
-              orderSql = "";
-              orderW = "";
-              emitOrderList(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "limit") {
-              flushOrder();
-              pushSql("LIMIT");
-              pushW("LIMIT");
-              emitLiteralPlaceholder(
-                node["functionCall"]["arguments"][0]["argument"],
-              );
-            } else if (nameNorm === "offset") {
-              flushOrder();
-              pushSql("OFFSET");
-              pushW("OFFSET");
-              emitLiteralPlaceholder(
-                node["functionCall"]["arguments"][0]["argument"],
-              );
-            } else if (nameNorm === "raw") {
+              pushW(asString(node["functionCall"]["arguments"][0]["argument"]));
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][1]["argument"],
+                  "chain",
+                )
+              ) {
+                tmpRef = isRef(
+                  node["functionCall"]["arguments"][1]["argument"]["chain"][
+                    "values"
+                  ],
+                );
+                if (tmpRef !== "") {
+                  emitIdent(tmpRef);
+                } else if (
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "select" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "with" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "values" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "insert" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "update" ||
+                  firstKind(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                  ) === "delete"
+                ) {
+                  savedSql = sql;
+                  savedW = wsql;
+                  savedOrderSql = orderSql;
+                  savedOrderW = orderW;
+                  savedHasOrder = hasOrder;
+                  savedAlias = subAlias;
+                  sql = "";
+                  wsql = "";
+                  orderSql = "";
+                  orderW = "";
+                  hasOrder = false;
+                  subAlias = "";
+                  renderNodes(
+                    node["functionCall"]["arguments"][1]["argument"]["chain"][
+                      "values"
+                    ],
+                    0,
+                  );
+                  subSql = sql.trim();
+                  subW = wsql.trim();
+                  subAliasText = subAlias;
+                  sql = savedSql;
+                  wsql = savedW;
+                  orderSql = savedOrderSql;
+                  orderW = savedOrderW;
+                  hasOrder = savedHasOrder;
+                  subAlias = savedAlias;
+                  pushSql("(" + (subSql + ")"));
+                  pushW("(" + (subW + ")"));
+                  if (subAliasText !== "") {
+                    pushSql(subAliasText);
+                    pushW(subAliasText);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][1]["argument"]);
+                }
+              } else {
+                emitParam(node["functionCall"]["arguments"][1]["argument"]);
+              }
+              hasLeft = false;
+            } else if (pn === "raw") {
               emitRaw(node);
-            } else if (nameNorm === "update") {
-              pushSql("UPDATE");
-              pushW("UPDATE");
-              emitRhs(node["functionCall"]["arguments"][0]["argument"]);
-              pushSql("SET");
-              pushW("SET");
-              emitAssignments(node["functionCall"]["arguments"][1]["argument"]);
-            } else if (nameNorm === "insert") {
-              emitInsert(
-                node["functionCall"]["arguments"][0]["argument"],
-                node["functionCall"]["arguments"][1]["argument"],
-              );
-            } else if (nameNorm === "delete") {
-              pushSql("DELETE");
-              pushW("DELETE");
-              pushSql("FROM");
-              pushW("FROM");
-              emitRhs(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "set") {
-              pushSql("SET");
-              pushW("SET");
-              emitAssignments(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "values") {
-              pushSql("VALUES");
-              pushW("VALUES");
-              emitTupleList(node["functionCall"]["arguments"][0]["argument"]);
-            } else if (nameNorm === "onconflictdonothing") {
-              pushSql("ON");
-              pushW("ON");
-              pushSql("CONFLICT");
-              pushW("CONFLICT");
-              pushSql(
-                conflictTarget(
-                  node["functionCall"]["arguments"][0]["argument"],
-                ),
-              );
-              pushW(
-                conflictTarget(
-                  node["functionCall"]["arguments"][0]["argument"],
-                ),
-              );
-              pushSql("DO");
-              pushW("DO");
-              pushSql("NOTHING");
-              pushW("NOTHING");
-            } else if (nameNorm === "onconflictdoupdate") {
-              pushSql("ON");
-              pushW("ON");
-              pushSql("CONFLICT");
-              pushW("CONFLICT");
-              pushSql(
-                conflictTarget(
-                  node["functionCall"]["arguments"][0]["argument"],
-                ),
-              );
-              pushW(
-                conflictTarget(
-                  node["functionCall"]["arguments"][0]["argument"],
-                ),
-              );
-              pushSql("DO");
-              pushW("DO");
-              pushSql("UPDATE");
-              pushW("UPDATE");
-              pushSql("SET");
-              pushW("SET");
-              emitAssignments(node["functionCall"]["arguments"][1]["argument"]);
             } else {
               throw new Error(
-                String("query-builder parse: unsupported clause " + name),
+                String("query-builder parse: unsupported predicate"),
               );
             }
           }
         }
+        return null;
       }
-      flushOrder();
       return null;
     }
-    renderChain(root["schema"]["chain"]["chain"]["values"]);
+    renderNodes(root["schema"]["chain"]["chain"]["values"], 0);
     return {
       sql: sql.trim(),
       sqlWithParam: wsql.trim(),
