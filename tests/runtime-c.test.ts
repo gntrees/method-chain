@@ -980,3 +980,57 @@ int main(void) {
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("query-builder-sign");
 });
+
+test("valid literal string argument passes", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder b = queryBuilder(variableName("q"), setDialect("postgres"));
+    printf("%s\\n", getJSONSchema(&b));
+    return 0;
+}
+`;
+    const { status, stderr } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+});
+
+test("invalid literal string argument aborts", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    Builder b = queryBuilder(variableName("q"), setDialect("oracle"));
+    return 0;
+}
+`;
+    const { status, signal, stderr } = compileAndRun(runner);
+    expect(status).not.toBe(0);
+    expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
+    expect(stderr).toContain("literal");
+});
+
+test("number and boolean literals validate", () => {
+    const runner = `#include "gntrees-method-chain.h"
+int main(void) {
+    StructType int_lit = { .kind = S_LITERAL, .as.literal = { .type = D_INT, .value.i = 5 } };
+    StructType float_lit = { .kind = S_LITERAL, .as.literal = { .type = D_FLOAT, .value.f = 1.5 } };
+    StructType bool_lit = { .kind = S_LITERAL, .as.literal = { .type = D_BOOL, .value.i = 1 } };
+    ArgumentValue i5 = v_int(5);
+    ArgumentValue i6 = v_int(6);
+    ArgumentValue f15 = v_float(1.5);
+    ArgumentValue f50 = v_float(5.0);
+    ArgumentValue b1 = v_bool(1);
+    ArgumentValue b0 = v_bool(0);
+    ArgumentValue sx = v_string("x");
+    if (validate_value(&i5, &int_lit) != V_OK) return 1;
+    if (validate_value(&f15, &float_lit) != V_OK) return 2;
+    if (validate_value(&b1, &bool_lit) != V_OK) return 3;
+    if (validate_value(&i6, &int_lit) == V_OK) return 4;
+    if (validate_value(&b0, &bool_lit) == V_OK) return 5;
+    if (validate_value(&sx, &int_lit) == V_OK) return 6;
+    if (validate_value(&f50, &int_lit) != V_OK) return 7;
+    return 0;
+}
+`;
+    const { status } = compileAndRun(runner);
+    expect(status).toBe(0);
+});

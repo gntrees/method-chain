@@ -119,6 +119,21 @@ export type StructType = {
         map: {
             type: StructType['struct']
         }
+    } | {
+        literal: {
+            value: string
+            type: "string"
+        }
+    } | {
+        literal: {
+            value: number
+            type: "number"
+        }
+    } | {
+        literal: {
+            value: boolean
+            type: "boolean"
+        }
     } | StructureCallType
 }
 

@@ -17,6 +17,7 @@ type ChainValue = FunctionCallType | PropertyCallType | CopyType;
 type ChainState = {
     statements: StatementsRecord;
     variables: VariablesRecord;
+    globals: StatementsRecord;
     result?: unknown;
     resultKind?: "expression" | "statements";
 };
@@ -154,7 +155,7 @@ function renderCallArgument(argument: unknown): ExpressionRecord {
         return argument;
     }
     if (isChainArgument(argument)) {
-        const subState: ChainState = { statements: { typescript: [], c: [] }, variables: { typescript: {}, c: {} } };
+        const subState: ChainState = { statements: { typescript: [], c: [] }, variables: { typescript: {}, c: {} }, globals: { typescript: [], c: [] } };
         return renderCallArgument(runChain(argument.chain.values, subState));
     }
     return renderValue(argument);
@@ -235,7 +236,7 @@ function renderOperatorOperand(value: unknown): ExpressionRecord {
         return value;
     }
     if (isChainArgument(value)) {
-        const subState: ChainState = { statements: { typescript: [], c: [] }, variables: { typescript: {}, c: {} } };
+        const subState: ChainState = { statements: { typescript: [], c: [] }, variables: { typescript: {}, c: {} }, globals: { typescript: [], c: [] } };
         return renderOperatorOperand(runChain(value.chain.values, subState));
     }
     return renderRawValue(value);
@@ -427,7 +428,7 @@ function addExpressionStatements(state: ChainState, expressions: ExpressionRecor
 
 function addVariable(state: ChainState, variableName: string, value: unknown): void {
     const valueExpressions = renderCallArgument(value);
-    const tsStatement = `const ${variableName} = ${valueExpressions.typescript};`;
+    const tsStatement = `let ${variableName} = ${valueExpressions.typescript};`;
     const cStatement = `ArgumentValue ${variableName} = ${valueExpressions.c};`;
     const declarations: StatementsRecord = {
         typescript: [tsStatement],
@@ -436,6 +437,58 @@ function addVariable(state: ChainState, variableName: string, value: unknown): v
     state.variables.typescript = { ...state.variables.typescript, [variableName]: tsStatement };
     state.variables.c = { ...state.variables.c, [variableName]: cStatement };
     addStatements(state, declarations);
+}
+
+function setVariable(state: ChainState, variableName: string, value: unknown): void {
+    if (
+        state.variables.typescript[variableName] === undefined &&
+        state.variables.c[variableName] === undefined
+    ) {
+        throw new Error(
+            `Cannot set variable "${variableName}" before it is declared with addVariable`,
+        );
+    }
+    const valueExpressions = renderCallArgument(value);
+    addStatements(state, {
+        typescript: [`${variableName} = ${valueExpressions.typescript};`],
+        c: [`${variableName} = ${valueExpressions.c};`],
+    });
+}
+
+function addGlobalFunction(
+    state: ChainState,
+    functionName: string,
+    params: string[],
+    bodyValue: unknown,
+): void {
+    if (!isChainArgument(bodyValue)) {
+        throw new Error(
+            "addGlobalFunction body must be a builder built from statements, e.g. addStatements(...)",
+        );
+    }
+    const bodyState: ChainState = {
+        statements: { typescript: [], c: [] },
+        variables: { typescript: {}, c: {} },
+        globals: state.globals,
+    };
+    for (const param of params) {
+        bodyState.variables.typescript[param] = param;
+        bodyState.variables.c[param] = param;
+    }
+    runChain(bodyValue.chain.values, bodyState);
+
+    const typescriptParams = params.join(", ");
+    const cParams = params.length
+        ? params.map((param) => `ArgumentValue ${param}`).join(", ")
+        : "void";
+    const typescriptBody = indentLines(bodyState.statements.typescript).join("\n");
+    const cBody = indentLines(bodyState.statements.c).join("\n");
+    state.globals.typescript.push(
+        `function ${functionName}(${typescriptParams}) {${typescriptBody ? `\n${typescriptBody}\n` : ""}}`,
+    );
+    state.globals.c.push(
+        `ArgumentValue ${functionName}(${cParams}) {${cBody ? `\n${cBody}\n` : ""}}`,
+    );
 }
 
 function stripOuterParens(expression: string): string {
@@ -475,7 +528,7 @@ function renderCondition(value: unknown): ExpressionRecord {
     };
 }
 
-function renderBody(value: unknown): StatementsRecord {
+function renderBody(value: unknown, parentState: ChainState): StatementsRecord {
     if (!isChainArgument(value)) {
         throw new Error(
             "Expected a body builder built from statements, e.g. addStatements(...)",
@@ -483,7 +536,11 @@ function renderBody(value: unknown): StatementsRecord {
     }
     const subState: ChainState = {
         statements: { typescript: [], c: [] },
-        variables: { typescript: {}, c: {} },
+        variables: {
+            typescript: { ...parentState.variables.typescript },
+            c: { ...parentState.variables.c },
+        },
+        globals: parentState.globals,
     };
     runChain(value.chain.values, subState);
     return subState.statements;
@@ -530,6 +587,10 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
             state.resultKind = "expression";
         } else if (functionName === "addVariable") {
             addVariable(state, args[0] as string, args[1]);
+        } else if (functionName === "setVariable") {
+            setVariable(state, args[0] as string, args[1]);
+        } else if (functionName === "addGlobalFunction") {
+            addGlobalFunction(state, args[0] as string, (args[1] as string[]) ?? [], args[2]);
         } else if (functionName === "freeCVariables") {
             addStatements(state, { typescript: [], c: ["lt_free_all();"] });
         } else if (functionName === "return") {
@@ -543,26 +604,26 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
             const condition = renderCondition(args[0]);
             addStatements(state, renderBlock(
                 { typescript: `if (${condition.typescript})`, c: `if (${condition.c})` },
-                renderBody(args[1]),
+                renderBody(args[1], state),
             ));
         } else if (functionName === "elseIf") {
             const condition = renderCondition(args[0]);
             addStatements(state, renderBlock(
                 { typescript: `else if (${condition.typescript})`, c: `else if (${condition.c})` },
-                renderBody(args[1]),
+                renderBody(args[1], state),
             ));
         } else if (functionName === "else") {
-            addStatements(state, renderBlock({ typescript: "else", c: "else" }, renderBody(args[0])));
+            addStatements(state, renderBlock({ typescript: "else", c: "else" }, renderBody(args[0], state)));
         } else if (functionName === "while") {
             const condition = renderCondition(args[0]);
             addStatements(state, renderBlock(
                 { typescript: `while (${condition.typescript})`, c: `while (${condition.c})` },
-                renderBody(args[1]),
+                renderBody(args[1], state),
             ));
         } else if (functionName === "forEach") {
             const array = renderCallArgument(args[0]);
             const variableName = args[1] as string;
-            const body = renderBody(args[2]);
+            const body = renderBody(args[2], state);
             const indexName = `${variableName}Index`;
             const arrayName = `${variableName}Array`;
             const cBodyLines = [
@@ -587,7 +648,7 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
                     typescript: `for (${init.typescript}; ${condition.typescript}; ${update.typescript})`,
                     c: `for (${init.c}; ${condition.c}; ${update.c})`,
                 },
-                renderBody(args[3]),
+                renderBody(args[3], state),
             ));
         } else if (functionName === "variableForCounter") {
             const name = args[0] as string;
@@ -630,8 +691,9 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
 export function generate(schema: SchemaType): Record<LanguageType, string> {
     const statements: StatementsRecord = { typescript: [], c: [] };
     const variables: VariablesRecord = { typescript: {}, c: {} };
+    const globals: StatementsRecord = { typescript: [], c: [] };
 
-    const state: ChainState = { statements, variables };
+    const state: ChainState = { statements, variables, globals };
     const result = runChain(schema.schema.chain.chain.values, state) as Record<LanguageType, unknown>;
 
     const autoFree = (state.resultKind ?? "statements") !== "expression";
@@ -650,6 +712,13 @@ export function generate(schema: SchemaType): Record<LanguageType, string> {
             if (lang === "c" && autoFree && value.length > 0 && !value.endsWith("lt_free_all();") && !value.endsWith("return;")) {
                 resolved[lang] = `${value}\nlt_free_all();`;
             }
+        }
+    }
+    for (const lang of LANGUAGE_KEYS) {
+        if (globals[lang].length > 0) {
+            resolved[lang] = [globals[lang].join("\n"), resolved[lang]]
+                .filter(Boolean)
+                .join("\n");
         }
     }
     return resolved;

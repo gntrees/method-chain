@@ -50,6 +50,17 @@ export function stringifyCStruct(struct: StructType['struct']): string {
         return `{ .kind = S_OBJECT, .as.object = { .count = ${keys.length}, .keys = (StructKey[]){ ${keys.join(', ')} } } }`;
     } else if ("structureCall" in struct) {
         return `{ .kind = S_STRUCT_CALL, .as.structureCall = { .name = "${normalizeName(struct.structureCall.name, "kebab")}" } }`;
+    } else if ("literal" in struct) {
+        const { value, type } = struct.literal;
+        if (type === "string") {
+            return `{ .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "${escapeCString(value)}" } }`;
+        }
+        if (type === "boolean") {
+            return `{ .kind = S_LITERAL, .as.literal = { .type = D_BOOL, .value.i = ${value ? 1 : 0} } }`;
+        }
+        return Number.isInteger(value)
+            ? `{ .kind = S_LITERAL, .as.literal = { .type = D_INT, .value.i = ${value} } }`
+            : `{ .kind = S_LITERAL, .as.literal = { .type = D_FLOAT, .value.f = ${value} } }`;
     } else {
         throw new Error("Unknown struct type for C");
     }
@@ -99,6 +110,11 @@ function cStructTypeName(struct: StructType['struct']): string {
         return `{ ${entries} }`;
     }
     if ("union" in struct) return struct.union.types.map(cStructTypeName).join(" | ");
+    if ("literal" in struct) {
+        return struct.literal.type === "string"
+            ? `"${escapeCString(struct.literal.value)}"`
+            : String(struct.literal.value);
+    }
     if ("structureCall" in struct) return `chain<${normalizeName(struct.structureCall.name, "kebab")}>`;
     throw new Error("Unknown struct type for C");
 }

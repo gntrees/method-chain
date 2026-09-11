@@ -56,6 +56,8 @@ export function generateTypeScriptContent(project: ProjectType, baseTypes: strin
         } else if ("union" in struct) {
             const types = struct.union.types.map(type => stringifyStruct(type)).join(' | ');
             return `(${types})`;
+        } else if ("literal" in struct) {
+            return JSON.stringify(struct.literal.value);
         } else if ("structureCall" in struct) {
             return normalizeName(findStructureInDefinitions(struct.structureCall.name, project.project.definitions), "pascal");
         } else {

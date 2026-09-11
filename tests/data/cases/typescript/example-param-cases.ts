@@ -17,4 +17,5 @@ export const schema = c
   .values([["a", "b"], ["c", "d"]])
   .raw`SELECT ${"x"} FROM ${"users"} WHERE age > ${18} AND name = ${"Alice"}`
   .asc()
-  .desc();
+  .desc()
+  .setDialect("postgres");

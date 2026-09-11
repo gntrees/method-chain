@@ -95,11 +95,11 @@ test("addVariable emits declarations per language", async () => {
         .addVariable("user", { name: "bob" })
         .generate();
     expect(out.typescript).toEqual([
-        "const count = 5;",
-        "const flag = true;",
-        "const nothing = null;",
-        'const items = ["a", "b"];',
-        'const user = {"name": "bob"};',
+        "let count = 5;",
+        "let flag = true;",
+        "let nothing = null;",
+        'let items = ["a", "b"];',
+        'let user = {"name": "bob"};',
     ].join("\n"));
     expect(out.c).toEqual([
         "ArgumentValue count = v_int(5);",
@@ -310,13 +310,13 @@ test("manipulation results can be used in addVariable and addValue", async () =>
         .addVariable("name", linguaTungga().stringUpper("bob"))
         .addVariable("sizes", linguaTungga().arrayAppend(linguaTungga().addValue([1, 2]), 3))
         .generate();
-    expect(out.typescript).toEqual('const name = "bob".toUpperCase();\nconst sizes = [...[1, 2], 3];');
+    expect(out.typescript).toEqual('let name = "bob".toUpperCase();\nlet sizes = [...[1, 2], 3];');
     expect(out.c).toEqual('ArgumentValue name = lt_to_upper(v_string("bob"));\nArgumentValue sizes = lt_append(arr(v_int(1), v_int(2)), v_int(3));\nlt_free_all();');
 });
 
 test("freeCVariables emits a single free for c and nothing for typescript", async () => {
     const out = await linguaTungga().addVariable("x", 1).freeCVariables().generate();
-    expect(out).toEqual({ typescript: "const x = 1;", c: "ArgumentValue x = v_int(1);\nlt_free_all();" });
+    expect(out).toEqual({ typescript: "let x = 1;", c: "ArgumentValue x = v_int(1);\nlt_free_all();" });
 });
 
 test("expression producers are not auto-freed", async () => {
@@ -345,7 +345,7 @@ test("return copies the returned value out of the arena", async () => {
         .addVariable("x", 1)
         .return(linguaTungga().variableForCounter("x"))
         .generate();
-    expect(withVar).toEqual({ typescript: "const x = 1;\nreturn x;", c: "ArgumentValue x = v_int(1);\nreturn lt_detach_copy(x);\nlt_free_all();" });
+    expect(withVar).toEqual({ typescript: "let x = 1;\nreturn x;", c: "ArgumentValue x = v_int(1);\nreturn lt_detach_copy(x);\nlt_free_all();" });
 });
 
 
@@ -400,9 +400,76 @@ test("duplicate addVariable appends both declarations", async () => {
         .addVariable("x", 2)
         .generate();
     expect(out).toEqual({
-        typescript: "const x = 1;\nconst x = 2;",
+        typescript: "let x = 1;\nlet x = 2;",
         c: "ArgumentValue x = v_int(1);\nArgumentValue x = v_int(2);\nlt_free_all();",
     });
+});
+
+test("setVariable reassigns a variable declared with addVariable", async () => {
+    const out = await linguaTungga()
+        .addVariable("count", 1)
+        .setVariable("count", 2)
+        .setVariable("count", linguaTungga().add(linguaTungga().variableForCounter("count"), 1))
+        .generate();
+    expect(out.typescript).toEqual("let count = 1;\ncount = 2;\ncount = (count + 1);");
+    expect(out.c).toEqual("ArgumentValue count = v_int(1);\ncount = v_int(2);\ncount = (count + 1);\nlt_free_all();");
+});
+
+test("setVariable rejects undeclared variables", () => {
+    expect(() => generate(makeSchema([
+        fnCall("setVariable", [{ string: { value: "missing" } }, { number: { value: 1 } }]),
+    ]))).toThrow(/Cannot set variable "missing"/);
+});
+
+test("setVariable works inside a block for outer variables", async () => {
+    const out = await linguaTungga()
+        .addVariable("flag", false)
+        .if(linguaTungga().equal(1, 1), linguaTungga().setVariable("flag", true))
+        .generate();
+    expect(out.typescript).toEqual("let flag = false;\nif (1 === 1) {\n  flag = true;\n}");
+    expect(out.c).toEqual("ArgumentValue flag = v_bool(0);\nif (1 == 1) {\n  flag = v_bool(1);\n}\nlt_free_all();");
+});
+
+test("addGlobalFunction emits a function before statements", async () => {
+    const out = await linguaTungga()
+        .addGlobalFunction("greet", ["name"], linguaTungga()
+            .return(linguaTungga().stringUpper(linguaTungga().variableForCounter("name"))))
+        .addVariable("msg", 1)
+        .generate();
+    expect(out.typescript).toEqual(
+        "function greet(name) {\n  return name.toUpperCase();\n}\nlet msg = 1;",
+    );
+    expect(out.c).toEqual(
+        "ArgumentValue greet(ArgumentValue name) {\n  return lt_detach_copy(lt_to_upper(name));\n}\nArgumentValue msg = v_int(1);\nlt_free_all();",
+    );
+});
+
+test("addGlobalFunction without params emits a void c parameter", async () => {
+    const out = await linguaTungga()
+        .addGlobalFunction("now", [], linguaTungga()
+            .addStatements({ typescript: ["return 1;"], c: ["return v_int(1);"] }))
+        .generate();
+    expect(out).toEqual({
+        typescript: "function now() {\n  return 1;\n}",
+        c: "ArgumentValue now(void) {\n  return v_int(1);\n}",
+    });
+});
+
+test("multiple global functions keep insertion order", async () => {
+    const out = await linguaTungga()
+        .addGlobalFunction("first", [], linguaTungga().addStatements({ typescript: ["a();"], c: ["a();"] }))
+        .addGlobalFunction("second", [], linguaTungga().addStatements({ typescript: ["b();"], c: ["b();"] }))
+        .generate();
+    expect(out.typescript).toEqual("function first() {\n  a();\n}\nfunction second() {\n  b();\n}");
+    expect(out.c).toEqual("ArgumentValue first(void) {\n  a();\n}\nArgumentValue second(void) {\n  b();\n}");
+});
+
+test("addGlobalFunction body can set its parameters", async () => {
+    const out = await linguaTungga()
+        .addGlobalFunction("bump", ["value"], linguaTungga().setVariable("value", 9))
+        .generate();
+    expect(out.typescript).toEqual("function bump(value) {\n  value = 9;\n}");
+    expect(out.c).toEqual("ArgumentValue bump(ArgumentValue value) {\n  value = v_int(9);\n}");
 });
 
 test("addValue escapes quotes in object keys", async () => {

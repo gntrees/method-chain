@@ -136,7 +136,8 @@ enum StructKind
     S_ARRAY,
     S_OBJECT,
     S_MAP,
-    S_STRUCT_CALL
+    S_STRUCT_CALL,
+    S_LITERAL
 };
 
 struct StructType
@@ -166,6 +167,16 @@ struct StructType
         {
             const char *name;
         } structureCall;
+        struct
+        {
+            enum DynamicType type;
+            union
+            {
+                const char *s;
+                long long i;
+                double f;
+            } value;
+        } literal;
     } as;
 };
 

@@ -148,6 +148,24 @@ export type StructType = {
           type: StructType["struct"];
         };
       }
+    | {
+        literal: {
+          value: string;
+          type: "string";
+        };
+      }
+    | {
+        literal: {
+          value: number;
+          type: "number";
+        };
+      }
+    | {
+        literal: {
+          value: boolean;
+          type: "boolean";
+        };
+      }
     | StructureCallType;
 };
 
@@ -523,6 +541,44 @@ function normalizeArgument(
   } else if ("structureCall" in struct) {
     const normalizedArgumentStructureCall = normalizeArgumentStructureCall(arg);
     return normalizedArgumentStructureCall;
+  } else if ("literal" in struct) {
+    const expected = struct.literal.value;
+    if (struct.literal.type === "string") {
+      if (typeof arg !== "string") {
+        throw new Error(
+          `Expected a string literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (arg !== expected) {
+        throw new Error(
+          `Expected string literal ${JSON.stringify(expected)}, but got ${JSON.stringify(arg)}`,
+        );
+      }
+      return { string: { value: arg } };
+    } else if (struct.literal.type === "number") {
+      if (typeof arg !== "number") {
+        throw new Error(
+          `Expected a number literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (!Number.isFinite(arg)) {
+        throw new Error(`Expected a finite number argument, but got ${arg}`);
+      }
+      if (arg !== expected) {
+        throw new Error(`Expected number literal ${expected}, but got ${arg}`);
+      }
+      return { number: { value: arg } };
+    } else {
+      if (typeof arg !== "boolean") {
+        throw new Error(
+          `Expected a boolean literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (arg !== expected) {
+        throw new Error(`Expected boolean literal ${expected}, but got ${arg}`);
+      }
+      return { boolean: { value: arg } };
+    }
   } else {
     throw new Error("Unsupported struct type in normalizeArgument");
   }
@@ -1142,6 +1198,146 @@ export class LinguaTungga {
               },
             },
             provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  setVariable(
+    variableName: string,
+    value:
+      | (string | number | boolean | null)
+      | (
+          | (string | number | boolean | null)
+          | (string | number | boolean | null)[]
+          | { [key: string]: string | number | boolean | null }
+        )[]
+      | { [key: string]: string | number | boolean | null }
+      | LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "setVariable",
+        [
+          {
+            arg: variableName,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: value,
+            struct: {
+              union: {
+                types: [
+                  {
+                    union: {
+                      types: [
+                        { string: { type: "string" } },
+                        { number: { type: "number" } },
+                        { boolean: { type: "boolean" } },
+                        { null: { type: "null" } },
+                      ],
+                    },
+                  },
+                  {
+                    array: {
+                      type: {
+                        union: {
+                          types: [
+                            {
+                              union: {
+                                types: [
+                                  { string: { type: "string" } },
+                                  { number: { type: "number" } },
+                                  { boolean: { type: "boolean" } },
+                                  { null: { type: "null" } },
+                                ],
+                              },
+                            },
+                            {
+                              array: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                            {
+                              map: {
+                                type: {
+                                  union: {
+                                    types: [
+                                      { string: { type: "string" } },
+                                      { number: { type: "number" } },
+                                      { boolean: { type: "boolean" } },
+                                      { null: { type: "null" } },
+                                    ],
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  {
+                    map: {
+                      type: {
+                        union: {
+                          types: [
+                            { string: { type: "string" } },
+                            { number: { type: "number" } },
+                            { boolean: { type: "boolean" } },
+                            { null: { type: "null" } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  { structureCall: { name: "lingua-tungga" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 2,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  addGlobalFunction(
+    name: string,
+    params: string[],
+    body: LinguaTungga,
+  ): LinguaTungga {
+    return new LinguaTungga().initFromStructure<LinguaTungga>(
+      createSchema(
+        this.getSchema(),
+        "addGlobalFunction",
+        [
+          {
+            arg: name,
+            struct: { string: { type: "string" } },
+            provided: arguments.length >= 1,
+          },
+          {
+            arg: params,
+            struct: { array: { type: { string: { type: "string" } } } },
+            provided: arguments.length >= 2,
+          },
+          {
+            arg: body,
+            struct: { structureCall: { name: "lingua-tungga" } },
+            provided: arguments.length >= 3,
           },
         ],
         false,

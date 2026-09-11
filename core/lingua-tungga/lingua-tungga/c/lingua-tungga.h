@@ -146,7 +146,8 @@ enum StructKind
     S_ARRAY,
     S_OBJECT,
     S_MAP,
-    S_STRUCT_CALL
+    S_STRUCT_CALL,
+    S_LITERAL
 };
 
 struct StructType
@@ -176,6 +177,16 @@ struct StructType
         {
             const char *name;
         } structureCall;
+        struct
+        {
+            enum DynamicType type;
+            union
+            {
+                const char *s;
+                long long i;
+                double f;
+            } value;
+        } literal;
     } as;
 };
 
@@ -1565,6 +1576,12 @@ static void union_reason_append_branch(const StructType *st, const ArgumentValue
         case S_MAP: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "map value type mismatch" : "expected map, got %s", vk); break;
         case S_OBJECT: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "object field type mismatch" : "expected object, got %s", vk); break;
         case S_STRUCT_CALL: snprintf(tmp, sizeof tmp, "expected structure instance, got %s", vk); break;
+        case S_LITERAL:
+            if (st->as.literal.type == D_STRING && st->as.literal.value.s)
+                snprintf(tmp, sizeof tmp, "expected literal %s, got %s", st->as.literal.value.s, vk);
+            else
+                snprintf(tmp, sizeof tmp, "expected literal, got %s", vk);
+            break;
         default: snprintf(tmp, sizeof tmp, "%s", result_msg(r)); break;
         }
     }
@@ -1701,6 +1718,25 @@ static enum ValidateResult validate_value_impl(const ArgumentValue *v, const Str
         if (v->as.chain->typeName && v->as.chain->typeName[0])
             return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
         return V_OK;
+    case S_LITERAL:
+        switch (st->as.literal.type)
+        {
+        case D_STRING:
+            return (v->type == D_STRING && v->as.s && st->as.literal.value.s && strcmp(v->as.s, st->as.literal.value.s) == 0) ? V_OK : V_TYPE_MISMATCH;
+        case D_BOOL:
+            return (v->type == D_BOOL && (v->as.i != 0) == (st->as.literal.value.i != 0)) ? V_OK : V_TYPE_MISMATCH;
+        case D_INT:
+        case D_FLOAT:
+        {
+            if (v->type != D_INT && v->type != D_FLOAT)
+                return V_TYPE_MISMATCH;
+            double expected = st->as.literal.type == D_INT ? (double)st->as.literal.value.i : st->as.literal.value.f;
+            double actual = v->type == D_INT ? (double)v->as.i : v->as.f;
+            return expected == actual ? V_OK : V_TYPE_MISMATCH;
+        }
+        default:
+            return V_TYPE_MISMATCH;
+        }
     }
     return V_TYPE_MISMATCH;
 }
@@ -2425,6 +2461,23 @@ static const char *getJSONSchema_impl(const SchemaType *s)
     builder_call("add-variable", ((ArgumentType[]){ mkarg(v(variableName)), mkarg(v(value)) }), 2, 0)
 
 /**
+ * @param variableName string
+ * @param value string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define setVariable(variableName, value) \
+    builder_call("set-variable", ((ArgumentType[]){ mkarg(v(variableName)), mkarg(v(value)) }), 2, 0)
+
+/**
+ * @param name string
+ * @param params array<string>
+ * @param body chain<lingua-tungga>
+ * @return Builder (function-call) : lingua-tungga
+ */
+#define addGlobalFunction(name, params, body) \
+    builder_call("add-global-function", ((ArgumentType[]){ mkarg(v(name)), mkarg(v(params)), mkarg(v(body)) }), 3, 0)
+
+/**
  * @param condition string | number | boolean | null | array<string | number | boolean | null | array<string | number | boolean | null> | map<string | number | boolean | null>> | map<string | number | boolean | null> | chain<lingua-tungga>
  * @param body chain<lingua-tungga>
  * @return Builder (function-call) : lingua-tungga
@@ -2947,6 +3000,13 @@ static const StructType lingua_tungga_add_value_arg0 = { .kind = S_UNION, .as.un
 static const StructType lingua_tungga_add_variable_arg0 = { .kind = S_STRING };
 static const StructType lingua_tungga_add_variable_arg1 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
 static const StructType lingua_tungga_add_variable_args[] = { lingua_tungga_add_variable_arg0, lingua_tungga_add_variable_arg1 };
+static const StructType lingua_tungga_set_variable_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_set_variable_arg1 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
+static const StructType lingua_tungga_set_variable_args[] = { lingua_tungga_set_variable_arg0, lingua_tungga_set_variable_arg1 };
+static const StructType lingua_tungga_add_global_function_arg0 = { .kind = S_STRING };
+static const StructType lingua_tungga_add_global_function_arg1 = { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_STRING } } };
+static const StructType lingua_tungga_add_global_function_arg2 = { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } };
+static const StructType lingua_tungga_add_global_function_args[] = { lingua_tungga_add_global_function_arg0, lingua_tungga_add_global_function_arg1, lingua_tungga_add_global_function_arg2 };
 static const StructType lingua_tungga_if_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 3, .types = (StructType[]){ { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } }, { .kind = S_ARRAY, .as.array = { .elem = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } } } } } } }, { .kind = S_MAP, .as.map = { .value = &(StructType){ .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_NULL } } } } } }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } } } } };
 static const StructType lingua_tungga_if_arg1 = { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "lingua-tungga" } };
 static const StructType lingua_tungga_if_args[] = { lingua_tungga_if_arg0, lingua_tungga_if_arg1 };
@@ -3118,6 +3178,8 @@ static const FunctionSignature lingua_tungga_functions[] = {
     { "add-structure-variable-call", 0, &lingua_tungga_add_structure_variable_call_arg0, 1, "lingua-tungga" },
     { "add-value", 0, &lingua_tungga_add_value_arg0, 1, "lingua-tungga" },
     { "add-variable", 0, lingua_tungga_add_variable_args, 2, "lingua-tungga" },
+    { "set-variable", 0, lingua_tungga_set_variable_args, 2, "lingua-tungga" },
+    { "add-global-function", 0, lingua_tungga_add_global_function_args, 3, "lingua-tungga" },
     { "if", 0, lingua_tungga_if_args, 2, "lingua-tungga" },
     { "else-if", 0, lingua_tungga_else_if_args, 2, "lingua-tungga" },
     { "else", 0, &lingua_tungga_else_arg0, 1, "lingua-tungga" },

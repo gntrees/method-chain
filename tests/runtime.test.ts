@@ -405,3 +405,99 @@ test("custom function collision: each structure uses its own body", () => {
 test("custom function without arguments works", () => {
     expect((qb() as any).sign()).toBe("query-builder-sign");
 });
+
+test("literal string argument accepts matching value", () => {
+    const arg = firstArg(qb().setDialect("postgres").getSchema());
+    expect(arg.argument).toEqual({ string: { value: "postgres" } });
+});
+
+test("literal string argument rejects mismatched value", () => {
+    expect(() => qb().setDialect("oracle")).toThrow("does not match any type in the union");
+});
+
+test("literal string struct rejects non-string", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "stringLiteral",
+            [
+                {
+                    arg: 1,
+                    struct: { literal: { value: "postgres", type: "string" } },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("string literal");
+});
+
+test("literal number argument accepts matching value", () => {
+    const arg = firstArg(
+        createSchema(
+            tc().getSchema(),
+            "numberLiteral",
+            [
+                {
+                    arg: 5,
+                    struct: { literal: { value: 5, type: "number" } },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    );
+    expect(arg.argument).toEqual({ number: { value: 5 } });
+});
+
+test("literal number argument rejects mismatched value", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "numberLiteral",
+            [
+                {
+                    arg: 6,
+                    struct: { literal: { value: 5, type: "number" } },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("number literal");
+});
+
+test("literal boolean argument accepts matching value", () => {
+    const arg = firstArg(
+        createSchema(
+            tc().getSchema(),
+            "booleanLiteral",
+            [
+                {
+                    arg: true,
+                    struct: { literal: { value: true, type: "boolean" } },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    );
+    expect(arg.argument).toEqual({ boolean: { value: true } });
+});
+
+test("literal boolean argument rejects mismatched value", () => {
+    expect(() =>
+        createSchema(
+            tc().getSchema(),
+            "booleanLiteral",
+            [
+                {
+                    arg: false,
+                    struct: { literal: { value: true, type: "boolean" } },
+                    provided: true,
+                },
+            ],
+            false,
+        ),
+    ).toThrow("boolean literal");
+});

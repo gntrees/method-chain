@@ -46,6 +46,21 @@ const stValues: StructType = {
     },
 };
 
+const dialect: StructType = {
+    struct: {
+        union: {
+            types: [
+                { literal: { value: "postgres", type: "string" } },
+                { literal: { value: "mysql", type: "string" } },
+                { literal: { value: "sqlite", type: "string" } },
+                { literal: { value: "single-store", type: "string" } },
+                { literal: { value: "mssql", type: "string" } },
+                { literal: { value: "cockroach", type: "string" } },
+            ],
+        },
+    },
+};
+
 const arg = (name: string, struct: StructType): ArgumentType => ({
     argument: { name, struct },
 });
@@ -365,6 +380,7 @@ export const exampleProject: ProjectType = {
                         qbFn("as", [arg("alias", st)]),
                         qbFn("col", [arg("column", st)]),
                         qbFn("table", [arg("table", st)]),
+                        qbFn("set-dialect", [arg("db", dialect)]),
                         {
                             customFunction: {
                                 name: "sign",

@@ -146,7 +146,8 @@ enum StructKind
     S_ARRAY,
     S_OBJECT,
     S_MAP,
-    S_STRUCT_CALL
+    S_STRUCT_CALL,
+    S_LITERAL
 };
 
 struct StructType
@@ -176,6 +177,16 @@ struct StructType
         {
             const char *name;
         } structureCall;
+        struct
+        {
+            enum DynamicType type;
+            union
+            {
+                const char *s;
+                long long i;
+                double f;
+            } value;
+        } literal;
     } as;
 };
 
@@ -1565,6 +1576,12 @@ static void union_reason_append_branch(const StructType *st, const ArgumentValue
         case S_MAP: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "map value type mismatch" : "expected map, got %s", vk); break;
         case S_OBJECT: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "object field type mismatch" : "expected object, got %s", vk); break;
         case S_STRUCT_CALL: snprintf(tmp, sizeof tmp, "expected structure instance, got %s", vk); break;
+        case S_LITERAL:
+            if (st->as.literal.type == D_STRING && st->as.literal.value.s)
+                snprintf(tmp, sizeof tmp, "expected literal %s, got %s", st->as.literal.value.s, vk);
+            else
+                snprintf(tmp, sizeof tmp, "expected literal, got %s", vk);
+            break;
         default: snprintf(tmp, sizeof tmp, "%s", result_msg(r)); break;
         }
     }
@@ -1701,6 +1718,25 @@ static enum ValidateResult validate_value_impl(const ArgumentValue *v, const Str
         if (v->as.chain->typeName && v->as.chain->typeName[0])
             return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
         return V_OK;
+    case S_LITERAL:
+        switch (st->as.literal.type)
+        {
+        case D_STRING:
+            return (v->type == D_STRING && v->as.s && st->as.literal.value.s && strcmp(v->as.s, st->as.literal.value.s) == 0) ? V_OK : V_TYPE_MISMATCH;
+        case D_BOOL:
+            return (v->type == D_BOOL && (v->as.i != 0) == (st->as.literal.value.i != 0)) ? V_OK : V_TYPE_MISMATCH;
+        case D_INT:
+        case D_FLOAT:
+        {
+            if (v->type != D_INT && v->type != D_FLOAT)
+                return V_TYPE_MISMATCH;
+            double expected = st->as.literal.type == D_INT ? (double)st->as.literal.value.i : st->as.literal.value.f;
+            double actual = v->type == D_INT ? (double)v->as.i : v->as.f;
+            return expected == actual ? V_OK : V_TYPE_MISMATCH;
+        }
+        default:
+            return V_TYPE_MISMATCH;
+        }
     }
     return V_TYPE_MISMATCH;
 }
@@ -2939,6 +2975,13 @@ static const FunctionSignature string_formatter_functions[] = {
     builder_call("table", ((ArgumentType[]){ mkarg(v(table)) }), 1, 0)
 
 /**
+ * @param db "postgres" | "mysql" | "sqlite" | "single-store" | "mssql" | "cockroach"
+ * @return Builder (function-call) : query-builder
+ */
+#define setDialect(db) \
+    builder_call("set-dialect", ((ArgumentType[]){ mkarg(v(db)) }), 1, 0)
+
+/**
  * @return char *
  */
 static char * query_builder_sign_impl(Builder builder, ArgumentType *args, size_t count) {
@@ -3025,6 +3068,7 @@ static const StructType query_builder_desc_args[] = {  };
 static const StructType query_builder_as_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };
 static const StructType query_builder_col_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };
 static const StructType query_builder_table_arg0 = { .kind = S_UNION, .as.unionType = { .count = 4, .types = (StructType[]){ { .kind = S_STRING }, { .kind = S_NUMBER }, { .kind = S_BOOL }, { .kind = S_STRUCT_CALL, .as.structureCall = { .name = "query-builder" } } } } };
+static const StructType query_builder_set_dialect_arg0 = { .kind = S_UNION, .as.unionType = { .count = 6, .types = (StructType[]){ { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "postgres" } }, { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "mysql" } }, { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "sqlite" } }, { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "single-store" } }, { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "mssql" } }, { .kind = S_LITERAL, .as.literal = { .type = D_STRING, .value.s = "cockroach" } } } } };
 
 static const FunctionSignature query_builder_functions[] = {
     { "select", 0, &query_builder_select_arg0, 1, "query-builder" },
@@ -3072,6 +3116,7 @@ static const FunctionSignature query_builder_functions[] = {
     { "as", 0, &query_builder_as_arg0, 1, "query-builder" },
     { "col", 0, &query_builder_col_arg0, 1, "query-builder" },
     { "table", 0, &query_builder_table_arg0, 1, "query-builder" },
+    { "set-dialect", 0, &query_builder_set_dialect_arg0, 1, "query-builder" },
 };
 
 /**

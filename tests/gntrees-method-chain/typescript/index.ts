@@ -148,6 +148,24 @@ export type StructType = {
           type: StructType["struct"];
         };
       }
+    | {
+        literal: {
+          value: string;
+          type: "string";
+        };
+      }
+    | {
+        literal: {
+          value: number;
+          type: "number";
+        };
+      }
+    | {
+        literal: {
+          value: boolean;
+          type: "boolean";
+        };
+      }
     | StructureCallType;
 };
 
@@ -537,6 +555,44 @@ function normalizeArgument(
   } else if ("structureCall" in struct) {
     const normalizedArgumentStructureCall = normalizeArgumentStructureCall(arg);
     return normalizedArgumentStructureCall;
+  } else if ("literal" in struct) {
+    const expected = struct.literal.value;
+    if (struct.literal.type === "string") {
+      if (typeof arg !== "string") {
+        throw new Error(
+          `Expected a string literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (arg !== expected) {
+        throw new Error(
+          `Expected string literal ${JSON.stringify(expected)}, but got ${JSON.stringify(arg)}`,
+        );
+      }
+      return { string: { value: arg } };
+    } else if (struct.literal.type === "number") {
+      if (typeof arg !== "number") {
+        throw new Error(
+          `Expected a number literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (!Number.isFinite(arg)) {
+        throw new Error(`Expected a finite number argument, but got ${arg}`);
+      }
+      if (arg !== expected) {
+        throw new Error(`Expected number literal ${expected}, but got ${arg}`);
+      }
+      return { number: { value: arg } };
+    } else {
+      if (typeof arg !== "boolean") {
+        throw new Error(
+          `Expected a boolean literal argument, but got ${typeof arg}`,
+        );
+      }
+      if (arg !== expected) {
+        throw new Error(`Expected boolean literal ${expected}, but got ${arg}`);
+      }
+      return { boolean: { value: arg } };
+    }
   } else {
     throw new Error("Unsupported struct type in normalizeArgument");
   }
@@ -2698,6 +2754,41 @@ export class QueryBuilder {
                   { number: { type: "number" } },
                   { boolean: { type: "boolean" } },
                   { structureCall: { name: "query-builder" } },
+                ],
+              },
+            },
+            provided: arguments.length >= 1,
+          },
+        ],
+        false,
+      ),
+    );
+  }
+  setDialect(
+    db:
+      | "postgres"
+      | "mysql"
+      | "sqlite"
+      | "single-store"
+      | "mssql"
+      | "cockroach",
+  ): QueryBuilder {
+    return new QueryBuilder().initFromStructure<QueryBuilder>(
+      createSchema(
+        this.getSchema(),
+        "setDialect",
+        [
+          {
+            arg: db,
+            struct: {
+              union: {
+                types: [
+                  { literal: { value: "postgres", type: "string" } },
+                  { literal: { value: "mysql", type: "string" } },
+                  { literal: { value: "sqlite", type: "string" } },
+                  { literal: { value: "single-store", type: "string" } },
+                  { literal: { value: "mssql", type: "string" } },
+                  { literal: { value: "cockroach", type: "string" } },
                 ],
               },
             },

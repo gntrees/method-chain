@@ -137,6 +137,12 @@ static void union_reason_append_branch(const StructType *st, const ArgumentValue
         case S_MAP: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "map value type mismatch" : "expected map, got %s", vk); break;
         case S_OBJECT: snprintf(tmp, sizeof tmp, v->type == D_MAP ? "object field type mismatch" : "expected object, got %s", vk); break;
         case S_STRUCT_CALL: snprintf(tmp, sizeof tmp, "expected structure instance, got %s", vk); break;
+        case S_LITERAL:
+            if (st->as.literal.type == D_STRING && st->as.literal.value.s)
+                snprintf(tmp, sizeof tmp, "expected literal %s, got %s", st->as.literal.value.s, vk);
+            else
+                snprintf(tmp, sizeof tmp, "expected literal, got %s", vk);
+            break;
         default: snprintf(tmp, sizeof tmp, "%s", result_msg(r)); break;
         }
     }
@@ -273,6 +279,25 @@ static enum ValidateResult validate_value_impl(const ArgumentValue *v, const Str
         if (v->as.chain->typeName && v->as.chain->typeName[0])
             return strcmp(v->as.chain->typeName, st->as.structureCall.name) == 0 ? V_OK : V_CHAIN_TYPE;
         return V_OK;
+    case S_LITERAL:
+        switch (st->as.literal.type)
+        {
+        case D_STRING:
+            return (v->type == D_STRING && v->as.s && st->as.literal.value.s && strcmp(v->as.s, st->as.literal.value.s) == 0) ? V_OK : V_TYPE_MISMATCH;
+        case D_BOOL:
+            return (v->type == D_BOOL && (v->as.i != 0) == (st->as.literal.value.i != 0)) ? V_OK : V_TYPE_MISMATCH;
+        case D_INT:
+        case D_FLOAT:
+        {
+            if (v->type != D_INT && v->type != D_FLOAT)
+                return V_TYPE_MISMATCH;
+            double expected = st->as.literal.type == D_INT ? (double)st->as.literal.value.i : st->as.literal.value.f;
+            double actual = v->type == D_INT ? (double)v->as.i : v->as.f;
+            return expected == actual ? V_OK : V_TYPE_MISMATCH;
+        }
+        default:
+            return V_TYPE_MISMATCH;
+        }
     }
     return V_TYPE_MISMATCH;
 }

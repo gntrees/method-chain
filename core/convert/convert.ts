@@ -148,7 +148,7 @@ function normalizeChain(chain: SchemaType["schema"]["chain"], target: LanguageTy
                 } else {
                     args = value.functionCall.arguments.map(arg => normalizeArgument(arg)).filter(s => s !== null).join(", ")
                 }
-                return `.${normalizeName(value.functionCall.name, "camel")}${value.functionCall.isTemplateLiteral ? `\`${args}\`` : `(${args})`}`;
+                return `.${value.functionCall.name}${value.functionCall.isTemplateLiteral ? `\`${args}\`` : `(${args})`}`;
             }
             if ("propertyCall" in value) {
                 return `.${value.propertyCall.name}`;

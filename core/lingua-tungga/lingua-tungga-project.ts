@@ -69,6 +69,10 @@ const statementsStruct: StructType = {
 
 const stringStruct: StructType = { struct: { string: { type: "string" } } };
 
+const stringArrayStruct: StructType = {
+    struct: { array: { type: { string: { type: "string" } } } },
+};
+
 const bodyStruct: StructType = { struct: { structureCall: { name: "lingua-tungga" } } };
 
 const arg = (name: string, struct: StructType): ArgumentType => ({
@@ -112,6 +116,15 @@ const linguaTunggaStructure: StructureType = {
             ltFunction("add-variable", [
                 arg("variable-name", stringStruct),
                 arg("value", operatorOperand),
+            ]),
+            ltFunction("set-variable", [
+                arg("variable-name", stringStruct),
+                arg("value", operatorOperand),
+            ]),
+            ltFunction("add-global-function", [
+                arg("name", stringStruct),
+                arg("params", stringArrayStruct),
+                arg("body", bodyStruct),
             ]),
             ltFunction("if", [arg("condition", operatorOperand), arg("body", bodyStruct)]),
             ltFunction("else-if", [arg("condition", operatorOperand), arg("body", bodyStruct)]),
