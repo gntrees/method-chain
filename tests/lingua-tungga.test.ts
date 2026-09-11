@@ -219,8 +219,9 @@ test("truthy coerces runtime values in conditions", async () => {
         )
         .generate();
     expect(out.typescript).toContain("if (!!(flag))");
-    expect(out.c).toContain("(flag).type == D_BOOL");
-    expect(out.c).toContain("flag");
+    expect(out.c).toContain("ArgumentValue __lt_t = (flag)");
+    expect(out.c).toContain("__lt_t.type == D_BOOL");
+    expect(out.c).not.toContain("(flag).type");
 });
 
 test("member reads nested paths per language", async () => {

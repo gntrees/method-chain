@@ -282,10 +282,10 @@ function renderValueNotEqual(left: unknown, right: unknown): ExpressionRecord {
 
 function renderTruthy(value: unknown): ExpressionRecord {
     const v = renderCallArgument(value);
-    const cv = v.c;
+    const t = "__lt_t";
     return {
         typescript: `!!(${v.typescript})`,
-        c: `((${cv}).type == D_NULL ? 0 : ((${cv}).type == D_BOOL || (${cv}).type == D_INT) ? ((${cv}).as.i != 0) : (${cv}).type == D_FLOAT ? ((${cv}).as.f != 0) : (${cv}).type == D_STRING ? ((${cv}).as.s && (${cv}).as.s[0] != 0) : ((${cv}).count != 0))`,
+        c: `({ ArgumentValue ${t} = (${v.c}); ${t}.type == D_NULL ? 0 : (${t}.type == D_BOOL || ${t}.type == D_INT) ? (${t}.as.i != 0) : ${t}.type == D_FLOAT ? (${t}.as.f != 0) : ${t}.type == D_STRING ? (${t}.as.s && ${t}.as.s[0] != 0) : (${t}.count != 0); })`,
     };
 }
 
@@ -588,6 +588,8 @@ function addLocalFunction(
 }
 
 function stripOuterParens(expression: string): string {
+    /* Jangan kupas statement-expression GNU `({ ... })` menjadi blok. */
+    if (expression.trimStart().startsWith("({")) return expression;
     if (!expression.startsWith("(") || !expression.endsWith(")")) return expression;
     let depth = 0;
     for (let index = 0; index < expression.length; index++) {

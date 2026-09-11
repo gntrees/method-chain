@@ -3132,14 +3132,14 @@ ArgumentValue identStr(ArgumentValue name) {
 }
 ArgumentValue literalOf(ArgumentValue arg) {
   ArgumentValue outLiteral = v_string("");
-  if ((lt_has(arg, v_string("string"))).type == D_NULL ? 0 : ((lt_has(arg, v_string("string"))).type == D_BOOL || (lt_has(arg, v_string("string"))).type == D_INT) ? ((lt_has(arg, v_string("string"))).as.i != 0) : (lt_has(arg, v_string("string"))).type == D_FLOAT ? ((lt_has(arg, v_string("string"))).as.f != 0) : (lt_has(arg, v_string("string"))).type == D_STRING ? ((lt_has(arg, v_string("string"))).as.s && (lt_has(arg, v_string("string"))).as.s[0] != 0) : ((lt_has(arg, v_string("string"))).count != 0)) {
+  if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("string"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     outLiteral = lt_str_concat(v_string("'"), lt_str_concat(lt_replace(asString(arg), v_string("'"), v_string("''")), v_string("'")));
   }
-  else if ((lt_has(arg, v_string("number"))).type == D_NULL ? 0 : ((lt_has(arg, v_string("number"))).type == D_BOOL || (lt_has(arg, v_string("number"))).type == D_INT) ? ((lt_has(arg, v_string("number"))).as.i != 0) : (lt_has(arg, v_string("number"))).type == D_FLOAT ? ((lt_has(arg, v_string("number"))).as.f != 0) : (lt_has(arg, v_string("number"))).type == D_STRING ? ((lt_has(arg, v_string("number"))).as.s && (lt_has(arg, v_string("number"))).as.s[0] != 0) : ((lt_has(arg, v_string("number"))).count != 0)) {
+  else if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("number"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     outLiteral = ({ char __lt_b[64]; const char *__lt_r = lt_repr((lt_get(lt_get(arg, v_string("number")), v_string("value"))), __lt_b, sizeof(__lt_b)); size_t __lt_n = strlen(__lt_r); char *__lt_o = lt_alloc(__lt_n + 1); memcpy(__lt_o, __lt_r, __lt_n + 1); v_string(__lt_o); });
   }
-  else if ((lt_has(arg, v_string("boolean"))).type == D_NULL ? 0 : ((lt_has(arg, v_string("boolean"))).type == D_BOOL || (lt_has(arg, v_string("boolean"))).type == D_INT) ? ((lt_has(arg, v_string("boolean"))).as.i != 0) : (lt_has(arg, v_string("boolean"))).type == D_FLOAT ? ((lt_has(arg, v_string("boolean"))).as.f != 0) : (lt_has(arg, v_string("boolean"))).type == D_STRING ? ((lt_has(arg, v_string("boolean"))).as.s && (lt_has(arg, v_string("boolean"))).as.s[0] != 0) : ((lt_has(arg, v_string("boolean"))).count != 0)) {
-    if ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).type == D_NULL ? 0 : ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).type == D_BOOL || (lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).type == D_INT) ? ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).as.i != 0) : (lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).type == D_FLOAT ? ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).as.f != 0) : (lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).type == D_STRING ? ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).as.s && (lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).as.s[0] != 0) : ((lt_get(lt_get(arg, v_string("boolean")), v_string("value"))).count != 0)) {
+  else if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("boolean"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+    if (({ ArgumentValue __lt_t = (lt_get(lt_get(arg, v_string("boolean")), v_string("value"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
       outLiteral = v_string("TRUE");
     }
     else {
@@ -3177,14 +3177,14 @@ ArgumentValue opOf(ArgumentValue n) {
   return o;
 }
 ArgumentValue itemsOf(ArgumentValue arg) {
-  if ((lt_has(arg, v_string("array"))).type == D_NULL ? 0 : ((lt_has(arg, v_string("array"))).type == D_BOOL || (lt_has(arg, v_string("array"))).type == D_INT) ? ((lt_has(arg, v_string("array"))).as.i != 0) : (lt_has(arg, v_string("array"))).type == D_FLOAT ? ((lt_has(arg, v_string("array"))).as.f != 0) : (lt_has(arg, v_string("array"))).type == D_STRING ? ((lt_has(arg, v_string("array"))).as.s && (lt_has(arg, v_string("array"))).as.s[0] != 0) : ((lt_has(arg, v_string("array"))).count != 0)) {
+  if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("array"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     return lt_get(lt_get(arg, v_string("array")), v_string("value"));
   }
   return lt_append(arr(), arg);
 }
 ArgumentValue isRef(ArgumentValue chainValues) {
   tmpRef = v_string("");
-  if (lt_value_equals(lt_len(chainValues), v_int(1)) && ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).type == D_NULL ? 0 : ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).type == D_BOOL || (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).type == D_INT) ? ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).as.i != 0) : (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).type == D_FLOAT ? ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).as.f != 0) : (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).type == D_STRING ? ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).as.s && (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).as.s[0] != 0) : ((lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))).count != 0))) {
+  if (lt_value_equals(lt_len(chainValues), v_int(1)) && ({ ArgumentValue __lt_t = (lt_has(lt_index(chainValues, v_int(0)), v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     ArgumentValue firstName = lt_get(lt_get(lt_index(chainValues, v_int(0)), v_string("functionCall")), v_string("name"));
     if (lt_value_equals(firstName, v_string("col")) || lt_value_equals(firstName, v_string("table"))) {
       tmpRef = asString(lt_get(lt_index(lt_get(lt_get(lt_index(chainValues, v_int(0)), v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
@@ -3220,18 +3220,19 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
   for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
     ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
     ArgumentValue pn = normName(lt_get(lt_get(node, v_string("functionCall")), v_string("name")));
-    if ((lt_has(node, v_string("functionCall"))).type == D_NULL ? 0 : ((lt_has(node, v_string("functionCall"))).type == D_BOOL || (lt_has(node, v_string("functionCall"))).type == D_INT) ? ((lt_has(node, v_string("functionCall"))).as.i != 0) : (lt_has(node, v_string("functionCall"))).type == D_FLOAT ? ((lt_has(node, v_string("functionCall"))).as.f != 0) : (lt_has(node, v_string("functionCall"))).type == D_STRING ? ((lt_has(node, v_string("functionCall"))).as.s && (lt_has(node, v_string("functionCall"))).as.s[0] != 0) : ((lt_has(node, v_string("functionCall"))).count != 0)) {
+    ArgumentValue op = opOf(pn);
+    if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
       if (lt_value_equals(pn, v_string("col")) || lt_value_equals(pn, v_string("table"))) {
         left = identStr(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
         hasLeft = v_bool(1);
       }
-      else if ((opOf(pn)).type == D_NULL ? 0 : ((opOf(pn)).type == D_BOOL || (opOf(pn)).type == D_INT) ? ((opOf(pn)).as.i != 0) : (opOf(pn)).type == D_FLOAT ? ((opOf(pn)).as.f != 0) : (opOf(pn)).type == D_STRING ? ((opOf(pn)).as.s && (opOf(pn)).as.s[0] != 0) : ((opOf(pn)).count != 0)) {
+      else if (({ ArgumentValue __lt_t = (op); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
         if (lt_value_equals(first, v_bool(0))) {
           pushSql(v_string("AND"));
           pushW(v_string("AND"));
         }
         first = v_bool(0);
-        if ((hasLeft).type == D_NULL ? 0 : ((hasLeft).type == D_BOOL || (hasLeft).type == D_INT) ? ((hasLeft).as.i != 0) : (hasLeft).type == D_FLOAT ? ((hasLeft).as.f != 0) : (hasLeft).type == D_STRING ? ((hasLeft).as.s && (hasLeft).as.s[0] != 0) : ((hasLeft).count != 0)) {
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
           base = left;
         }
         else {
@@ -3239,8 +3240,8 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
         }
         pushSql(base);
         pushW(base);
-        pushSql(opOf(pn));
-        pushW(opOf(pn));
+        pushSql(op);
+        pushW(op);
         emitParam(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
         hasLeft = v_bool(0);
       }
@@ -3250,7 +3251,7 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
           pushW(v_string("AND"));
         }
         first = v_bool(0);
-        if ((hasLeft).type == D_NULL ? 0 : ((hasLeft).type == D_BOOL || (hasLeft).type == D_INT) ? ((hasLeft).as.i != 0) : (hasLeft).type == D_FLOAT ? ((hasLeft).as.f != 0) : (hasLeft).type == D_STRING ? ((hasLeft).as.s && (hasLeft).as.s[0] != 0) : ((hasLeft).count != 0)) {
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
           base = left;
         }
         else {
@@ -3281,7 +3282,7 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
           pushW(v_string("AND"));
         }
         first = v_bool(0);
-        if ((hasLeft).type == D_NULL ? 0 : ((hasLeft).type == D_BOOL || (hasLeft).type == D_INT) ? ((hasLeft).as.i != 0) : (hasLeft).type == D_FLOAT ? ((hasLeft).as.f != 0) : (hasLeft).type == D_STRING ? ((hasLeft).as.s && (hasLeft).as.s[0] != 0) : ((hasLeft).count != 0)) {
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
           base = left;
         }
         else {
@@ -3303,7 +3304,7 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
           pushW(v_string("AND"));
         }
         first = v_bool(0);
-        if ((hasLeft).type == D_NULL ? 0 : ((hasLeft).type == D_BOOL || (hasLeft).type == D_INT) ? ((hasLeft).as.i != 0) : (hasLeft).type == D_FLOAT ? ((hasLeft).as.f != 0) : (hasLeft).type == D_STRING ? ((hasLeft).as.s && (hasLeft).as.s[0] != 0) : ((hasLeft).count != 0)) {
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
           base = left;
         }
         else {
@@ -3346,7 +3347,7 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
             pushW(tmp);
           }
           boolFirst = v_bool(0);
-          if ((lt_has(bv, v_string("chain"))).type == D_NULL ? 0 : ((lt_has(bv, v_string("chain"))).type == D_BOOL || (lt_has(bv, v_string("chain"))).type == D_INT) ? ((lt_has(bv, v_string("chain"))).as.i != 0) : (lt_has(bv, v_string("chain"))).type == D_FLOAT ? ((lt_has(bv, v_string("chain"))).as.f != 0) : (lt_has(bv, v_string("chain"))).type == D_STRING ? ((lt_has(bv, v_string("chain"))).as.s && (lt_has(bv, v_string("chain"))).as.s[0] != 0) : ((lt_has(bv, v_string("chain"))).count != 0)) {
+          if (({ ArgumentValue __lt_t = (lt_has(bv, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
             emitPredicate(lt_get(lt_get(bv, v_string("chain")), v_string("values")));
           }
           else {
@@ -3365,7 +3366,7 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
   return v_null();
 }
 ArgumentValue emitOperand(ArgumentValue arg) {
-  if ((lt_has(arg, v_string("chain"))).type == D_NULL ? 0 : ((lt_has(arg, v_string("chain"))).type == D_BOOL || (lt_has(arg, v_string("chain"))).type == D_INT) ? ((lt_has(arg, v_string("chain"))).as.i != 0) : (lt_has(arg, v_string("chain"))).type == D_FLOAT ? ((lt_has(arg, v_string("chain"))).as.f != 0) : (lt_has(arg, v_string("chain"))).type == D_STRING ? ((lt_has(arg, v_string("chain"))).as.s && (lt_has(arg, v_string("chain"))).as.s[0] != 0) : ((lt_has(arg, v_string("chain"))).count != 0)) {
+  if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     tmpRef = isRef(lt_get(lt_get(arg, v_string("chain")), v_string("values")));
     if (!lt_value_equals(tmpRef, v_string(""))) {
       emitIdent(tmpRef);
@@ -3396,7 +3397,7 @@ ArgumentValue emitColumnList(ArgumentValue arg) {
 ArgumentValue emitOrderItem(ArgumentValue item) {
   ArgumentValue dir = v_string("");
   ArgumentValue ordName = v_string("");
-  if ((lt_has(item, v_string("chain"))).type == D_NULL ? 0 : ((lt_has(item, v_string("chain"))).type == D_BOOL || (lt_has(item, v_string("chain"))).type == D_INT) ? ((lt_has(item, v_string("chain"))).as.i != 0) : (lt_has(item, v_string("chain"))).type == D_FLOAT ? ((lt_has(item, v_string("chain"))).as.f != 0) : (lt_has(item, v_string("chain"))).type == D_STRING ? ((lt_has(item, v_string("chain"))).as.s && (lt_has(item, v_string("chain"))).as.s[0] != 0) : ((lt_has(item, v_string("chain"))).count != 0)) {
+  if (({ ArgumentValue __lt_t = (lt_has(item, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     ArgumentValue onArray = lt_get(lt_get(item, v_string("chain")), v_string("values"));
     for (size_t onIndex = 0; onIndex < onArray.count; onIndex++) {
       ArgumentValue on = ((const ArgumentValue *)onArray.as.data)[onIndex];
@@ -3434,7 +3435,7 @@ ArgumentValue emitOrderList(ArgumentValue arg) {
   return v_null();
 }
 ArgumentValue flushOrder(void) {
-  if ((hasOrder).type == D_NULL ? 0 : ((hasOrder).type == D_BOOL || (hasOrder).type == D_INT) ? ((hasOrder).as.i != 0) : (hasOrder).type == D_FLOAT ? ((hasOrder).as.f != 0) : (hasOrder).type == D_STRING ? ((hasOrder).as.s && (hasOrder).as.s[0] != 0) : ((hasOrder).count != 0)) {
+  if (({ ArgumentValue __lt_t = (hasOrder); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     pushSql(v_string("ORDER"));
     pushSql(v_string("BY"));
     pushW(v_string("ORDER"));
@@ -3479,14 +3480,14 @@ ArgumentValue emitLiteralPlaceholder(ArgumentValue arg) {
 ArgumentValue nodeArray = lt_get(lt_get(lt_get(lt_get(root, v_string("schema")), v_string("chain")), v_string("chain")), v_string("values"));
 for (size_t nodeIndex = 0; nodeIndex < nodeArray.count; nodeIndex++) {
   ArgumentValue node = ((const ArgumentValue *)nodeArray.as.data)[nodeIndex];
-  if ((lt_has(node, v_string("functionCall"))).type == D_NULL ? 0 : ((lt_has(node, v_string("functionCall"))).type == D_BOOL || (lt_has(node, v_string("functionCall"))).type == D_INT) ? ((lt_has(node, v_string("functionCall"))).as.i != 0) : (lt_has(node, v_string("functionCall"))).type == D_FLOAT ? ((lt_has(node, v_string("functionCall"))).as.f != 0) : (lt_has(node, v_string("functionCall"))).type == D_STRING ? ((lt_has(node, v_string("functionCall"))).as.s && (lt_has(node, v_string("functionCall"))).as.s[0] != 0) : ((lt_has(node, v_string("functionCall"))).count != 0)) {
+  if (({ ArgumentValue __lt_t = (lt_has(node, v_string("functionCall"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
     ArgumentValue name = lt_get(lt_get(node, v_string("functionCall")), v_string("name"));
     ArgumentValue nameNorm = normName(name);
     if (lt_value_equals(nameNorm, v_string("setdialect"))) {
       continue;
     }
     else if (lt_value_equals(nameNorm, v_string("asc")) || lt_value_equals(nameNorm, v_string("desc"))) {
-      if ((hasOrder).type == D_NULL ? 0 : ((hasOrder).type == D_BOOL || (hasOrder).type == D_INT) ? ((hasOrder).as.i != 0) : (hasOrder).type == D_FLOAT ? ((hasOrder).as.f != 0) : (hasOrder).type == D_STRING ? ((hasOrder).as.s && (hasOrder).as.s[0] != 0) : ((hasOrder).count != 0)) {
+      if (({ ArgumentValue __lt_t = (hasOrder); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
         tmp = lt_to_upper(nameNorm);
         orderSql = lt_str_concat(orderSql, lt_str_concat(v_string(" "), tmp));
         orderW = lt_str_concat(orderW, lt_str_concat(v_string(" "), tmp));

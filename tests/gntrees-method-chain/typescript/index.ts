@@ -2917,13 +2917,14 @@ export class QueryBuilder {
       let base = "";
       for (const node of chainValues) {
         let pn = normName(node["functionCall"]["name"]);
+        let op = opOf(pn);
         if (!!Object.prototype.hasOwnProperty.call(node, "functionCall")) {
           if (pn === "col" || pn === "table") {
             left = identStr(
               asString(node["functionCall"]["arguments"][0]["argument"]),
             );
             hasLeft = true;
-          } else if (!!opOf(pn)) {
+          } else if (!!op) {
             if (first === false) {
               pushSql("AND");
               pushW("AND");
@@ -2936,8 +2937,8 @@ export class QueryBuilder {
             }
             pushSql(base);
             pushW(base);
-            pushSql(opOf(pn));
-            pushW(opOf(pn));
+            pushSql(op);
+            pushW(op);
             emitParam(node["functionCall"]["arguments"][0]["argument"]);
             hasLeft = false;
           } else if (pn === "in") {

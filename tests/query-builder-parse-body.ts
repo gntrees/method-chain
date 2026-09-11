@@ -276,14 +276,15 @@ function buildParser(): LT {
             .addVariable("base", "")
             .forEach(ref("chainValues"), "node",
                 lt().addVariable("pn", callExpr("normName", [member(ref("node"), "functionCall.name")]))
+                    .addVariable("op", callExpr("opOf", [ref("pn")]))
                     .if(objHas(ref("node"), "functionCall"),
                         lt().if(lt().or(valEq(ref("pn"), "col"), valEq(ref("pn"), "table")),
                             lt().setVariable("left", callExpr("identStr", [callExpr("asString", [argAt(ref("node"), 0)])]))
                                 .setVariable("hasLeft", true))
-                        .elseIf(truthy(callExpr("opOf", [ref("pn")])),
+                        .elseIf(truthy(ref("op")),
                             emitBase(separator(lt()))
-                                .addCallFunction("pushSql", [callExpr("opOf", [ref("pn")])])
-                                .addCallFunction("pushW", [callExpr("opOf", [ref("pn")])])
+                                .addCallFunction("pushSql", [ref("op")])
+                                .addCallFunction("pushW", [ref("op")])
                                 .addCallFunction("emitParam", [argAt(ref("node"), 0)])
                                 .setVariable("hasLeft", false))
                         .elseIf(valEq(ref("pn"), "in"),
