@@ -3373,6 +3373,39 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
         pushW(v_string(")"));
         hasLeft = v_bool(0);
       }
+      else if (lt_value_equals(pn, v_string("as"))) {
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+          base = left;
+        }
+        else {
+          base = v_string("?");
+        }
+        pushSql(base);
+        pushW(base);
+        pushSql(v_string("AS"));
+        pushW(v_string("AS"));
+        emitIdent(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+        hasLeft = v_bool(0);
+      }
+      else if (lt_value_equals(pn, v_string("op"))) {
+        if (lt_value_equals(first, v_bool(0))) {
+          pushSql(v_string("AND"));
+          pushW(v_string("AND"));
+        }
+        first = v_bool(0);
+        if (({ ArgumentValue __lt_t = (hasLeft); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+          base = left;
+        }
+        else {
+          base = v_string("?");
+        }
+        pushSql(base);
+        pushW(base);
+        pushSql(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+        pushW(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+        emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+        hasLeft = v_bool(0);
+      }
       else {
         ({ ArgumentValue __lt_m = (v_string("query-builder parse: unsupported predicate")); fail("%s", lt_as_string(&__lt_m)); });
       }

@@ -3062,6 +3062,37 @@ export class QueryBuilder {
             pushSql(")");
             pushW(")");
             hasLeft = false;
+          } else if (pn === "as") {
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql("AS");
+            pushW("AS");
+            emitIdent(
+              asString(node["functionCall"]["arguments"][0]["argument"]),
+            );
+            hasLeft = false;
+          } else if (pn === "op") {
+            if (first === false) {
+              pushSql("AND");
+              pushW("AND");
+            }
+            first = false;
+            if (!!hasLeft) {
+              base = left;
+            } else {
+              base = "?";
+            }
+            pushSql(base);
+            pushW(base);
+            pushSql(asString(node["functionCall"]["arguments"][0]["argument"]));
+            pushW(asString(node["functionCall"]["arguments"][0]["argument"]));
+            emitRhs(node["functionCall"]["arguments"][1]["argument"]);
+            hasLeft = false;
           } else {
             throw new Error(
               String("query-builder parse: unsupported predicate"),

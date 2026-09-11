@@ -347,6 +347,18 @@ function buildParser(): LT {
                                 .addCallFunction("pushSql", [")"])
                                 .addCallFunction("pushW", [")"])
                                 .setVariable("hasLeft", false))
+                        .elseIf(valEq(ref("pn"), "as"),
+                            emitBase(lt())
+                                .addCallFunction("pushSql", ["AS"])
+                                .addCallFunction("pushW", ["AS"])
+                                .addCallFunction("emitIdent", [callExpr("asString", [argAt(ref("node"), 0)])])
+                                .setVariable("hasLeft", false))
+                        .elseIf(valEq(ref("pn"), "op"),
+                            emitBase(separator(lt()))
+                                .addCallFunction("pushSql", [callExpr("asString", [argAt(ref("node"), 0)])])
+                                .addCallFunction("pushW", [callExpr("asString", [argAt(ref("node"), 0)])])
+                                .addCallFunction("emitRhs", [argAt(ref("node"), 1)])
+                                .setVariable("hasLeft", false))
                         .else(lt().throwError("query-builder parse: unsupported predicate"))))
             .returnRaw(NULL_EXPR()));
 

@@ -586,6 +586,37 @@ test("parse supports column bounds in between", () => {
     });
 });
 
+test("parse aliases select columns", () => {
+    const c = qb();
+    const result = c.select(c.col("x").as("alias")).from(c.table("t")).setDialect("postgres").parse();
+    expect(result.sql).toBe('SELECT "x" AS "alias" FROM "t"');
+});
+
+test("parse aliases from and join tables", () => {
+    const c = qb();
+    const result = c
+        .select(c.col("id"))
+        .from(c.table("users").as("u"))
+        .join(c.table("posts").as("p"), c.col("u.id").eq(c.col("p.uid")))
+        .setDialect("postgres")
+        .parse();
+    expect(result.sql).toBe('SELECT "id" FROM "users" AS "u" JOIN "posts" AS "p" ON "u.id" = "p.uid"');
+});
+
+test("parse renders generic operator with literal and column", () => {
+    const literal = qb();
+    expect(literal.select(literal.col("id")).where(literal.col("a").op("~", "x")).setDialect("postgres").parse()).toEqual({
+        sql: 'SELECT "id" WHERE "a" ~ $1',
+        param: ["x"],
+        sqlWithParam: `SELECT "id" WHERE "a" ~ 'x'`,
+    });
+
+    const column = qb();
+    expect(column.select(column.col("id")).where(column.col("a").op("~", column.col("b"))).setDialect("mysql").parse().sql).toBe(
+        "SELECT `id` WHERE `a` ~ `b`"
+    );
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });

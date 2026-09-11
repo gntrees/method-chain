@@ -144,6 +144,25 @@ const cases: Case[] = [
         select(col(v_string("id"))),
         where(chain(col(v_string("x")), between(chain(col(v_string("lo"))), chain(col(v_string("hi"))))))`,
     },
+    {
+        name: "postgres aliased columns and tables",
+        query: (c) =>
+            c.select(c.col("x").as("alias"))
+                .from(c.table("users").as("u"))
+                .join(c.table("posts").as("p"), c.col("u.id").eq(c.col("p.uid")))
+                .setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        select(chain(col(v_string("x")), as(v_string("alias")))),
+        from(chain(table(v_string("users")), as(v_string("u")))),
+        join(chain(table(v_string("posts")), as(v_string("p"))), chain(col(v_string("u.id")), eq(chain(col(v_string("p.uid"))))))`,
+    },
+    {
+        name: "postgres generic operator",
+        query: (c) => c.select(c.col("id")).where(c.col("a").op("~", "x")).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        where(chain(col(v_string("a")), op(v_string("~"), v_string("x"))))`,
+    },
 ];
 
 for (const { name, query, cArgs } of cases) {
