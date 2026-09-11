@@ -5,5 +5,5 @@ Builder chain_schema() {
         variableName("c"),
         stringify("hello"),
         numerify(42),
-        boolify(1));
+        boolify(v_bool(1)));
 }

@@ -1,55 +1,7 @@
 import { expect, test } from "bun:test";
 import { queryBuilder } from "./gntrees-method-chain/typescript/index";
 import { compileAndRun } from "./compile-helper";
-
-type Param = string | number | boolean | null;
-type ParseOutput = { sql: string; sqlWithParam: string; param: Param[] };
-
-const printer = `
-#include "gntrees-method-chain.h"
-#include <stdio.h>
-static void print_parse(ParseResult r) {
-    printf("SQL:%s\\n", r.sql);
-    printf("WSQL:%s\\n", r.sqlWithParam);
-    for (size_t i = 0; i < r.paramCount; i++) {
-        ParseParam *p = &r.param[i];
-        switch (p->type) {
-            case PARSE_STRING: printf("PARAM:S:%s\\n", p->value.s); break;
-            case PARSE_NUMBER: printf("PARAM:N:%g\\n", p->value.n); break;
-            case PARSE_BOOL: printf("PARAM:B:%d\\n", p->value.b); break;
-            case PARSE_NULL: printf("PARAM:Z:\\n"); break;
-        }
-    }
-}
-int main(void) {
-    Builder qb = queryBuilder(variableName("q"), %C_ARGS%);
-    ParseResult r = parse(qb);
-    print_parse(r);
-    lt_free_value((ArgumentValue){0});
-    lt_shutdown();
-    return 0;
-}
-`;
-
-function parseC(stdout: string): ParseOutput {
-    const out: ParseOutput = { sql: "", sqlWithParam: "", param: [] };
-    for (const line of stdout.split("\n")) {
-        if (line.startsWith("SQL:")) {
-            out.sql = line.slice("SQL:".length);
-        } else if (line.startsWith("WSQL:")) {
-            out.sqlWithParam = line.slice("WSQL:".length);
-        } else if (line.startsWith("PARAM:")) {
-            const body = line.slice("PARAM:".length);
-            const type = body.slice(0, 1);
-            const value = body.slice(2);
-            if (type === "S") out.param.push(value);
-            else if (type === "N") out.param.push(Number(value));
-            else if (type === "B") out.param.push(value === "1");
-            else out.param.push(null);
-        }
-    }
-    return out;
-}
+import { cParseProgram, parseC, type ParseOutput } from "./parse-c-result";
 
 type Case = {
     name: string;
@@ -158,7 +110,7 @@ for (const { name, query, cArgs } of cases) {
     test(`differential TS<->C: ${name}`, () => {
         const c = queryBuilder("q") as any;
         const expected: ParseOutput = query(c).parse();
-        const runner = printer.replace("%C_ARGS%", cArgs);
+        const runner = cParseProgram(`Builder qb = queryBuilder(variableName("q"), ${cArgs});`);
         const { status, stderr, stdout } = compileAndRun(runner);
         expect(stderr).not.toContain("validate:");
         expect(status).toBe(0);
