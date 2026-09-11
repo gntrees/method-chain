@@ -444,6 +444,86 @@ test("parse rejects unsupported dialect", () => {
     expect(() => c.select(c.col("id")).setDialect("sqlite").parse()).toThrow(/unsupported dialect/);
 });
 
+test("parse builds nested and predicate", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.and([c.col("a").eq(1), c.col("b").eq(2)])).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE ( "a" = $1 AND "b" = $2 )',
+        param: [1, 2],
+        sqlWithParam: 'SELECT "id" WHERE ( "a" = 1 AND "b" = 2 )',
+    });
+});
+
+test("parse builds or with not predicate", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.or([c.col("a").eq(1), c.not(c.col("b").eq(2))])).setDialect("mysql").parse();
+    expect(result).toEqual({
+        sql: "SELECT `id` WHERE ( `a` = ? OR NOT ( `b` = ? ) )",
+        param: [1, 2],
+        sqlWithParam: "SELECT `id` WHERE ( `a` = 1 OR NOT ( `b` = 2 ) )",
+    });
+});
+
+test("parse builds is null predicate without params", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.col("x").isNull(true)).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE "x" IS NULL',
+        param: [],
+        sqlWithParam: 'SELECT "id" WHERE "x" IS NULL',
+    });
+});
+
+test("parse builds in predicate", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.col("x").in("1,2,3")).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE "x" IN ( $1 )',
+        param: ["1,2,3"],
+        sqlWithParam: `SELECT "id" WHERE "x" IN ( '1,2,3' )`,
+    });
+});
+
+test("parse builds between predicate", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.col("x").between(1, 2)).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE "x" BETWEEN $1 AND $2',
+        param: [1, 2],
+        sqlWithParam: 'SELECT "id" WHERE "x" BETWEEN 1 AND 2',
+    });
+});
+
+test("parse builds group by and multi-order", () => {
+    const c = qb();
+    const grouped = c.select(c.col("x")).from(c.table("t")).groupBy(c.col("x")).setDialect("postgres").parse();
+    expect(grouped.sql).toBe('SELECT "x" FROM "t" GROUP BY "x"');
+
+    const o = qb();
+    const ordered = o
+        .select(o.col("x"))
+        .from(o.table("t"))
+        .orderBy([o.col("name").asc(), o.col("age").desc()])
+        .setDialect("mysql")
+        .parse();
+    expect(ordered.sql).toBe("SELECT `x` FROM `t` ORDER BY `name` ASC, `age` DESC");
+});
+
+test("parse numbers every placeholder in order", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.and([c.col("a").eq(1), c.col("b").eq(2), c.col("c").eq(3)])).setDialect("mysql").parse();
+    expect(result).toEqual({
+        sql: "SELECT `id` WHERE ( `a` = ? AND `b` = ? AND `c` = ? )",
+        param: [1, 2, 3],
+        sqlWithParam: "SELECT `id` WHERE ( `a` = 1 AND `b` = 2 AND `c` = 3 )",
+    });
+});
+
+test("parse with only a dialect yields empty sql", () => {
+    const c = qb();
+    expect(c.setDialect("postgres").parse()).toEqual({ sql: "", param: [], sqlWithParam: "" });
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });

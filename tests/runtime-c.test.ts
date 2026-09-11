@@ -1,31 +1,6 @@
 import { expect, test } from "bun:test";
-import { execSync, spawnSync } from "node:child_process";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { unlinkSync, writeFileSync } from "node:fs";
 import { convertSchemaToC } from "../core/convert/convert-c";
-
-const cGenDir = join(import.meta.dir, "gntrees-method-chain/c");
-
-let tempCounter = 0;
-
-function compileAndRun(runner: string): { status: number | null; signal: string | null; stderr: string; stdout: string } {
-    const tag = `${process.pid}-${tempCounter++}`;
-    const tempC = join(tmpdir(), `gntrees-runtime-c-${tag}.c`);
-    const binary = join(tmpdir(), `gntrees-runtime-c-${tag}`);
-    try {
-        writeFileSync(tempC, runner);
-        execSync(
-            `gcc -Wall -Wextra -o ${binary} ${tempC} ${join(cGenDir, "cJSON.c")} -I${cGenDir} -lm`,
-            { stdio: "pipe" }
-        );
-        const res = spawnSync(binary, [], { encoding: "utf8" });
-        return { status: res.status, signal: res.signal, stderr: res.stderr, stdout: res.stdout ?? "" };
-    } finally {
-        try { unlinkSync(tempC); } catch { /* ignore */ }
-        try { unlinkSync(binary); } catch { /* ignore */ }
-    }
-}
+import { compileAndRun } from "./compile-helper";
 
 test("finite number: NaN argument aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -992,6 +967,45 @@ int main(void) {
     expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10');
     expect(stdout).toContain("1 2");
 });
+
+test("parse is memory-safe under AddressSanitizer", () => {
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder qb = queryBuilder(
+        variableName("q"),
+        setDialect("mysql"),
+        select(arr(col(v_string("id")), col(v_string("name")))),
+        from(table(v_string("users"))),
+        where(chain(and(arr(
+            chain(col(v_string("age")), gte(v_int(18))),
+            chain(col(v_string("active")), eq(v_bool(1))))))),
+        orderBy(chain(col(v_string("name")), desc())),
+        limit(v_int(5)));
+    ParseResult r = parse(qb);
+    printf("%s\\n", r.sql);
+    printf("%s\\n", r.sqlWithParam);
+    lt_free_value((ArgumentValue){0});
+    lt_shutdown();
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner, {
+        flags: "-fsanitize=address,undefined -fno-omit-frame-pointer -g",
+        env: {
+            ASAN_OPTIONS: "detect_leaks=1:abort_on_error=1",
+            UBSAN_OPTIONS: "halt_on_error=1",
+        },
+    });
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("AddressSanitizer");
+    expect(stderr).not.toContain("LeakSanitizer");
+    expect(stderr).not.toContain("runtime error:");
+    expect(stderr).not.toContain("validate:");
+    expect(stdout).toContain(
+        "SELECT `id`, `name` FROM `users` WHERE ( `age` >= ? AND `active` = ? ) ORDER BY `name` DESC LIMIT 5"
+    );
+}, 60000);
 
 test("valid literal string argument passes", () => {
     const runner = `#include "gntrees-method-chain.h"
