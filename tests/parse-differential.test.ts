@@ -197,6 +197,46 @@ const cases: Case[] = [
         from(table(v_string("t"))),
         returning(col(v_string("id")))`,
     },
+    {
+        name: "postgres update with map",
+        query: (c) => c.update(c.table("users"), { name: "bob", age: 3 }).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        update(table(v_string("users")), map(entry("name", "bob"), entry("age", v_int(3))))`,
+    },
+    {
+        name: "postgres insert from map",
+        query: (c) => c.insert(c.table("users"), { name: "bob" }).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        insert(table(v_string("users")), map(entry("name", "bob")))`,
+    },
+    {
+        name: "postgres delete",
+        query: (c) => c.delete(c.table("users")).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        delete(table(v_string("users")))`,
+    },
+    {
+        name: "postgres values tuples",
+        query: (c) => c.values([["a", "b"], ["c", "d"]]).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        values(arr(arr(v_string("a"), v_string("b")), arr(v_string("c"), v_string("d"))))`,
+    },
+    {
+        name: "postgres on conflict do update",
+        query: (c) =>
+            c.insert(c.table("t"), { name: "x" })
+                .onConflictDoUpdate(c.col("id"), { name: "y" })
+                .setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        insert(table(v_string("t")), map(entry("name", v_string("x")))),
+        onConflictDoUpdate(col(v_string("id")), map(entry("name", v_string("y"))))`,
+    },
+    {
+        name: "mysql raw template literal",
+        query: (c) => c.raw`SELECT ${c.col("id")} FROM ${c.table("t")}`.setDialect("mysql"),
+        cArgs: `setDialect("mysql"),
+        raw("SELECT ", col(v_string("id")), " FROM ", table(v_string("t")))`,
+    },
 ];
 
 for (const { name, query, cArgs } of cases) {

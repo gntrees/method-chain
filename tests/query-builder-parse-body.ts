@@ -268,6 +268,117 @@ function buildParser(): LT {
             .else(lt().addCallFunction("emitParam", [ref("arg")]))
             .returnRaw(NULL_EXPR()));
 
+    const rawParam = (arg: LT): LT =>
+        lt().setVariable("params", lt().arrayAppend(ref("params"), arg))
+            .if(valEq(ref("dialect"), "postgres"),
+                lt().setVariable("tmp", strCat("$", strOf(arrLen(ref("params"))))))
+            .else(lt().setVariable("tmp", "?"))
+            .setVariable("sql", strCat(ref("sql"), ref("tmp")))
+            .setVariable("tmp2", callExpr("literalOf", [arg]))
+            .setVariable("wsql", strCat(ref("wsql"), ref("tmp2")));
+
+    c = localFn(c, "emitRaw", ["node"], () =>
+        lt().if(valNeq(ref("sql"), ""),
+                lt().setVariable("sql", strCat(ref("sql"), " ")).setVariable("wsql", strCat(ref("wsql"), " ")))
+            .forEach(member(ref("node"), "functionCall.arguments"), "rawArg",
+                lt().addVariable("rawVal", objGet(ref("rawArg"), "argument"))
+                    .if(objHas(ref("rawVal"), "string"),
+                        lt().setVariable("sql", strCat(ref("sql"), callExpr("asString", [ref("rawVal")])))
+                            .setVariable("wsql", strCat(ref("wsql"), callExpr("asString", [ref("rawVal")]))))
+                    .elseIf(objHas(ref("rawVal"), "chain"),
+                        lt().setVariable("tmpRef", callExpr("isRef", [member(ref("rawVal"), "chain.values")]))
+                            .if(valNeq(ref("tmpRef"), ""),
+                                lt().setVariable("sql", strCat(ref("sql"), callExpr("identStr", [ref("tmpRef")])))
+                                    .setVariable("wsql", strCat(ref("wsql"), callExpr("identStr", [ref("tmpRef")]))))
+                            .else(rawParam(ref("rawVal"))))
+                    .else(rawParam(ref("rawVal"))))
+            .returnRaw(NULL_EXPR()));
+
+    c = localFn(c, "emitAssignments", ["arg"], () =>
+        lt().addVariable("assnFirst", true)
+            .forEach(lt().objectKeys(member(ref("arg"), "object.value")), "ak",
+                lt().if(valEq(ref("assnFirst"), false),
+                        lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                    .setVariable("assnFirst", false)
+                    .addCallFunction("pushSql", [callExpr("identStr", [ref("ak")])])
+                    .addCallFunction("pushW", [callExpr("identStr", [ref("ak")])])
+                    .addCallFunction("pushSql", ["="])
+                    .addCallFunction("pushW", ["="])
+                    .addCallFunction("emitRhs", [objGet(member(ref("arg"), "object.value"), ref("ak"))]))
+            .returnRaw(NULL_EXPR()));
+
+    c = localFn(c, "emitInsert", ["tableArg", "mapArg"], () =>
+        lt().addCallFunction("pushSql", ["INSERT"])
+            .addCallFunction("pushW", ["INSERT"])
+            .addCallFunction("pushSql", ["INTO"])
+            .addCallFunction("pushW", ["INTO"])
+            .addCallFunction("emitRhs", [ref("tableArg")])
+            .addCallFunction("pushSql", ["("])
+            .addCallFunction("pushW", ["("])
+            .addVariable("colFirst", true)
+            .forEach(lt().objectKeys(member(ref("mapArg"), "object.value")), "ck",
+                lt().if(valEq(ref("colFirst"), false),
+                        lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                    .setVariable("colFirst", false)
+                    .addCallFunction("pushSql", [callExpr("identStr", [ref("ck")])])
+                    .addCallFunction("pushW", [callExpr("identStr", [ref("ck")])]))
+            .addCallFunction("pushSql", [")"])
+            .addCallFunction("pushW", [")"])
+            .addCallFunction("pushSql", ["VALUES"])
+            .addCallFunction("pushW", ["VALUES"])
+            .addCallFunction("pushSql", ["("])
+            .addCallFunction("pushW", ["("])
+            .addVariable("valFirst", true)
+            .forEach(lt().objectKeys(member(ref("mapArg"), "object.value")), "vk",
+                lt().if(valEq(ref("valFirst"), false),
+                        lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                    .setVariable("valFirst", false)
+                    .addCallFunction("emitRhs", [objGet(member(ref("mapArg"), "object.value"), ref("vk"))]))
+            .addCallFunction("pushSql", [")"])
+            .addCallFunction("pushW", [")"])
+            .returnRaw(NULL_EXPR()));
+
+    c = localFn(c, "emitTupleList", ["arg"], () =>
+        lt().addVariable("valueRows", callExpr("itemsOf", [ref("arg")]))
+            .addVariable("valueFirst", true)
+            .if(lt().and(valNeq(arrLen(ref("valueRows")), 0), objHas(arrGet(ref("valueRows"), 0), "array")),
+                lt().forEach(ref("valueRows"), "tuple",
+                    lt().if(valEq(ref("valueFirst"), false),
+                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                        .setVariable("valueFirst", false)
+                        .addCallFunction("pushSql", ["("])
+                        .addCallFunction("pushW", ["("])
+                        .addVariable("itemFirst", true)
+                        .forEach(callExpr("itemsOf", [ref("tuple")]), "ti",
+                            lt().if(valEq(ref("itemFirst"), false),
+                                    lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                                .setVariable("itemFirst", false)
+                                .addCallFunction("emitRhs", [ref("ti")]))
+                        .addCallFunction("pushSql", [")"])
+                        .addCallFunction("pushW", [")"])))
+            .else(
+                lt().addCallFunction("pushSql", ["("])
+                    .addCallFunction("pushW", ["("])
+                    .addVariable("itemFirst", true)
+                    .forEach(ref("valueRows"), "ti",
+                        lt().if(valEq(ref("itemFirst"), false),
+                                lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            .setVariable("itemFirst", false)
+                            .addCallFunction("emitRhs", [ref("ti")]))
+                    .addCallFunction("pushSql", [")"])
+                    .addCallFunction("pushW", [")"]))
+            .returnRaw(NULL_EXPR()));
+
+    c = localFn(c, "conflictTarget", ["arg"], () =>
+        lt().addVariable("ct", "()")
+            .if(objHas(ref("arg"), "chain"),
+                lt().setVariable("tmpRef", callExpr("isRef", [member(ref("arg"), "chain.values")]))
+                    .if(valNeq(ref("tmpRef"), ""),
+                        lt().setVariable("ct", strCat("(", strCat(callExpr("identStr", [ref("tmpRef")]), ")")))))
+            .elseIf(objHas(ref("arg"), "string"),
+                lt().setVariable("ct", strCat("(", strCat(callExpr("identStr", [callExpr("asString", [ref("arg")])]), ")"))))
+            .returnRaw(ref("ct")));
+
     const separator = (chain: LT) =>
         chain.if(valEq(ref("first"), false), lt().addCallFunction("pushSql", ["AND"]).addCallFunction("pushW", ["AND"]))
             .setVariable("first", false);
@@ -360,6 +471,7 @@ function buildParser(): LT {
                                 .addCallFunction("pushW", [callExpr("asString", [argAt(ref("node"), 0)])])
                                 .addCallFunction("emitRhs", [argAt(ref("node"), 1)])
                                 .setVariable("hasLeft", false))
+                        .elseIf(valEq(ref("pn"), "raw"), lt().addCallFunction("emitRaw", [ref("node")]))
                         .else(lt().throwError("query-builder parse: unsupported predicate"))))
             .returnRaw(NULL_EXPR()));
 
@@ -506,6 +618,51 @@ function buildParser(): LT {
             },
             { names: ["limit"], build: (n) => keywordClause(lt(), n, "LIMIT", "emitLiteralPlaceholder", (a) => a) },
             { names: ["offset"], build: (n) => keywordClause(lt(), n, "OFFSET", "emitLiteralPlaceholder", (a) => a) },
+            { names: ["raw"], build: (n) => lt().addCallFunction("emitRaw", [n]) },
+            {
+                names: ["update"],
+                build: (n) => lt().addCallFunction("pushSql", ["UPDATE"]).addCallFunction("pushW", ["UPDATE"])
+                    .addCallFunction("emitRhs", [argAt(n, 0)])
+                    .addCallFunction("pushSql", ["SET"]).addCallFunction("pushW", ["SET"])
+                    .addCallFunction("emitAssignments", [argAt(n, 1)]),
+            },
+            { names: ["insert"], build: (n) => lt().addCallFunction("emitInsert", [argAt(n, 0), argAt(n, 1)]) },
+            {
+                names: ["delete"],
+                build: (n) => lt().addCallFunction("pushSql", ["DELETE"]).addCallFunction("pushW", ["DELETE"])
+                    .addCallFunction("pushSql", ["FROM"]).addCallFunction("pushW", ["FROM"])
+                    .addCallFunction("emitRhs", [argAt(n, 0)]),
+            },
+            {
+                names: ["set"],
+                build: (n) => lt().addCallFunction("pushSql", ["SET"]).addCallFunction("pushW", ["SET"])
+                    .addCallFunction("emitAssignments", [argAt(n, 0)]),
+            },
+            {
+                names: ["values"],
+                build: (n) => lt().addCallFunction("pushSql", ["VALUES"]).addCallFunction("pushW", ["VALUES"])
+                    .addCallFunction("emitTupleList", [argAt(n, 0)]),
+            },
+            {
+                names: ["onconflictdonothing"],
+                build: (n) => lt().addCallFunction("pushSql", ["ON"]).addCallFunction("pushW", ["ON"])
+                    .addCallFunction("pushSql", ["CONFLICT"]).addCallFunction("pushW", ["CONFLICT"])
+                    .addCallFunction("pushSql", [callExpr("conflictTarget", [argAt(n, 0)])])
+                    .addCallFunction("pushW", [callExpr("conflictTarget", [argAt(n, 0)])])
+                    .addCallFunction("pushSql", ["DO"]).addCallFunction("pushW", ["DO"])
+                    .addCallFunction("pushSql", ["NOTHING"]).addCallFunction("pushW", ["NOTHING"]),
+            },
+            {
+                names: ["onconflictdoupdate"],
+                build: (n) => lt().addCallFunction("pushSql", ["ON"]).addCallFunction("pushW", ["ON"])
+                    .addCallFunction("pushSql", ["CONFLICT"]).addCallFunction("pushW", ["CONFLICT"])
+                    .addCallFunction("pushSql", [callExpr("conflictTarget", [argAt(n, 0)])])
+                    .addCallFunction("pushW", [callExpr("conflictTarget", [argAt(n, 0)])])
+                    .addCallFunction("pushSql", ["DO"]).addCallFunction("pushW", ["DO"])
+                    .addCallFunction("pushSql", ["UPDATE"]).addCallFunction("pushW", ["UPDATE"])
+                    .addCallFunction("pushSql", ["SET"]).addCallFunction("pushW", ["SET"])
+                    .addCallFunction("emitAssignments", [argAt(n, 1)]),
+            },
         ];
         let b = lt();
         specs.forEach((spec, index) => {

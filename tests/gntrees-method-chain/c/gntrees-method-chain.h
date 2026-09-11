@@ -3227,6 +3227,173 @@ ArgumentValue emitRhs(ArgumentValue arg) {
   }
   return v_null();
 }
+ArgumentValue emitRaw(ArgumentValue node) {
+  if (!lt_value_equals(sql, v_string(""))) {
+    sql = lt_str_concat(sql, v_string(" "));
+    wsql = lt_str_concat(wsql, v_string(" "));
+  }
+  ArgumentValue rawArgArray = lt_get(lt_get(node, v_string("functionCall")), v_string("arguments"));
+  for (size_t rawArgIndex = 0; rawArgIndex < rawArgArray.count; rawArgIndex++) {
+    ArgumentValue rawArg = ((const ArgumentValue *)rawArgArray.as.data)[rawArgIndex];
+    ArgumentValue rawVal = lt_get(rawArg, v_string("argument"));
+    if (({ ArgumentValue __lt_t = (lt_has(rawVal, v_string("string"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+      sql = lt_str_concat(sql, asString(rawVal));
+      wsql = lt_str_concat(wsql, asString(rawVal));
+    }
+    else if (({ ArgumentValue __lt_t = (lt_has(rawVal, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+      tmpRef = isRef(lt_get(lt_get(rawVal, v_string("chain")), v_string("values")));
+      if (!lt_value_equals(tmpRef, v_string(""))) {
+        sql = lt_str_concat(sql, identStr(tmpRef));
+        wsql = lt_str_concat(wsql, identStr(tmpRef));
+      }
+      else {
+        params = lt_append(params, rawVal);
+        if (lt_value_equals(dialect, v_string("postgres"))) {
+          tmp = lt_str_concat(v_string("$"), ({ char __lt_b[64]; const char *__lt_r = lt_repr((lt_len(params)), __lt_b, sizeof(__lt_b)); size_t __lt_n = strlen(__lt_r); char *__lt_o = lt_alloc(__lt_n + 1); memcpy(__lt_o, __lt_r, __lt_n + 1); v_string(__lt_o); }));
+        }
+        else {
+          tmp = v_string("?");
+        }
+        sql = lt_str_concat(sql, tmp);
+        tmp2 = literalOf(rawVal);
+        wsql = lt_str_concat(wsql, tmp2);
+      }
+    }
+    else {
+      params = lt_append(params, rawVal);
+      if (lt_value_equals(dialect, v_string("postgres"))) {
+        tmp = lt_str_concat(v_string("$"), ({ char __lt_b[64]; const char *__lt_r = lt_repr((lt_len(params)), __lt_b, sizeof(__lt_b)); size_t __lt_n = strlen(__lt_r); char *__lt_o = lt_alloc(__lt_n + 1); memcpy(__lt_o, __lt_r, __lt_n + 1); v_string(__lt_o); }));
+      }
+      else {
+        tmp = v_string("?");
+      }
+      sql = lt_str_concat(sql, tmp);
+      tmp2 = literalOf(rawVal);
+      wsql = lt_str_concat(wsql, tmp2);
+    }
+  }
+  return v_null();
+}
+ArgumentValue emitAssignments(ArgumentValue arg) {
+  ArgumentValue assnFirst = v_bool(1);
+  ArgumentValue akArray = lt_keys(lt_get(lt_get(arg, v_string("object")), v_string("value")));
+  for (size_t akIndex = 0; akIndex < akArray.count; akIndex++) {
+    ArgumentValue ak = ((const ArgumentValue *)akArray.as.data)[akIndex];
+    if (lt_value_equals(assnFirst, v_bool(0))) {
+      sql = lt_str_concat(sql, v_string(","));
+      wsql = lt_str_concat(wsql, v_string(","));
+    }
+    assnFirst = v_bool(0);
+    pushSql(identStr(ak));
+    pushW(identStr(ak));
+    pushSql(v_string("="));
+    pushW(v_string("="));
+    emitRhs(lt_get(lt_get(lt_get(arg, v_string("object")), v_string("value")), ak));
+  }
+  return v_null();
+}
+ArgumentValue emitInsert(ArgumentValue tableArg, ArgumentValue mapArg) {
+  pushSql(v_string("INSERT"));
+  pushW(v_string("INSERT"));
+  pushSql(v_string("INTO"));
+  pushW(v_string("INTO"));
+  emitRhs(tableArg);
+  pushSql(v_string("("));
+  pushW(v_string("("));
+  ArgumentValue colFirst = v_bool(1);
+  ArgumentValue ckArray = lt_keys(lt_get(lt_get(mapArg, v_string("object")), v_string("value")));
+  for (size_t ckIndex = 0; ckIndex < ckArray.count; ckIndex++) {
+    ArgumentValue ck = ((const ArgumentValue *)ckArray.as.data)[ckIndex];
+    if (lt_value_equals(colFirst, v_bool(0))) {
+      sql = lt_str_concat(sql, v_string(","));
+      wsql = lt_str_concat(wsql, v_string(","));
+    }
+    colFirst = v_bool(0);
+    pushSql(identStr(ck));
+    pushW(identStr(ck));
+  }
+  pushSql(v_string(")"));
+  pushW(v_string(")"));
+  pushSql(v_string("VALUES"));
+  pushW(v_string("VALUES"));
+  pushSql(v_string("("));
+  pushW(v_string("("));
+  ArgumentValue valFirst = v_bool(1);
+  ArgumentValue vkArray = lt_keys(lt_get(lt_get(mapArg, v_string("object")), v_string("value")));
+  for (size_t vkIndex = 0; vkIndex < vkArray.count; vkIndex++) {
+    ArgumentValue vk = ((const ArgumentValue *)vkArray.as.data)[vkIndex];
+    if (lt_value_equals(valFirst, v_bool(0))) {
+      sql = lt_str_concat(sql, v_string(","));
+      wsql = lt_str_concat(wsql, v_string(","));
+    }
+    valFirst = v_bool(0);
+    emitRhs(lt_get(lt_get(lt_get(mapArg, v_string("object")), v_string("value")), vk));
+  }
+  pushSql(v_string(")"));
+  pushW(v_string(")"));
+  return v_null();
+}
+ArgumentValue emitTupleList(ArgumentValue arg) {
+  ArgumentValue valueRows = itemsOf(arg);
+  ArgumentValue valueFirst = v_bool(1);
+  if (!lt_value_equals(lt_len(valueRows), v_int(0)) && ({ ArgumentValue __lt_t = (lt_has(lt_index(valueRows, v_int(0)), v_string("array"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+    ArgumentValue tupleArray = valueRows;
+    for (size_t tupleIndex = 0; tupleIndex < tupleArray.count; tupleIndex++) {
+      ArgumentValue tuple = ((const ArgumentValue *)tupleArray.as.data)[tupleIndex];
+      if (lt_value_equals(valueFirst, v_bool(0))) {
+        sql = lt_str_concat(sql, v_string(","));
+        wsql = lt_str_concat(wsql, v_string(","));
+      }
+      valueFirst = v_bool(0);
+      pushSql(v_string("("));
+      pushW(v_string("("));
+      ArgumentValue itemFirst = v_bool(1);
+      ArgumentValue tiArray = itemsOf(tuple);
+      for (size_t tiIndex = 0; tiIndex < tiArray.count; tiIndex++) {
+        ArgumentValue ti = ((const ArgumentValue *)tiArray.as.data)[tiIndex];
+        if (lt_value_equals(itemFirst, v_bool(0))) {
+          sql = lt_str_concat(sql, v_string(","));
+          wsql = lt_str_concat(wsql, v_string(","));
+        }
+        itemFirst = v_bool(0);
+        emitRhs(ti);
+      }
+      pushSql(v_string(")"));
+      pushW(v_string(")"));
+    }
+  }
+  else {
+    pushSql(v_string("("));
+    pushW(v_string("("));
+    ArgumentValue itemFirst = v_bool(1);
+    ArgumentValue tiArray = valueRows;
+    for (size_t tiIndex = 0; tiIndex < tiArray.count; tiIndex++) {
+      ArgumentValue ti = ((const ArgumentValue *)tiArray.as.data)[tiIndex];
+      if (lt_value_equals(itemFirst, v_bool(0))) {
+        sql = lt_str_concat(sql, v_string(","));
+        wsql = lt_str_concat(wsql, v_string(","));
+      }
+      itemFirst = v_bool(0);
+      emitRhs(ti);
+    }
+    pushSql(v_string(")"));
+    pushW(v_string(")"));
+  }
+  return v_null();
+}
+ArgumentValue conflictTarget(ArgumentValue arg) {
+  ArgumentValue ct = v_string("()");
+  if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("chain"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+    tmpRef = isRef(lt_get(lt_get(arg, v_string("chain")), v_string("values")));
+    if (!lt_value_equals(tmpRef, v_string(""))) {
+      ct = lt_str_concat(v_string("("), lt_str_concat(identStr(tmpRef), v_string(")")));
+    }
+  }
+  else if (({ ArgumentValue __lt_t = (lt_has(arg, v_string("string"))); __lt_t.type == D_NULL ? 0 : (__lt_t.type == D_BOOL || __lt_t.type == D_INT) ? (__lt_t.as.i != 0) : __lt_t.type == D_FLOAT ? (__lt_t.as.f != 0) : __lt_t.type == D_STRING ? (__lt_t.as.s && __lt_t.as.s[0] != 0) : (__lt_t.count != 0); })) {
+    ct = lt_str_concat(v_string("("), lt_str_concat(identStr(asString(arg)), v_string(")")));
+  }
+  return ct;
+}
 ArgumentValue emitPredicate(ArgumentValue chainValues) {
   ArgumentValue first = v_bool(1);
   ArgumentValue left = v_string("");
@@ -3406,6 +3573,9 @@ ArgumentValue emitPredicate(ArgumentValue chainValues) {
         pushW(asString(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
         emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
         hasLeft = v_bool(0);
+      }
+      else if (lt_value_equals(pn, v_string("raw"))) {
+        emitRaw(node);
       }
       else {
         ({ ArgumentValue __lt_m = (v_string("query-builder parse: unsupported predicate")); fail("%s", lt_as_string(&__lt_m)); });
@@ -3686,6 +3856,64 @@ ArgumentValue renderChain(ArgumentValue chainValues) {
           pushSql(v_string("OFFSET"));
           pushW(v_string("OFFSET"));
           emitLiteralPlaceholder(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("raw"))) {
+          emitRaw(node);
+        }
+        else if (lt_value_equals(nameNorm, v_string("update"))) {
+          pushSql(v_string("UPDATE"));
+          pushW(v_string("UPDATE"));
+          emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+          pushSql(v_string("SET"));
+          pushW(v_string("SET"));
+          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("insert"))) {
+          emitInsert(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")), lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("delete"))) {
+          pushSql(v_string("DELETE"));
+          pushW(v_string("DELETE"));
+          pushSql(v_string("FROM"));
+          pushW(v_string("FROM"));
+          emitRhs(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("set"))) {
+          pushSql(v_string("SET"));
+          pushW(v_string("SET"));
+          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("values"))) {
+          pushSql(v_string("VALUES"));
+          pushW(v_string("VALUES"));
+          emitTupleList(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument")));
+        }
+        else if (lt_value_equals(nameNorm, v_string("onconflictdonothing"))) {
+          pushSql(v_string("ON"));
+          pushW(v_string("ON"));
+          pushSql(v_string("CONFLICT"));
+          pushW(v_string("CONFLICT"));
+          pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          pushSql(v_string("DO"));
+          pushW(v_string("DO"));
+          pushSql(v_string("NOTHING"));
+          pushW(v_string("NOTHING"));
+        }
+        else if (lt_value_equals(nameNorm, v_string("onconflictdoupdate"))) {
+          pushSql(v_string("ON"));
+          pushW(v_string("ON"));
+          pushSql(v_string("CONFLICT"));
+          pushW(v_string("CONFLICT"));
+          pushSql(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          pushW(conflictTarget(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(0)), v_string("argument"))));
+          pushSql(v_string("DO"));
+          pushW(v_string("DO"));
+          pushSql(v_string("UPDATE"));
+          pushW(v_string("UPDATE"));
+          pushSql(v_string("SET"));
+          pushW(v_string("SET"));
+          emitAssignments(lt_get(lt_index(lt_get(lt_get(node, v_string("functionCall")), v_string("arguments")), v_int(1)), v_string("argument")));
         }
         else {
           ({ ArgumentValue __lt_m = (lt_str_concat(v_string("query-builder parse: unsupported clause "), name)); fail("%s", lt_as_string(&__lt_m)); });

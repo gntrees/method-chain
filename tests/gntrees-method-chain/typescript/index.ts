@@ -2924,6 +2924,155 @@ export class QueryBuilder {
       }
       return null;
     }
+    function emitRaw(node: any) {
+      if (sql !== "") {
+        sql = sql + " ";
+        wsql = wsql + " ";
+      }
+      for (const rawArg of node["functionCall"]["arguments"]) {
+        let rawVal = rawArg["argument"];
+        if (!!Object.prototype.hasOwnProperty.call(rawVal, "string")) {
+          sql = sql + asString(rawVal);
+          wsql = wsql + asString(rawVal);
+        } else if (!!Object.prototype.hasOwnProperty.call(rawVal, "chain")) {
+          tmpRef = isRef(rawVal["chain"]["values"]);
+          if (tmpRef !== "") {
+            sql = sql + identStr(tmpRef);
+            wsql = wsql + identStr(tmpRef);
+          } else {
+            params = [...params, rawVal];
+            if (dialect === "postgres") {
+              tmp = "$" + String(params.length);
+            } else {
+              tmp = "?";
+            }
+            sql = sql + tmp;
+            tmp2 = literalOf(rawVal);
+            wsql = wsql + tmp2;
+          }
+        } else {
+          params = [...params, rawVal];
+          if (dialect === "postgres") {
+            tmp = "$" + String(params.length);
+          } else {
+            tmp = "?";
+          }
+          sql = sql + tmp;
+          tmp2 = literalOf(rawVal);
+          wsql = wsql + tmp2;
+        }
+      }
+      return null;
+    }
+    function emitAssignments(arg: any) {
+      let assnFirst = true;
+      for (const ak of Object.keys(arg["object"]["value"])) {
+        if (assnFirst === false) {
+          sql = sql + ",";
+          wsql = wsql + ",";
+        }
+        assnFirst = false;
+        pushSql(identStr(ak));
+        pushW(identStr(ak));
+        pushSql("=");
+        pushW("=");
+        emitRhs(arg["object"]["value"][ak]);
+      }
+      return null;
+    }
+    function emitInsert(tableArg: any, mapArg: any) {
+      pushSql("INSERT");
+      pushW("INSERT");
+      pushSql("INTO");
+      pushW("INTO");
+      emitRhs(tableArg);
+      pushSql("(");
+      pushW("(");
+      let colFirst = true;
+      for (const ck of Object.keys(mapArg["object"]["value"])) {
+        if (colFirst === false) {
+          sql = sql + ",";
+          wsql = wsql + ",";
+        }
+        colFirst = false;
+        pushSql(identStr(ck));
+        pushW(identStr(ck));
+      }
+      pushSql(")");
+      pushW(")");
+      pushSql("VALUES");
+      pushW("VALUES");
+      pushSql("(");
+      pushW("(");
+      let valFirst = true;
+      for (const vk of Object.keys(mapArg["object"]["value"])) {
+        if (valFirst === false) {
+          sql = sql + ",";
+          wsql = wsql + ",";
+        }
+        valFirst = false;
+        emitRhs(mapArg["object"]["value"][vk]);
+      }
+      pushSql(")");
+      pushW(")");
+      return null;
+    }
+    function emitTupleList(arg: any) {
+      let valueRows = itemsOf(arg);
+      let valueFirst = true;
+      if (
+        valueRows.length !== 0 &&
+        !!Object.prototype.hasOwnProperty.call(valueRows[0], "array")
+      ) {
+        for (const tuple of valueRows) {
+          if (valueFirst === false) {
+            sql = sql + ",";
+            wsql = wsql + ",";
+          }
+          valueFirst = false;
+          pushSql("(");
+          pushW("(");
+          let itemFirst = true;
+          for (const ti of itemsOf(tuple)) {
+            if (itemFirst === false) {
+              sql = sql + ",";
+              wsql = wsql + ",";
+            }
+            itemFirst = false;
+            emitRhs(ti);
+          }
+          pushSql(")");
+          pushW(")");
+        }
+      } else {
+        pushSql("(");
+        pushW("(");
+        let itemFirst = true;
+        for (const ti of valueRows) {
+          if (itemFirst === false) {
+            sql = sql + ",";
+            wsql = wsql + ",";
+          }
+          itemFirst = false;
+          emitRhs(ti);
+        }
+        pushSql(")");
+        pushW(")");
+      }
+      return null;
+    }
+    function conflictTarget(arg: any) {
+      let ct = "()";
+      if (!!Object.prototype.hasOwnProperty.call(arg, "chain")) {
+        tmpRef = isRef(arg["chain"]["values"]);
+        if (tmpRef !== "") {
+          ct = "(" + (identStr(tmpRef) + ")");
+        }
+      } else if (!!Object.prototype.hasOwnProperty.call(arg, "string")) {
+        ct = "(" + (identStr(asString(arg)) + ")");
+      }
+      return ct;
+    }
     function emitPredicate(chainValues: any) {
       let first = true;
       let left = "";
@@ -3094,6 +3243,8 @@ export class QueryBuilder {
             pushW(asString(node["functionCall"]["arguments"][0]["argument"]));
             emitRhs(node["functionCall"]["arguments"][1]["argument"]);
             hasLeft = false;
+          } else if (pn === "raw") {
+            emitRaw(node);
           } else {
             throw new Error(
               String("query-builder parse: unsupported predicate"),
@@ -3398,6 +3549,75 @@ export class QueryBuilder {
               emitLiteralPlaceholder(
                 node["functionCall"]["arguments"][0]["argument"],
               );
+            } else if (nameNorm === "raw") {
+              emitRaw(node);
+            } else if (nameNorm === "update") {
+              pushSql("UPDATE");
+              pushW("UPDATE");
+              emitRhs(node["functionCall"]["arguments"][0]["argument"]);
+              pushSql("SET");
+              pushW("SET");
+              emitAssignments(node["functionCall"]["arguments"][1]["argument"]);
+            } else if (nameNorm === "insert") {
+              emitInsert(
+                node["functionCall"]["arguments"][0]["argument"],
+                node["functionCall"]["arguments"][1]["argument"],
+              );
+            } else if (nameNorm === "delete") {
+              pushSql("DELETE");
+              pushW("DELETE");
+              pushSql("FROM");
+              pushW("FROM");
+              emitRhs(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "set") {
+              pushSql("SET");
+              pushW("SET");
+              emitAssignments(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "values") {
+              pushSql("VALUES");
+              pushW("VALUES");
+              emitTupleList(node["functionCall"]["arguments"][0]["argument"]);
+            } else if (nameNorm === "onconflictdonothing") {
+              pushSql("ON");
+              pushW("ON");
+              pushSql("CONFLICT");
+              pushW("CONFLICT");
+              pushSql(
+                conflictTarget(
+                  node["functionCall"]["arguments"][0]["argument"],
+                ),
+              );
+              pushW(
+                conflictTarget(
+                  node["functionCall"]["arguments"][0]["argument"],
+                ),
+              );
+              pushSql("DO");
+              pushW("DO");
+              pushSql("NOTHING");
+              pushW("NOTHING");
+            } else if (nameNorm === "onconflictdoupdate") {
+              pushSql("ON");
+              pushW("ON");
+              pushSql("CONFLICT");
+              pushW("CONFLICT");
+              pushSql(
+                conflictTarget(
+                  node["functionCall"]["arguments"][0]["argument"],
+                ),
+              );
+              pushW(
+                conflictTarget(
+                  node["functionCall"]["arguments"][0]["argument"],
+                ),
+              );
+              pushSql("DO");
+              pushW("DO");
+              pushSql("UPDATE");
+              pushW("UPDATE");
+              pushSql("SET");
+              pushW("SET");
+              emitAssignments(node["functionCall"]["arguments"][1]["argument"]);
             } else {
               throw new Error(
                 String("query-builder parse: unsupported clause " + name),

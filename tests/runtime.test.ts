@@ -659,6 +659,80 @@ test("parse appends returning clause", () => {
     expect(result.sql).toBe('SELECT "id" FROM "t" RETURNING "id"');
 });
 
+test("parse builds update with map assignments", () => {
+    const c = qb();
+    const result = c.update(c.table("users"), { name: "bob", age: 3 }).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'UPDATE "users" SET "name" = $1, "age" = $2',
+        param: ["bob", 3],
+        sqlWithParam: `UPDATE "users" SET "name" = 'bob', "age" = 3`,
+    });
+});
+
+test("parse builds insert from a map", () => {
+    const c = qb();
+    const result = c.insert(c.table("users"), { name: "bob" }).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'INSERT INTO "users" ( "name" ) VALUES ( $1 )',
+        param: ["bob"],
+        sqlWithParam: `INSERT INTO "users" ( "name" ) VALUES ( 'bob' )`,
+    });
+});
+
+test("parse builds delete", () => {
+    const c = qb();
+    expect(c.delete(c.table("users")).setDialect("postgres").parse().sql).toBe('DELETE FROM "users"');
+});
+
+test("parse builds standalone set", () => {
+    const c = qb();
+    expect(c.set({ name: "bob" }).setDialect("postgres").parse().sql).toBe('SET "name" = $1');
+});
+
+test("parse builds values tuples", () => {
+    const c = qb();
+    const result = c.values([["a", "b"], ["c", "d"]]).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: "VALUES ( $1, $2 ), ( $3, $4 )",
+        param: ["a", "b", "c", "d"],
+        sqlWithParam: "VALUES ( 'a', 'b' ), ( 'c', 'd' )",
+    });
+});
+
+test("parse builds conflict clauses", () => {
+    const nothing = qb();
+    expect(
+        nothing.insert(nothing.table("t"), { name: "x" }).onConflictDoNothing(nothing.col("id")).setDialect("postgres").parse().sql
+    ).toBe('INSERT INTO "t" ( "name" ) VALUES ( $1 ) ON CONFLICT ("id") DO NOTHING');
+
+    const update = qb();
+    expect(
+        update
+            .insert(update.table("t"), { name: "x" })
+            .onConflictDoUpdate(update.col("id"), { name: "y" })
+            .setDialect("postgres")
+            .parse()
+            .sql
+    ).toBe('INSERT INTO "t" ( "name" ) VALUES ( $1 ) ON CONFLICT ("id") DO UPDATE SET "name" = $2');
+});
+
+test("parse renders raw template literals", () => {
+    const c = qb();
+    const identifiers = c.raw`SELECT ${c.col("id")} FROM ${c.table("t")}`.setDialect("mysql").parse();
+    expect(identifiers).toEqual({
+        sql: "SELECT `id` FROM `t`",
+        param: [],
+        sqlWithParam: "SELECT `id` FROM `t`",
+    });
+
+    const literal = qb();
+    expect(literal.where(literal.raw`x = ${5}`).setDialect("postgres").parse()).toEqual({
+        sql: "WHERE x = $1",
+        param: [5],
+        sqlWithParam: "WHERE x = 5",
+    });
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });
