@@ -524,6 +524,68 @@ test("parse with only a dialect yields empty sql", () => {
     expect(c.setDialect("postgres").parse()).toEqual({ sql: "", param: [], sqlWithParam: "" });
 });
 
+test("parse compares two columns without parameters", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).from(c.table("users")).where(c.col("a").eq(c.col("b"))).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" WHERE "a" = "b"',
+        param: [],
+        sqlWithParam: 'SELECT "id" FROM "users" WHERE "a" = "b"',
+    });
+});
+
+test("parse builds join on column equality", () => {
+    const c = qb();
+    const result = c
+        .select(c.col("id"))
+        .from(c.table("users"))
+        .join(c.table("posts"), c.col("users.id").eq(c.col("posts.user_id")))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "users" JOIN "posts" ON "users.id" = "posts.user_id"',
+        param: [],
+        sqlWithParam: 'SELECT "id" FROM "users" JOIN "posts" ON "users.id" = "posts.user_id"',
+    });
+});
+
+test("parse builds left join with mysql quoting", () => {
+    const c = qb();
+    const result = c
+        .select(c.col("id"))
+        .from(c.table("users"))
+        .leftJoin(c.table("posts"), c.col("users.id").eq(c.col("posts.user_id")))
+        .setDialect("mysql")
+        .parse();
+    expect(result.sql).toBe("SELECT `id` FROM `users` LEFT JOIN `posts` ON `users.id` = `posts.user_id`");
+});
+
+test("parse builds group by with having", () => {
+    const c = qb();
+    const result = c
+        .select(c.col("x"))
+        .from(c.table("t"))
+        .groupBy(c.col("x"))
+        .having(c.col("count").gt(1))
+        .setDialect("postgres")
+        .parse();
+    expect(result).toEqual({
+        sql: 'SELECT "x" FROM "t" GROUP BY "x" HAVING "count" > $1',
+        param: [1],
+        sqlWithParam: 'SELECT "x" FROM "t" GROUP BY "x" HAVING "count" > 1',
+    });
+});
+
+test("parse supports column bounds in between", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.col("x").between(c.col("lo"), c.col("hi"))).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE "x" BETWEEN "lo" AND "hi"',
+        param: [],
+        sqlWithParam: 'SELECT "id" WHERE "x" BETWEEN "lo" AND "hi"',
+    });
+});
+
 test("literal string argument accepts matching value", () => {
     const arg = firstArg(qb().setDialect("postgres").getSchema());
     expect(arg.argument).toEqual({ string: { value: "postgres" } });

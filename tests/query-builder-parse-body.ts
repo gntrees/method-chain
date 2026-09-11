@@ -259,6 +259,14 @@ function buildParser(): LT {
             .addCallFunction("pushW", [ref("tmp")])
             .returnRaw(NULL_EXPR()));
 
+    c = localFn(c, "emitRhs", ["arg"], () =>
+        lt().if(objHas(ref("arg"), "chain"),
+            lt().setVariable("tmpRef", callExpr("isRef", [member(ref("arg"), "chain.values")]))
+                .if(valNeq(ref("tmpRef"), ""), lt().addCallFunction("emitIdent", [ref("tmpRef")]))
+                .else(lt().addCallFunction("emitParam", [ref("arg")])))
+            .else(lt().addCallFunction("emitParam", [ref("arg")]))
+            .returnRaw(NULL_EXPR()));
+
     const separator = (chain: LT) =>
         chain.if(valEq(ref("first"), false), lt().addCallFunction("pushSql", ["AND"]).addCallFunction("pushW", ["AND"]))
             .setVariable("first", false);
@@ -285,7 +293,7 @@ function buildParser(): LT {
                             emitBase(separator(lt()))
                                 .addCallFunction("pushSql", [ref("op")])
                                 .addCallFunction("pushW", [ref("op")])
-                                .addCallFunction("emitParam", [argAt(ref("node"), 0)])
+                                .addCallFunction("emitRhs", [argAt(ref("node"), 0)])
                                 .setVariable("hasLeft", false))
                         .elseIf(valEq(ref("pn"), "in"),
                             emitBase(separator(lt()))
@@ -296,7 +304,7 @@ function buildParser(): LT {
                                     lt().if(valEq(ref("inFirst"), false),
                                             lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
                                         .setVariable("inFirst", false)
-                                        .addCallFunction("emitParam", [ref("iv")]))
+                                        .addCallFunction("emitRhs", [ref("iv")]))
                                 .addCallFunction("pushSql", [")"])
                                 .addCallFunction("pushW", [")"])
                                 .setVariable("hasLeft", false))
@@ -304,10 +312,10 @@ function buildParser(): LT {
                             emitBase(separator(lt()))
                                 .addCallFunction("pushSql", ["BETWEEN"])
                                 .addCallFunction("pushW", ["BETWEEN"])
-                                .addCallFunction("emitParam", [argAt(ref("node"), 0)])
+                                .addCallFunction("emitRhs", [argAt(ref("node"), 0)])
                                 .addCallFunction("pushSql", ["AND"])
                                 .addCallFunction("pushW", ["AND"])
-                                .addCallFunction("emitParam", [argAt(ref("node"), 1)])
+                                .addCallFunction("emitRhs", [argAt(ref("node"), 1)])
                                 .setVariable("hasLeft", false))
                         .elseIf(valEq(ref("pn"), "isnull"),
                             emitBase(separator(lt()))
@@ -421,12 +429,28 @@ function buildParser(): LT {
             .addCallFunction("pushW", [keyword])
             .addCallFunction(emitFn, [argTransform(argAt(node, 0))]);
 
+    const joinClause = (node: LT, keyword: string): LT =>
+        lt().addCallFunction("flushOrder", [])
+            .addCallFunction("pushSql", [keyword])
+            .addCallFunction("pushW", [keyword])
+            .addCallFunction("emitOperand", [argAt(node, 0)])
+            .addCallFunction("pushSql", ["ON"])
+            .addCallFunction("pushW", ["ON"])
+            .addCallFunction("emitPredicate", [member(argAt(node, 1), "chain.values")]);
+
     const clauseBody = (node: LT): LT => {
         const specs: { names: string[]; build: (node: LT) => LT }[] = [
             { names: ["select"], build: (n) => keywordClause(lt(), n, "SELECT", "emitColumnList", (a) => a) },
             { names: ["from"], build: (n) => keywordClause(lt(), n, "FROM", "emitOperand", (a) => a) },
+            { names: ["join"], build: (n) => joinClause(n, "JOIN") },
+            { names: ["leftjoin"], build: (n) => joinClause(n, "LEFT JOIN") },
+            { names: ["rightjoin"], build: (n) => joinClause(n, "RIGHT JOIN") },
+            { names: ["innerjoin"], build: (n) => joinClause(n, "INNER JOIN") },
+            { names: ["fulljoin"], build: (n) => joinClause(n, "FULL JOIN") },
+            { names: ["crossjoin"], build: (n) => joinClause(n, "CROSS JOIN") },
             { names: ["where"], build: (n) => keywordClause(lt(), n, "WHERE", "emitPredicate", (a) => member(a, "chain.values")) },
             { names: ["groupby"], build: (n) => keywordClause(lt(), n, "GROUP BY", "emitColumnList", (a) => a) },
+            { names: ["having"], build: (n) => keywordClause(lt(), n, "HAVING", "emitPredicate", (a) => member(a, "chain.values")) },
             {
                 names: ["orderby"],
                 build: (n) => lt().setVariable("hasOrder", true)
