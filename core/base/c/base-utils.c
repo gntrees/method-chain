@@ -24,7 +24,7 @@ static ArgumentValue v_pass(ArgumentValue v) { return v; }
 
 static ArgumentValue v_builder(Builder b)
 {
-    ChainType *c = malloc(sizeof(ChainType));
+    ChainType *c = lt_alloc(sizeof(ChainType));
     if (c)
         *c = b.schema.chain;
     return (ArgumentValue){.type = D_CHAIN, .as.chain = c ? c : &b.schema.chain};
@@ -523,7 +523,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
     case D_ARRAY:
     {
         const ArgumentValue *src = v->as.data;
-        ArgumentValue *items = malloc(v->count * sizeof(ArgumentValue));
+        ArgumentValue *items = gn_alloc(v->count * sizeof(ArgumentValue));
         if (items)
         {
             for (size_t i = 0; i < v->count; i++)
@@ -535,7 +535,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
     case D_MAP:
     {
         const MapEntry *src = v->as.data;
-        MapEntry *entries = malloc(v->count * sizeof(MapEntry));
+        MapEntry *entries = gn_alloc(v->count * sizeof(MapEntry));
         if (entries)
         {
             for (size_t i = 0; i < v->count; i++)
@@ -555,7 +555,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
 
 static ChainType *deep_copy_chain(const ChainType *c)
 {
-    ChainType *copy = malloc(sizeof(ChainType));
+    ChainType *copy = gn_alloc(sizeof(ChainType));
     if (!copy)
         return NULL;
     *copy = *c;
@@ -563,7 +563,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
     if (c->valueCount == 0)
         return copy;
 
-    ChainValue *values = malloc(c->valueCount * sizeof(ChainValue));
+    ChainValue *values = gn_alloc(c->valueCount * sizeof(ChainValue));
     if (!values)
         return copy;
     for (size_t i = 0; i < c->valueCount; i++)
@@ -574,7 +574,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
             FunctionCallType *fc = &values[i].as.functionCall;
             if (fc->argumentCount == 0)
                 continue;
-            ArgumentType *args = malloc(fc->argumentCount * sizeof(ArgumentType));
+            ArgumentType *args = gn_alloc(fc->argumentCount * sizeof(ArgumentType));
             if (!args)
                 continue;
             for (size_t j = 0; j < fc->argumentCount; j++)
@@ -590,7 +590,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
         {
             if (values[i].as.propertyCall.builder)
             {
-                Builder *b = malloc(sizeof(Builder));
+                Builder *b = gn_alloc(sizeof(Builder));
                 if (b)
                 {
                     b->schema = deep_copy_schema(&values[i].as.propertyCall.builder->schema);
@@ -602,10 +602,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
         {
             ChainType *srcCopy = deep_copy_chain(&values[i].as.copy.source);
             if (srcCopy)
-            {
                 values[i].as.copy.source = *srcCopy;
-                free(srcCopy);
-            }
         }
     }
     copy->values = values;
@@ -640,7 +637,7 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
     if (total == 0)
         return flat;
 
-    ChainValue *values = malloc(total * sizeof(ChainValue));
+    ChainValue *values = gn_alloc(total * sizeof(ChainValue));
     if (!values)
         return flat;
     size_t k = 0;
@@ -653,7 +650,6 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
     flat.values = values;
 
     ChainType *copy = deep_copy_chain(&flat);
-    free(values);
     if (copy)
         return *copy;
     return flat;
@@ -873,6 +869,12 @@ static cJSON *jval(const ArgumentValue *d)
 }
 
 static char *json_buf = NULL;
+
+static void free_json_buf(void)
+{
+    free(json_buf);
+    json_buf = NULL;
+}
 
 static SchemaType getSchema_impl(const Builder *b, const char *exportName, ArgumentValue importPaths)
 {

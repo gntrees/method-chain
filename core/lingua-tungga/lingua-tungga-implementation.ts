@@ -537,7 +537,7 @@ function runChain(values: ChainValue[], state: ChainState): unknown {
                 addStatements(state, { typescript: ["return;"], c: ["lt_free_all();", "return;"] });
             } else {
                 const value = renderCallArgument(args[0]);
-                addStatements(state, { typescript: [`return ${value.typescript};`], c: [`return lt_detach(${value.c});`] });
+                addStatements(state, { typescript: [`return ${value.typescript};`], c: [`return lt_detach_copy(${value.c});`] });
             }
         } else if (functionName === "if") {
             const condition = renderCondition(args[0]);
@@ -635,7 +635,8 @@ export function generate(schema: SchemaType): Record<LanguageType, string> {
     const result = runChain(schema.schema.chain.chain.values, state) as Record<LanguageType, unknown>;
 
     const autoFree = (state.resultKind ?? "statements") !== "expression";
-    if (autoFree && statements.c.length > 0 && statements.c[statements.c.length - 1] !== "lt_free_all();") {
+    const lastC = statements.c[statements.c.length - 1];
+    if (autoFree && statements.c.length > 0 && lastC !== "lt_free_all();" && lastC !== "return;") {
         statements.c.push("lt_free_all();");
     }
 
@@ -646,7 +647,7 @@ export function generate(schema: SchemaType): Record<LanguageType, string> {
             resolved[lang] = value.join("\n");
         } else if (typeof value === "string") {
             resolved[lang] = value;
-            if (lang === "c" && autoFree && value.length > 0 && !value.endsWith("lt_free_all();")) {
+            if (lang === "c" && autoFree && value.length > 0 && !value.endsWith("lt_free_all();") && !value.endsWith("return;")) {
                 resolved[lang] = `${value}\nlt_free_all();`;
             }
         }

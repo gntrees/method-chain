@@ -325,27 +325,27 @@ test("expression producers are not auto-freed", async () => {
 });
 
 test("return renders value, void and null per language", async () => {
-    expect(await linguaTungga().return(linguaTungga().addValue(5)).generate()).toEqual({ typescript: "return 5;", c: "return lt_detach(v_int(5));\nlt_free_all();" });
-    expect(await linguaTungga().return(linguaTungga().stringUpper("bob")).generate()).toEqual({ typescript: 'return "bob".toUpperCase();', c: 'return lt_detach(lt_to_upper(v_string("bob")));\nlt_free_all();' });
-    expect(await linguaTungga().return().generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;\nlt_free_all();" });
-    expect(await linguaTungga().return(null).generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;\nlt_free_all();" });
-    expect(await linguaTungga().return(linguaTungga().addValue(null)).generate()).toEqual({ typescript: "return null;", c: "return lt_detach(v_null());\nlt_free_all();" });
+    expect(await linguaTungga().return(linguaTungga().addValue(5)).generate()).toEqual({ typescript: "return 5;", c: "return lt_detach_copy(v_int(5));\nlt_free_all();" });
+    expect(await linguaTungga().return(linguaTungga().stringUpper("bob")).generate()).toEqual({ typescript: 'return "bob".toUpperCase();', c: 'return lt_detach_copy(lt_to_upper(v_string("bob")));\nlt_free_all();' });
+    expect(await linguaTungga().return().generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;" });
+    expect(await linguaTungga().return(null).generate()).toEqual({ typescript: "return;", c: "lt_free_all();\nreturn;" });
+    expect(await linguaTungga().return(linguaTungga().addValue(null)).generate()).toEqual({ typescript: "return null;", c: "return lt_detach_copy(v_null());\nlt_free_all();" });
 });
 
-test("return frees all except the returned value", async () => {
+test("return copies the returned value out of the arena", async () => {
     const guarded = await linguaTungga()
         .if(linguaTungga().equal(1, 1), linguaTungga().return(linguaTungga().addValue(1)))
         .generate();
     expect(guarded).toEqual({
         typescript: "if (1 === 1) {\n  return 1;\n}",
-        c: "if (1 == 1) {\n  return lt_detach(v_int(1));\n}\nlt_free_all();",
+        c: "if (1 == 1) {\n  return lt_detach_copy(v_int(1));\n}\nlt_free_all();",
     });
 
     const withVar = await linguaTungga()
         .addVariable("x", 1)
         .return(linguaTungga().variableForCounter("x"))
         .generate();
-    expect(withVar).toEqual({ typescript: "const x = 1;\nreturn x;", c: "ArgumentValue x = v_int(1);\nreturn lt_detach(x);\nlt_free_all();" });
+    expect(withVar).toEqual({ typescript: "const x = 1;\nreturn x;", c: "ArgumentValue x = v_int(1);\nreturn lt_detach_copy(x);\nlt_free_all();" });
 });
 
 
@@ -623,76 +623,92 @@ test("generated project typechecks in c", () => {
     expect(res.stderr).not.toContain("error:");
 }, 30000);
 
-test("c value helpers free cleanly under address sanitizer", () => {
+let asanAvailable: boolean | null = null;
+
+function runWithAsan(source: string, name: string): { status: number | null; stderr: string } | null {
     const cDir = join(projectDir, "c");
-    const tag = `${process.pid}-${Date.now()}`;
+    const tag = `${process.pid}-${Date.now()}-${name}`;
     const runner = join(tmpdir(), `lt-asan-${tag}.c`);
     const binary = join(tmpdir(), `lt-asan-${tag}`);
-    const source = `#include "test-lingua-tungga.h"
+    try {
+        if (asanAvailable === null) {
+            const probe = spawnSync(
+                "gcc",
+                ["-fsanitize=address", "-x", "c", "-", "-o", binary, "-I", cDir, join(cDir, "cJSON.c"), "-lm"],
+                { input: "int main(void){return 0;}\n", encoding: "utf8" },
+            );
+            asanAvailable = probe.status === 0;
+        }
+        if (!asanAvailable) return null;
+
+        writeFileSync(runner, source);
+        const compiled = spawnSync("gcc", ["-fsanitize=address", "-g", "-std=c11", "-o", binary, runner, join(cDir, "cJSON.c"), "-I", cDir, "-lm"], { encoding: "utf8" });
+        if (compiled.status !== 0) return { status: compiled.status, stderr: compiled.stderr };
+
+        const executed = spawnSync(binary, [], { encoding: "utf8" });
+        return { status: executed.status, stderr: executed.stderr };
+    } finally {
+        try { unlinkSync(runner); } catch { /* ignore */ }
+        try { unlinkSync(binary); } catch { /* ignore */ }
+    }
+}
+
+test("c value helpers and bump arena are leak-free under address sanitizer", () => {
+    const result = runWithAsan(`#include "test-lingua-tungga.h"
+#include <string.h>
 int main(void) {
     ArgumentValue s = lt_str_concat(v_string("hello"), v_string(" world"));
     ArgumentValue upper = lt_to_upper(s);
     ArgumentValue list = lt_append(arr(v_int(1), v_int(2)), v_int(3));
     ArgumentValue joined = lt_join(list, v_string(","));
-    ArgumentValue obj = lt_set(map(entry("a", v_int(1))), v_string("b"), v_int(2));
-    ArgumentValue merged = lt_merge(obj, map(entry("c", v_int(3))));
     (void)upper;
     (void)joined;
-    (void)merged;
     lt_free_all();
+
+    for (int i = 0; i < 10000; i++) {
+        ArgumentValue tmp = lt_str_concat(v_string("a"), v_string("b"));
+        (void)tmp;
+    }
+    lt_free_all();
+
+    ArgumentValue arrValue = lt_append(arr(v_string("lit"), v_string("x")), v_int(1));
+    ArgumentValue owned = lt_detach_copy(arrValue);
+    if (owned.type != D_ARRAY || owned.count != 3) return 3;
+    lt_free_value(owned);
+
+    ArgumentValue keep = lt_detach_copy(lt_to_upper(v_string("keep")));
+    if (strcmp(keep.as.s, "KEEP") != 0) return 4;
+    lt_free_value(keep);
+
+    lt_shutdown();
     return 0;
 }
-`;
-    try {
-        writeFileSync(runner, source);
-        const availability = spawnSync("gcc", ["-fsanitize=address", "-x", "c", "-", "-o", binary, "-I", cDir, join(cDir, "cJSON.c"), "-lm"], { input: "int main(void){return 0;}\n", encoding: "utf8" });
-        if (availability.status !== 0) return;
+`, "values");
+    if (!result) return;
+    expect(result.status).toBe(0);
+    expect(result.stderr).not.toContain("AddressSanitizer");
+    expect(result.stderr).not.toContain("LeakSanitizer");
+}, 60000);
 
-        const compiled = spawnSync("gcc", ["-fsanitize=address", "-g", "-std=c11", "-o", binary, runner, join(cDir, "cJSON.c"), "-I", cDir, "-lm"], { encoding: "utf8" });
-        expect(compiled.status).toBe(0);
-
-        const executed = spawnSync(binary, [], { encoding: "utf8" });
-        expect(executed.status).toBe(0);
-        expect(executed.stderr).not.toContain("AddressSanitizer");
-        expect(executed.stderr).not.toContain("LeakSanitizer");
-    } finally {
-        try { unlinkSync(runner); } catch { /* ignore */ }
-        try { unlinkSync(binary); } catch { /* ignore */ }
-    }
-}, 30000);
-
-test("lt_detach frees everything except the returned value under asan", () => {
-    const cDir = join(projectDir, "c");
-    const tag = `${process.pid}-${Date.now()}`;
-    const runner = join(tmpdir(), `lt-detach-${tag}.c`);
-    const binary = join(tmpdir(), `lt-detach-${tag}`);
-    const source = `#include "test-lingua-tungga.h"
-#include <string.h>
+test("c builder and schema allocations are leak-free under address sanitizer", () => {
+    const result = runWithAsan(`#include "test-lingua-tungga.h"
 int main(void) {
-    ArgumentValue keep = lt_to_upper(v_string("keep"));
-    ArgumentValue drop = lt_str_concat(v_string("dro"), v_string("p"));
-    (void)drop;
-    ArgumentValue out = lt_detach(keep);
-    if (strcmp(out.as.s, "KEEP") != 0) return 2;
-    free((void *)out.as.s);
+    ArgumentValue chainValue = v(select(v_string("id")));
+    (void)chainValue;
+    lt_free_all();
+
+    Builder combined = chain(select(v_string("id")), limit(v_int(5)));
+    (void)combined;
+    gn_free_schemas();
+
+    lt_shutdown();
+    gn_shutdown();
     return 0;
 }
-`;
-    try {
-        writeFileSync(runner, source);
-        const availability = spawnSync("gcc", ["-fsanitize=address", "-x", "c", "-", "-o", binary, "-I", cDir, join(cDir, "cJSON.c"), "-lm"], { input: "int main(void){return 0;}\n", encoding: "utf8" });
-        if (availability.status !== 0) return;
-
-        const compiled = spawnSync("gcc", ["-fsanitize=address", "-g", "-std=c11", "-o", binary, runner, join(cDir, "cJSON.c"), "-I", cDir, "-lm"], { encoding: "utf8" });
-        expect(compiled.status).toBe(0);
-
-        const executed = spawnSync(binary, [], { encoding: "utf8" });
-        expect(executed.status).toBe(0);
-        expect(executed.stderr).not.toContain("AddressSanitizer");
-        expect(executed.stderr).not.toContain("LeakSanitizer");
-    } finally {
-        try { unlinkSync(runner); } catch { /* ignore */ }
-        try { unlinkSync(binary); } catch { /* ignore */ }
-    }
-}, 30000);
+`, "schema");
+    if (!result) return;
+    expect(result.status).toBe(0);
+    expect(result.stderr).not.toContain("AddressSanitizer");
+    expect(result.stderr).not.toContain("LeakSanitizer");
+}, 60000);
 

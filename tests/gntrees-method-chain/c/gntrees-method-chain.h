@@ -441,6 +441,7 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define GN_TREES_BASE_UTILS_H
 
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -491,90 +492,221 @@ static inline const char *getJSONSchema_builder(const Builder *b)
         default: getJSONSchema_impl)(x)
 
 /* ---- value manipulation helpers (string / array / object) ----
- * Semua alokasi helper dicatat di arena `lt_allocs` sehingga
- * `lt_free_all()` dapat membebaskan semuanya sekaligus. Nilai dari
- * literal / macro `arr` / `map` (compound literal) tidak dialokasikan
- * lewat arena dan karenanya tidak ikut di-free.
+ * Semua alokasi helper diambil dari arena bump `lt_region`, sehingga
+ * `lt_free_all()` mengembalikan seluruh region sekaligus dengan biaya
+ * O(jumlah blok). Nilai dari literal / macro `arr` / `map` (compound
+ * literal) tidak dialokasikan lewat arena dan karenanya tidak ikut
+ * dibebaskan.
  */
 
-#ifndef LT_MAX_ALLOCS
-#define LT_MAX_ALLOCS 4096
+#ifndef LT_BLOCK_SIZE
+#define LT_BLOCK_SIZE 8192
 #endif
 
-static void *lt_allocs[LT_MAX_ALLOCS];
-static size_t lt_alloc_count = 0;
-static char lt_kept[LT_MAX_ALLOCS];
+#ifndef GN_BLOCK_SIZE
+#define GN_BLOCK_SIZE 8192
+#endif
+
+#ifndef LT_OWN_BLOCK_SIZE
+#define LT_OWN_BLOCK_SIZE 8192
+#endif
+
+typedef struct LtBlock
+{
+    struct LtBlock *next;
+    size_t used;
+    size_t cap;
+    max_align_t _align;
+    unsigned char mem[];
+} LtBlock;
+
+typedef struct LtRegion
+{
+    LtBlock *blocks;
+    LtBlock *current;
+    size_t block_size;
+} LtRegion;
+
+static LtRegion lt_region = {NULL, NULL, LT_BLOCK_SIZE};
+static LtRegion gn_region = {NULL, NULL, GN_BLOCK_SIZE};
+static LtRegion lt_own_region = {NULL, NULL, LT_OWN_BLOCK_SIZE};
+
+static void *region_alloc(LtRegion *r, size_t n)
+{
+    const size_t align = _Alignof(max_align_t);
+    size_t need = (n + align - 1) & ~(align - 1);
+    if (need == 0)
+        need = align;
+
+    LtBlock *b = r->current;
+    if (!b || b->cap - b->used < need)
+    {
+        size_t cap = need > r->block_size ? need : r->block_size;
+        LtBlock *next = malloc(sizeof(LtBlock) + cap);
+        if (!next)
+            return NULL;
+        next->next = NULL;
+        next->used = 0;
+        next->cap = cap;
+        if (r->current)
+            r->current->next = next;
+        else
+            r->blocks = next;
+        r->current = next;
+        b = next;
+    }
+
+    void *p = b->mem + b->used;
+    b->used += need;
+    return p;
+}
+
+/* Kembalikan seluruh blok ke kondisi kosong. Blok pertama dipertahankan
+ * agar alokasi berikutnya tidak perlu malloc lagi. */
+static void region_reset(LtRegion *r)
+{
+    LtBlock *first = r->blocks;
+    if (!first)
+        return;
+    LtBlock *extra = first->next;
+    while (extra)
+    {
+        LtBlock *next = extra->next;
+        free(extra);
+        extra = next;
+    }
+    first->used = 0;
+    first->next = NULL;
+    r->current = first;
+}
+
+static void region_destroy(LtRegion *r)
+{
+    LtBlock *b = r->blocks;
+    while (b)
+    {
+        LtBlock *next = b->next;
+        free(b);
+        b = next;
+    }
+    r->blocks = NULL;
+    r->current = NULL;
+}
 
 static void *lt_alloc(size_t n)
 {
-    void *p = malloc(n ? n : 1);
-    if (p && lt_alloc_count < LT_MAX_ALLOCS)
-        lt_allocs[lt_alloc_count++] = p;
-    return p;
+    return region_alloc(&lt_region, n);
 }
 
 static void lt_free_all(void)
 {
-    for (size_t i = 0; i < lt_alloc_count; i++)
-        free(lt_allocs[i]);
-    lt_alloc_count = 0;
+    region_reset(&lt_region);
 }
 
-static void lt_mark_ptr(const void *p)
+static void free_json_buf(void);
+
+static void lt_shutdown(void)
 {
-    if (!p)
-        return;
-    for (size_t i = 0; i < lt_alloc_count; i++)
-        if (lt_allocs[i] == p)
-        {
-            lt_kept[i] = 1;
-            return;
-        }
+    region_destroy(&lt_region);
+    region_destroy(&lt_own_region);
+    free_json_buf();
 }
 
-static void lt_mark_value(ArgumentValue v)
+static char *lt_own_strdup(const char *s)
+{
+    const char *src = s ? s : "";
+    size_t n = strlen(src) + 1;
+    char *copy = region_alloc(&lt_own_region, n);
+    if (copy)
+        memcpy(copy, src, n);
+    return copy;
+}
+
+/* Deep-copy `v` ke region owned di luar arena value, sehingga hasilnya
+ * seragam region-allocated dan dibebaskan sekaligus dengan `lt_free_value`. */
+static ArgumentValue lt_own_copy(ArgumentValue v)
 {
     switch (v.type)
     {
     case D_STRING:
-        lt_mark_ptr(v.as.s);
-        break;
+        v.as.s = lt_own_strdup(v.as.s);
+        return v;
     case D_ARRAY:
     {
-        lt_mark_ptr(v.as.data);
-        const ArgumentValue *items = v.as.data;
-        for (size_t i = 0; i < v.count; i++)
-            lt_mark_value(items[i]);
-        break;
+        const ArgumentValue *src = v.as.data;
+        ArgumentValue *items = NULL;
+        if (v.count)
+        {
+            items = region_alloc(&lt_own_region, v.count * sizeof(ArgumentValue));
+            if (!items)
+                return v_null();
+            for (size_t i = 0; i < v.count; i++)
+                items[i] = lt_own_copy(src[i]);
+        }
+        v.as.data = items;
+        return v;
     }
     case D_MAP:
     {
-        lt_mark_ptr(v.as.data);
-        const MapEntry *entries = v.as.data;
-        for (size_t i = 0; i < v.count; i++)
+        const MapEntry *src = v.as.data;
+        MapEntry *entries = NULL;
+        if (v.count)
         {
-            lt_mark_ptr(entries[i].key);
-            lt_mark_value(entries[i].value);
+            entries = region_alloc(&lt_own_region, v.count * sizeof(MapEntry));
+            if (!entries)
+                return v_null();
+            for (size_t i = 0; i < v.count; i++)
+            {
+                entries[i].key = lt_own_strdup(src[i].key);
+                entries[i].value = lt_own_copy(src[i].value);
+            }
         }
-        break;
+        v.as.data = entries;
+        return v;
     }
     default:
-        break;
+        return v;
     }
 }
 
-/* Free semua alokasi arena kecuali yang reachable dari `v`, lalu keluarkan
- * alokasi milik `v` dari tracking (ownership pindah ke pemanggil). */
-static ArgumentValue lt_detach(ArgumentValue v)
+/* Deep-copy nilai return keluar arena, lalu bebaskan seluruh arena. Hasil
+ * dapat dibebaskan pemanggil dengan `lt_free_value`. */
+static ArgumentValue lt_detach_copy(ArgumentValue v)
 {
-    for (size_t i = 0; i < lt_alloc_count; i++)
-        lt_kept[i] = 0;
-    lt_mark_value(v);
-    for (size_t i = 0; i < lt_alloc_count; i++)
-        if (!lt_kept[i])
-            free(lt_allocs[i]);
-    lt_alloc_count = 0;
-    return v;
+    ArgumentValue copy = lt_own_copy(v);
+    lt_free_all();
+    return copy;
+}
+
+/* Bebaskan semua nilai hasil `lt_detach_copy` / `lt_own_copy` sekaligus
+ * dengan me-reset region owned (O(jumlah blok)). Argumen diabaikan; nilai
+ * yang berasal dari arena atau literal aman dilewatkan ke sini. */
+static void lt_free_value(ArgumentValue v)
+{
+    (void)v;
+    region_reset(&lt_own_region);
+}
+
+/* ---- schema/builder arena ----
+ * Alokasi schema (deep copy chain, builder, init function) berumur panjang
+ * dan memakai region bump terpisah dari arena value, sehingga `lt_free_all`
+ * tidak menyentuhnya. Panggil `gn_free_schemas()` saat schema tidak dipakai
+ * lagi.
+ */
+
+static void *gn_alloc(size_t n)
+{
+    return region_alloc(&gn_region, n);
+}
+
+static void gn_free_schemas(void)
+{
+    region_reset(&gn_region);
+}
+
+static void gn_shutdown(void)
+{
+    region_destroy(&gn_region);
 }
 
 static ArgumentValue lt_make_arr(ArgumentValue *items, size_t count)
@@ -601,6 +733,20 @@ static ArgumentValue lt_make_map(MapEntry *entries, size_t count)
         memcpy(copy, entries, count * sizeof(MapEntry));
     }
     return (ArgumentValue){ .type = D_MAP, .count = count, .as.data = copy };
+}
+
+/* Wrap buffer `items` (milik pemanggil, hasil lt_alloc) langsung sebagai
+ * array tanpa menyalin. Buffer tetap valid sampai lt_free_all. */
+static ArgumentValue lt_adopt_arr(ArgumentValue *items, size_t count)
+{
+    return (ArgumentValue){ .type = D_ARRAY, .count = count, .as.data = items };
+}
+
+/* Wrap buffer `entries` (milik pemanggil, hasil lt_alloc) langsung sebagai
+ * map tanpa menyalin. Buffer tetap valid sampai lt_free_all. */
+static ArgumentValue lt_adopt_map(MapEntry *entries, size_t count)
+{
+    return (ArgumentValue){ .type = D_MAP, .count = count, .as.data = entries };
 }
 
 static const char *lt_as_string(const ArgumentValue *v)
@@ -810,36 +956,29 @@ static ArgumentValue lt_split(ArgumentValue a, ArgumentValue separator)
     size_t dl = strlen(d);
     if (dl == 0)
         return lt_make_arr(NULL, 0);
-    size_t cap = 8, count = 0;
-    ArgumentValue *items = lt_alloc(cap * sizeof(ArgumentValue));
-    if (!items)
+    size_t nparts = 1;
+    for (const char *p = str; (p = strstr(p, d)); p += dl)
+        nparts++;
+    ArgumentValue *items = lt_alloc(nparts * sizeof(ArgumentValue));
+    char *block = lt_alloc(strlen(str) + nparts);
+    if (!items || !block)
         return v_null();
+    size_t count = 0;
+    char *out = block;
     const char *p = str;
     while (1)
     {
         const char *q = strstr(p, d);
         size_t n = q ? (size_t)(q - p) : strlen(p);
-        char *buf = lt_alloc(n + 1);
-        if (!buf)
-            return v_null();
-        memcpy(buf, p, n);
-        buf[n] = '\0';
-        items[count++] = v_string(buf);
-        if (count == cap)
-        {
-            size_t ncap = cap * 2;
-            ArgumentValue *bigger = lt_alloc(ncap * sizeof(ArgumentValue));
-            if (!bigger)
-                return v_null();
-            memcpy(bigger, items, count * sizeof(ArgumentValue));
-            items = bigger;
-            cap = ncap;
-        }
+        memcpy(out, p, n);
+        out[n] = '\0';
+        items[count++] = v_string(out);
+        out += n + 1;
         if (!q)
             break;
         p = q + dl;
     }
-    return lt_make_arr(items, count);
+    return lt_adopt_arr(items, count);
 }
 
 static ArgumentValue lt_contains(ArgumentValue a, ArgumentValue item)
@@ -940,7 +1079,7 @@ static ArgumentValue lt_append(ArgumentValue a, ArgumentValue item)
     for (size_t i = 0; i < ca; i++)
         out[i] = src[i];
     out[ca] = item;
-    return lt_make_arr(out, ca + 1);
+    return lt_adopt_arr(out, ca + 1);
 }
 
 static ArgumentValue lt_arr_concat(ArgumentValue a, ArgumentValue b)
@@ -956,7 +1095,7 @@ static ArgumentValue lt_arr_concat(ArgumentValue a, ArgumentValue b)
         out[i] = ia[i];
     for (size_t i = 0; i < cb; i++)
         out[ca + i] = ib[i];
-    return lt_make_arr(out, ca + cb);
+    return lt_adopt_arr(out, ca + cb);
 }
 
 static ArgumentValue lt_join(ArgumentValue a, ArgumentValue separator)
@@ -977,13 +1116,20 @@ static ArgumentValue lt_join(ArgumentValue a, ArgumentValue separator)
     char *buf = lt_alloc(total);
     if (!buf)
         return v_null();
-    buf[0] = '\0';
+    char *out = buf;
     for (size_t i = 0; i < a.count; i++)
     {
+        const char *part = lt_repr(items[i], tmp, sizeof tmp);
+        size_t pl = strlen(part);
         if (i)
-            strcat(buf, d);
-        strcat(buf, lt_repr(items[i], tmp, sizeof tmp));
+        {
+            memcpy(out, d, dl);
+            out += dl;
+        }
+        memcpy(out, part, pl);
+        out += pl;
     }
+    *out = '\0';
     return v_string(buf);
 }
 
@@ -998,7 +1144,7 @@ static ArgumentValue lt_reverse(ArgumentValue a)
         return v_null();
     for (size_t i = 0; i < n; i++)
         out[i] = items[n - 1 - i];
-    return lt_make_arr(out, n);
+    return lt_adopt_arr(out, n);
 }
 
 static int lt_compare(ArgumentValue x, ArgumentValue y)
@@ -1017,6 +1163,18 @@ static int lt_compare(ArgumentValue x, ArgumentValue y)
     return (int)x.type - (int)y.type;
 }
 
+static int lt_compare_ptr(const void *pa, const void *pb)
+{
+    return lt_compare(*(const ArgumentValue *)pa, *(const ArgumentValue *)pb);
+}
+
+static int lt_compare_deref_ptr(const void *pa, const void *pb)
+{
+    const ArgumentValue *const *x = (const ArgumentValue *const *)pa;
+    const ArgumentValue *const *y = (const ArgumentValue *const *)pb;
+    return lt_compare(**x, **y);
+}
+
 static ArgumentValue lt_sort(ArgumentValue a)
 {
     if (a.type != D_ARRAY)
@@ -1028,18 +1186,9 @@ static ArgumentValue lt_sort(ArgumentValue a)
         return v_null();
     for (size_t i = 0; i < n; i++)
         out[i] = items[i];
-    for (size_t i = 1; i < n; i++)
-    {
-        ArgumentValue key = out[i];
-        size_t j = i;
-        while (j > 0 && lt_compare(out[j - 1], key) > 0)
-        {
-            out[j] = out[j - 1];
-            j--;
-        }
-        out[j] = key;
-    }
-    return lt_make_arr(out, n);
+    if (n > 1)
+        qsort(out, n, sizeof(ArgumentValue), lt_compare_ptr);
+    return lt_adopt_arr(out, n);
 }
 
 static ArgumentValue lt_unique(ArgumentValue a)
@@ -1049,22 +1198,24 @@ static ArgumentValue lt_unique(ArgumentValue a)
     const ArgumentValue *items = a.as.data;
     size_t n = a.count;
     ArgumentValue *out = lt_alloc((n ? n : 1) * sizeof(ArgumentValue));
-    if (!out)
+    const ArgumentValue **idx = lt_alloc((n ? n : 1) * sizeof(ArgumentValue *));
+    char *keep = lt_alloc((n ? n : 1) * sizeof(char));
+    if (!out || !idx || !keep)
         return v_null();
-    size_t m = 0;
+    for (size_t i = 0; i < n; i++)
+        idx[i] = &items[i];
+    if (n > 1)
+        qsort(idx, n, sizeof(ArgumentValue *), lt_compare_deref_ptr);
     for (size_t i = 0; i < n; i++)
     {
-        int duplicate = 0;
-        for (size_t j = 0; j < m; j++)
-            if (lt_value_equals(out[j], items[i]))
-            {
-                duplicate = 1;
-                break;
-            }
-        if (!duplicate)
-            out[m++] = items[i];
+        size_t orig = (size_t)(idx[i] - items);
+        keep[orig] = (i == 0) || !lt_value_equals(*idx[i - 1], *idx[i]);
     }
-    return lt_make_arr(out, m);
+    size_t m = 0;
+    for (size_t i = 0; i < n; i++)
+        if (keep[i])
+            out[m++] = items[i];
+    return lt_adopt_arr(out, m);
 }
 
 /* ---- object manipulation ---- */
@@ -1111,7 +1262,7 @@ static ArgumentValue lt_set(ArgumentValue a, ArgumentValue key, ArgumentValue va
         out[n].value = value;
         n++;
     }
-    return lt_make_map(out, n);
+    return lt_adopt_map(out, n);
 }
 
 static ArgumentValue lt_keys(ArgumentValue a)
@@ -1123,7 +1274,7 @@ static ArgumentValue lt_keys(ArgumentValue a)
         return v_null();
     for (size_t i = 0; i < n; i++)
         out[i] = v_string(entries[i].key ? entries[i].key : "");
-    return lt_make_arr(out, n);
+    return lt_adopt_arr(out, n);
 }
 
 static ArgumentValue lt_values(ArgumentValue a)
@@ -1135,7 +1286,7 @@ static ArgumentValue lt_values(ArgumentValue a)
         return v_null();
     for (size_t i = 0; i < n; i++)
         out[i] = entries[i].value;
-    return lt_make_arr(out, n);
+    return lt_adopt_arr(out, n);
 }
 
 static ArgumentValue lt_has(ArgumentValue a, ArgumentValue key)
@@ -1150,6 +1301,63 @@ static ArgumentValue lt_has(ArgumentValue a, ArgumentValue key)
     return v_bool(0);
 }
 
+/* Arena-backed open-addressing string->index map (untuk dedup key di merge). */
+typedef struct LtStrMap
+{
+    const char **slots;
+    size_t *vals;
+    size_t cap;
+    size_t count;
+} LtStrMap;
+
+static size_t lt_str_hash(const char *s)
+{
+    size_t h = 5381;
+    while (*s)
+        h = h * 33 ^ (unsigned char)*s++;
+    return h;
+}
+
+static LtStrMap lt_strmap_create(size_t hint)
+{
+    size_t cap = 4;
+    while (cap < hint * 2)
+        cap *= 2;
+    LtStrMap m = { NULL, NULL, cap, 0 };
+    m.slots = lt_alloc(cap * sizeof(const char *));
+    m.vals = lt_alloc(cap * sizeof(size_t));
+    if (m.slots)
+        memset(m.slots, 0, cap * sizeof(const char *));
+    return m;
+}
+
+/* Cari key. Kembalikan index tersimpan atau (size_t)-1 jika absen. */
+static size_t lt_strmap_find(const LtStrMap *m, const char *key)
+{
+    if (!m->slots || !m->vals)
+        return (size_t)-1;
+    size_t i = lt_str_hash(key) & (m->cap - 1);
+    while (m->slots[i])
+    {
+        if (strcmp(m->slots[i], key) == 0)
+            return m->vals[i];
+        i = (i + 1) & (m->cap - 1);
+    }
+    return (size_t)-1;
+}
+
+static void lt_strmap_insert(LtStrMap *m, const char *key, size_t idx)
+{
+    if (!m->slots || !m->vals)
+        return;
+    size_t i = lt_str_hash(key) & (m->cap - 1);
+    while (m->slots[i])
+        i = (i + 1) & (m->cap - 1);
+    m->slots[i] = key;
+    m->vals[i] = idx;
+    m->count++;
+}
+
 static ArgumentValue lt_merge(ArgumentValue a, ArgumentValue b)
 {
     size_t ca = a.type == D_MAP ? a.count : 0;
@@ -1159,25 +1367,33 @@ static ArgumentValue lt_merge(ArgumentValue a, ArgumentValue b)
     MapEntry *out = lt_alloc((ca + cb ? ca + cb : 1) * sizeof(MapEntry));
     if (!out)
         return v_null();
+    LtStrMap seen = lt_strmap_create(ca + cb);
+    if (!seen.slots || !seen.vals)
+        return v_null();
     size_t n = 0;
     for (size_t i = 0; i < ca; i++)
+    {
         out[n++] = ea[i];
+        if (ea[i].key)
+            lt_strmap_insert(&seen, ea[i].key, n - 1);
+    }
     for (size_t i = 0; i < cb; i++)
     {
-        int found = 0;
-        for (size_t j = 0; j < n; j++)
+        if (eb[i].key)
         {
-            if (out[j].key && eb[i].key && strcmp(out[j].key, eb[i].key) == 0)
+            size_t prev = lt_strmap_find(&seen, eb[i].key);
+            if (prev == (size_t)-1)
             {
-                out[j].value = eb[i].value;
-                found = 1;
-                break;
+                lt_strmap_insert(&seen, eb[i].key, n);
+                out[n++] = eb[i];
             }
+            else
+                out[prev].value = eb[i].value;
         }
-        if (!found)
+        else
             out[n++] = eb[i];
     }
-    return lt_make_map(out, n);
+    return lt_adopt_map(out, n);
 }
 
 static ArgumentValue lt_delete(ArgumentValue a, ArgumentValue key)
@@ -1192,7 +1408,7 @@ static ArgumentValue lt_delete(ArgumentValue a, ArgumentValue key)
     for (size_t i = 0; i < count; i++)
         if (!(src[i].key && strcmp(src[i].key, k) == 0))
             out[n++] = src[i];
-    return lt_make_map(out, n);
+    return lt_adopt_map(out, n);
 }
 
 static ArgumentValue lt_entries(ArgumentValue a)
@@ -1209,7 +1425,7 @@ static ArgumentValue lt_entries(ArgumentValue a)
         pair[1] = entries[i].value;
         out[i] = lt_make_arr(pair, 2);
     }
-    return lt_make_arr(out, n);
+    return lt_adopt_arr(out, n);
 }
 
 #endif
@@ -1236,7 +1452,7 @@ static ArgumentValue v_pass(ArgumentValue v) { return v; }
 
 static ArgumentValue v_builder(Builder b)
 {
-    ChainType *c = malloc(sizeof(ChainType));
+    ChainType *c = lt_alloc(sizeof(ChainType));
     if (c)
         *c = b.schema.chain;
     return (ArgumentValue){.type = D_CHAIN, .as.chain = c ? c : &b.schema.chain};
@@ -1735,7 +1951,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
     case D_ARRAY:
     {
         const ArgumentValue *src = v->as.data;
-        ArgumentValue *items = malloc(v->count * sizeof(ArgumentValue));
+        ArgumentValue *items = gn_alloc(v->count * sizeof(ArgumentValue));
         if (items)
         {
             for (size_t i = 0; i < v->count; i++)
@@ -1747,7 +1963,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
     case D_MAP:
     {
         const MapEntry *src = v->as.data;
-        MapEntry *entries = malloc(v->count * sizeof(MapEntry));
+        MapEntry *entries = gn_alloc(v->count * sizeof(MapEntry));
         if (entries)
         {
             for (size_t i = 0; i < v->count; i++)
@@ -1767,7 +1983,7 @@ static ArgumentValue deep_copy_value(const ArgumentValue *v)
 
 static ChainType *deep_copy_chain(const ChainType *c)
 {
-    ChainType *copy = malloc(sizeof(ChainType));
+    ChainType *copy = gn_alloc(sizeof(ChainType));
     if (!copy)
         return NULL;
     *copy = *c;
@@ -1775,7 +1991,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
     if (c->valueCount == 0)
         return copy;
 
-    ChainValue *values = malloc(c->valueCount * sizeof(ChainValue));
+    ChainValue *values = gn_alloc(c->valueCount * sizeof(ChainValue));
     if (!values)
         return copy;
     for (size_t i = 0; i < c->valueCount; i++)
@@ -1786,7 +2002,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
             FunctionCallType *fc = &values[i].as.functionCall;
             if (fc->argumentCount == 0)
                 continue;
-            ArgumentType *args = malloc(fc->argumentCount * sizeof(ArgumentType));
+            ArgumentType *args = gn_alloc(fc->argumentCount * sizeof(ArgumentType));
             if (!args)
                 continue;
             for (size_t j = 0; j < fc->argumentCount; j++)
@@ -1802,7 +2018,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
         {
             if (values[i].as.propertyCall.builder)
             {
-                Builder *b = malloc(sizeof(Builder));
+                Builder *b = gn_alloc(sizeof(Builder));
                 if (b)
                 {
                     b->schema = deep_copy_schema(&values[i].as.propertyCall.builder->schema);
@@ -1814,10 +2030,7 @@ static ChainType *deep_copy_chain(const ChainType *c)
         {
             ChainType *srcCopy = deep_copy_chain(&values[i].as.copy.source);
             if (srcCopy)
-            {
                 values[i].as.copy.source = *srcCopy;
-                free(srcCopy);
-            }
         }
     }
     copy->values = values;
@@ -1852,7 +2065,7 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
     if (total == 0)
         return flat;
 
-    ChainValue *values = malloc(total * sizeof(ChainValue));
+    ChainValue *values = gn_alloc(total * sizeof(ChainValue));
     if (!values)
         return flat;
     size_t k = 0;
@@ -1865,7 +2078,6 @@ static ChainType builder_chain(const char *typeName, const Builder *builders, si
     flat.values = values;
 
     ChainType *copy = deep_copy_chain(&flat);
-    free(values);
     if (copy)
         return *copy;
     return flat;
@@ -2085,6 +2297,12 @@ static cJSON *jval(const ArgumentValue *d)
 }
 
 static char *json_buf = NULL;
+
+static void free_json_buf(void)
+{
+    free(json_buf);
+    json_buf = NULL;
+}
 
 static SchemaType getSchema_impl(const Builder *b, const char *exportName, ArgumentValue importPaths)
 {
