@@ -459,6 +459,23 @@ function buildParser(): LT {
                     .addCallFunction("pushSql", [")"])
                     .addCallFunction("pushW", [")"]));
 
+    const emitTransactionNode = (chain: LT, arg: LT): LT =>
+        chain.addCallFunction("pushSql", ["BEGIN"])
+            .addCallFunction("pushW", ["BEGIN"])
+            .addVariable("txnFirst", true)
+            .forEach(callExpr("itemsOf", [arg]), "txnItem",
+                lt().if(valEq(ref("txnFirst"), false),
+                        lt().setVariable("sql", strCat(ref("sql"), ";")).setVariable("wsql", strCat(ref("wsql"), ";")))
+                    .setVariable("txnFirst", false)
+                    .if(objHas(ref("txnItem"), "chain"),
+                        lt().addCallFunction("renderNodes", [member(ref("txnItem"), "chain.values"), 0]))
+                    .elseIf(objHas(ref("txnItem"), "string"),
+                        lt().addCallFunction("pushSql", [callExpr("asString", [ref("txnItem")])])
+                            .addCallFunction("pushW", [callExpr("asString", [ref("txnItem")])]))
+                    .else(emitRhsNode(lt(), ref("txnItem"))))
+            .addCallFunction("pushSql", ["COMMIT"])
+            .addCallFunction("pushW", ["COMMIT"]);
+
     const emitInList = (arg: LT): LT =>
         emitBase(separator(lt()))
             .addCallFunction("pushSql", ["IN ("])
@@ -485,13 +502,11 @@ function buildParser(): LT {
         .else(emitInList(arg));
 
     const emitExistsNode = (arg: LT): LT =>
-        lt().if(objHas(arg, "chain"),
-            emitSubquery(
-                separator(lt())
-                    .addCallFunction("pushSql", ["EXISTS"])
-                    .addCallFunction("pushW", ["EXISTS"]),
-                member(arg, "chain.values")))
-            .else(lt().throwError("query-builder parse: exists expects a subquery"));
+        emitRhsNode(
+            separator(lt())
+                .addCallFunction("pushSql", ["EXISTS"])
+                .addCallFunction("pushW", ["EXISTS"]),
+            arg);
 
     const predicateNode = (node: LT): LT =>
         lt().addVariable("pn", callExpr("normName", [member(node, "functionCall.name")]))
@@ -688,6 +703,7 @@ function buildParser(): LT {
     const clauseBody = (node: LT): LT => {
         const specs: { names: string[]; build: (node: LT) => LT }[] = [
             { names: ["with"], build: (n) => withClause(n) },
+            { names: ["transaction"], build: (n) => emitTransactionNode(lt(), argAt(n, 0)) },
             { names: ["select"], build: (n) => keywordClause(n, "SELECT", emitColumnListNode, (a) => a) },
             { names: ["from"], build: (n) => keywordClause(n, "FROM", emitOperandNode, (a) => a) },
             { names: ["join"], build: (n) => joinClause(n, "JOIN") },

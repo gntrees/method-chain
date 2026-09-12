@@ -354,6 +354,21 @@ const cases: Case[] = [
         cArgs: `setDialect("postgres"),
         values(arr(arr(valSub, v_int(1))))`,
     },
+    {
+        name: "postgres exists without subquery",
+        query: (c) => c.select(c.col("id")).where(c.exists(c.col("x"))).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        where(chain(exists(col(v_string("x")))))`,
+    },
+    {
+        name: "postgres transaction block",
+        query: (c) =>
+            c.transaction([c.insert(c.table("t"), { a: 1 }), c.insert(c.table("u"), { b: 2 })])
+                .setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        transaction(arr(insert(table(v_string("t")), map(entry("a", v_int(1)))), insert(table(v_string("u")), map(entry("b", v_int(2))))))`,
+    },
 ];
 
 for (const { name, query, cArgs, cSetup } of cases) {

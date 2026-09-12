@@ -828,6 +828,49 @@ test("parse builds exists subquery", () => {
     });
 });
 
+test("parse allows exists without a subquery", () => {
+    const c = qb();
+    expect(c.select(c.col("id")).where(c.exists(c.col("x"))).setDialect("postgres").parse()).toEqual({
+        sql: 'SELECT "id" WHERE EXISTS "x"',
+        param: [],
+        sqlWithParam: 'SELECT "id" WHERE EXISTS "x"',
+    });
+});
+
+test("parse builds transaction block", () => {
+    const c = qb();
+    const chained = c.transaction(c.insert(c.table("t"), { a: 1 })).setDialect("postgres").parse();
+    expect(chained).toEqual({
+        sql: 'BEGIN INSERT INTO "t" ( "a" ) VALUES ( $1 ) COMMIT',
+        param: [1],
+        sqlWithParam: 'BEGIN INSERT INTO "t" ( "a" ) VALUES ( 1 ) COMMIT',
+    });
+
+    const batch = qb();
+    const array = batch.transaction([batch.insert(batch.table("t"), { a: 1 }), batch.insert(batch.table("u"), { b: 2 })]).setDialect("postgres").parse();
+    expect(array).toEqual({
+        sql: 'BEGIN INSERT INTO "t" ( "a" ) VALUES ( $1 ); INSERT INTO "u" ( "b" ) VALUES ( $2 ) COMMIT',
+        param: [1, 2],
+        sqlWithParam: 'BEGIN INSERT INTO "t" ( "a" ) VALUES ( 1 ); INSERT INTO "u" ( "b" ) VALUES ( 2 ) COMMIT',
+    });
+
+    const raw = qb();
+    expect(raw.transaction("UPDATE t SET a=1").setDialect("postgres").parse().sql).toBe("BEGIN UPDATE t SET a=1 COMMIT");
+});
+
+test("parse leaves SQL responsibility to the caller", () => {
+    const dup = qb();
+    expect(dup.select(dup.col("id")).where(dup.col("x").eq(1)).where(dup.col("y").eq(2)).setDialect("postgres").parse().sql).toBe(
+        'SELECT "id" WHERE "x" = $1 WHERE "y" = $2'
+    );
+
+    const empty = qb();
+    expect(empty.select(empty.col("id")).where(empty.and([])).setDialect("postgres").parse().sql).toBe('SELECT "id" WHERE ( )');
+
+    const emptyValues = qb();
+    expect(emptyValues.values([]).setDialect("postgres").parse().sql).toBe("VALUES ( )");
+});
+
 test("parse builds in subquery", () => {
     const c = qb();
     const result = c.select(c.col("id"))
