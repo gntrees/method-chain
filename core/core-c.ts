@@ -333,15 +333,17 @@ function createMacro(definition: StructureType, init: InitFunctionType, index: n
         .schema = validate_and_return( \\
             (SchemaType){ \\
                 .exportName = "${exportName}", \\
-                .chain = builder_chain( \\
-                    "${kebab}", \\
-                    (Builder[]){ __VA_ARGS__ }, \\
-                    BUILDER_COUNT(__VA_ARGS__), \\
-                    (InitFunctionType){ \\
-                        .name = "${initName}", \\
-                        .variableName = (meta).schema.chain.initFunction.variableName, \\
-                        .importString = "${importString}", \\
-                    }), \\
+                .chain = ({ \\
+                    Builder __lt_chain_args[] = { __VA_ARGS__ }; \\
+                    builder_chain( \\
+                        "${kebab}", \\
+                        __lt_chain_args, \\
+                        sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \\
+                        (InitFunctionType){ \\
+                            .name = "${initName}", \\
+                            .variableName = (meta).schema.chain.initFunction.variableName, \\
+                            .importString = "${importString}", \\
+                        }); }), \\
             }, \\
             gntrees_structures, COUNT_OF(gntrees_structures)) \\
     })`;

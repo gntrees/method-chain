@@ -394,11 +394,13 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define chain(...) \
     ((Builder){ \
         .type = "chain", \
-        .schema = { .exportName = 0, .chain = builder_chain( \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
-            (Builder[]){ __VA_ARGS__ }, \
-            BUILDER_COUNT(__VA_ARGS__), \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+        .schema = { .exportName = 0, .chain = ({ \
+            Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+            builder_chain( \
+                __lt_chain_args[0].schema.chain.typeName, \
+                __lt_chain_args, \
+                sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                __lt_chain_args[0].schema.chain.initFunction); }) } \
     })
 
 /**
@@ -2572,15 +2574,17 @@ static const PropertySignature type_converter_properties[] = {
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = builder_chain( \
-                    "type-converter", \
-                    (Builder[]){ __VA_ARGS__ }, \
-                    BUILDER_COUNT(__VA_ARGS__), \
-                    (InitFunctionType){ \
-                        .name = "create-type-converter", \
-                        .variableName = (meta).schema.chain.initFunction.variableName, \
-                        .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }), \
+                .chain = ({ \
+                    Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+                    builder_chain( \
+                        "type-converter", \
+                        __lt_chain_args, \
+                        sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                        (InitFunctionType){ \
+                            .name = "create-type-converter", \
+                            .variableName = (meta).schema.chain.initFunction.variableName, \
+                            .importString = "import { createTypeConverter } from \"../../../gntrees-method-chain/typescript/index\"", \
+                        }); }), \
             }, \
             gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
@@ -2631,15 +2635,17 @@ static const FunctionSignature string_formatter_functions[] = {
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = builder_chain( \
-                    "string-formatter", \
-                    (Builder[]){ __VA_ARGS__ }, \
-                    BUILDER_COUNT(__VA_ARGS__), \
-                    (InitFunctionType){ \
-                        .name = "create-string-formatter", \
-                        .variableName = (meta).schema.chain.initFunction.variableName, \
-                        .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }), \
+                .chain = ({ \
+                    Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+                    builder_chain( \
+                        "string-formatter", \
+                        __lt_chain_args, \
+                        sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                        (InitFunctionType){ \
+                            .name = "create-string-formatter", \
+                            .variableName = (meta).schema.chain.initFunction.variableName, \
+                            .importString = "import { createStringFormatter } from \"../../../gntrees-method-chain/typescript/index\"", \
+                        }); }), \
             }, \
             gntrees_structures, COUNT_OF(gntrees_structures)) \
     })
@@ -4912,15 +4918,17 @@ static const FunctionSignature query_builder_functions[] = {
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = builder_chain( \
-                    "query-builder", \
-                    (Builder[]){ __VA_ARGS__ }, \
-                    BUILDER_COUNT(__VA_ARGS__), \
-                    (InitFunctionType){ \
-                        .name = "query-builder", \
-                        .variableName = (meta).schema.chain.initFunction.variableName, \
-                        .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/index\"", \
-                    }), \
+                .chain = ({ \
+                    Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+                    builder_chain( \
+                        "query-builder", \
+                        __lt_chain_args, \
+                        sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                        (InitFunctionType){ \
+                            .name = "query-builder", \
+                            .variableName = (meta).schema.chain.initFunction.variableName, \
+                            .importString = "import { queryBuilder } from \"../../../gntrees-method-chain/typescript/index\"", \
+                        }); }), \
             }, \
             gntrees_structures, COUNT_OF(gntrees_structures)) \
     })

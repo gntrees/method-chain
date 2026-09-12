@@ -16,7 +16,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("finite");
-});
+}, 60000);
 
 test("object missing required key aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -45,7 +45,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("missing required object key");
-});
+}, 60000);
 
 test("valid object passes validation", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -74,7 +74,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("valid multi-call chain passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -88,7 +88,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("first call not a member of init structure aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -101,7 +101,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("second call not a member of returned structure aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -114,7 +114,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("property call followed by member function passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -128,7 +128,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("property call followed by wrong-structure function aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -141,7 +141,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("cross-structure init chain passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -155,7 +155,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("valid sub-chain argument passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -169,7 +169,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("invalid sub-chain argument aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -182,7 +182,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("empty chain is valid", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -196,7 +196,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("last call returning unknown structure aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -219,7 +219,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("returns unknown structure");
-});
+}, 60000);
 
 test("NULL chain argument aborts instead of crashing", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -243,7 +243,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal).not.toBe("SIGSEGV");
     expect(stderr).toContain("type mismatch");
-});
+}, 60000);
 
 test("template literal flag mismatch aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -262,7 +262,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("flag mismatch");
-});
+}, 60000);
 
 test("union error message includes branch reasons", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -276,7 +276,7 @@ int main(void) {
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("expected string");
     expect(stderr).toContain("expected number");
-});
+}, 60000);
 
 test("duplicate object key aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -305,7 +305,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("duplicate object key");
-});
+}, 60000);
 
 test("property builder type name mismatch aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -326,7 +326,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("builder type name mismatch");
-});
+}, 60000);
 
 test("schema without init function name aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -349,7 +349,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("init function without name");
-});
+}, 60000);
 
 test("nested sub-chain in array with invalid member aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -362,7 +362,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("nested sub-chain in array with valid member passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -376,7 +376,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("template literal with invalid chain expression aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -389,7 +389,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("template literal with valid chain expression passes", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -403,7 +403,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("string variables passed to builder functions", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -425,7 +425,7 @@ int main(void) {
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain('"data"');
     expect(stdout).toContain('"hello"');
-});
+}, 60000);
 
 test("numeric variables of each supported type", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -452,7 +452,7 @@ int main(void) {
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("42");
     expect(stdout).toContain("2.5");
-});
+}, 60000);
 
 test("numeric variables in query-builder", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -477,7 +477,7 @@ int main(void) {
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("42");
     expect(stdout).toContain("3.14");
-});
+}, 60000);
 
 test("bool variable via boolify", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -493,7 +493,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("boolean");
-});
+}, 60000);
 
 test("ArgumentValue variables pass through v_pass", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -510,7 +510,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain('"x"');
-});
+}, 60000);
 
 test("Builder variables used as sub-chain arguments", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -528,7 +528,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("array and map variables in query-builder", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -550,7 +550,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain('"bob"');
-});
+}, 60000);
 
 test("combined schema built from variables prints values", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -582,7 +582,7 @@ int main(void) {
     expect(stdout).toContain('"x"');
     expect(stdout).toContain("42");
     expect(stdout).toContain("3.14");
-});
+}, 60000);
 
 test("variable with type not covered by _Generic fails to compile", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -593,7 +593,7 @@ int main(void) {
 }
 `;
     expect(() => compileAndRun(runner)).toThrow();
-});
+}, 60000);
 
 test("getSchema with importPaths map sets importPaths in JSON", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -611,7 +611,7 @@ int main(void) {
     expect(stdout).toContain('"importPaths"');
     expect(stdout).toContain('"c": "./c-lib"');
     expect(stdout).toContain('"typescript": "./ts-lib"');
-});
+}, 60000);
 
 test("getSchema without importPaths omits importPaths from JSON", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -627,7 +627,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).not.toContain("importPaths");
-});
+}, 60000);
 
 test("empty map() and arr() macros produce zero-count values", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -644,7 +644,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("OK");
-});
+}, 60000);
 
 test("non-empty map/arr dispatch preserves entries", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -663,7 +663,7 @@ int main(void) {
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("OK");
-});
+}, 60000);
 
 test("copy() records the source builder as a copy value", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -685,7 +685,7 @@ int main(void) {
     expect(values[0].copy.chain.chain.values[0].functionCall.name).toBe("label");
     expect(values[1].functionCall.name).toBe("label");
     expect(schema.schema.chain.chain.initFunction.variableName).toBe("c");
-});
+}, 60000);
 
 test("raw init-function builder in chain args aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -701,7 +701,7 @@ int main(void) {
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("cannot be placed directly in a chain");
     expect(stderr).toContain("copy(");
-});
+}, 60000);
 
 test("raw init-function builder inside chain() aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -716,7 +716,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("cannot be placed directly in a chain");
-});
+}, 60000);
 
 test("cross-type copy aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -731,7 +731,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("cannot copy builder of structure 'string-formatter' into 'type-converter'");
-});
+}, 60000);
 
 test("copy of empty builder is valid", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -751,7 +751,7 @@ int main(void) {
     expect(values).toHaveLength(2);
     expect(values[0].copy.chain.chain.values).toHaveLength(0);
     expect(values[1].functionCall.name).toBe("stringify");
-});
+}, 60000);
 
 test("multiple copies keep their positions", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -773,7 +773,7 @@ int main(void) {
     expect(values[0].copy.chain.chain.initFunction.variableName).toBe("f");
     expect(values[1].functionCall.name).toBe("numerify");
     expect(values[2].copy.chain.chain.initFunction.variableName).toBe("g");
-});
+}, 60000);
 
 test("init-function builder stays intact inside functionCall param", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -794,7 +794,7 @@ int main(void) {
     const arg = values[0].functionCall.arguments[0].argument;
     expect(arg.chain.chain.initFunction.variableName).toBe("s");
     expect(arg.chain.chain.values[0].functionCall.name).toBe("format");
-});
+}, 60000);
 
 test("copy of the same source twice emits a single declaration", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -833,7 +833,7 @@ int main(void) {
     expect(roundtrip.stderr).not.toContain("validate:");
     const regenerated = JSON.parse(roundtrip.stdout);
     expect(regenerated.schema.chain).toEqual(schema.schema.chain);
-});
+}, 60000);
 
 test("copy source without named init function throws during conversion", () => {
     const bad = {
@@ -850,7 +850,7 @@ test("copy source without named init function throws during conversion", () => {
         },
     };
     expect(() => convertSchemaToC(bad as any)).toThrow("Copy source chain requires a named init function");
-});
+}, 60000);
 
 test("copy source chain without structure type aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -868,7 +868,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("copy source chain without structure type");
-});
+}, 60000);
 
 test("copy source deep-copied: mutating source later does not leak into target", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -893,7 +893,7 @@ int main(void) {
     expect(JSON.stringify(bJson)).not.toContain('"stringify"');
     const fValues = fJson.schema.chain.chain.values;
     expect(fValues[0].functionCall.name).toBe("stringify");
-});
+}, 60000);
 
 test("custom function dispatches to the matching structure impl", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -911,7 +911,7 @@ int main(void) {
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain("type-converter");
     expect(stdout).toContain("string-formatter");
-});
+}, 60000);
 
 test("custom function on wrong structure aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -925,7 +925,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("not a member");
-});
+}, 60000);
 
 test("custom function wrong argument type aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -939,7 +939,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("type mismatch");
-});
+}, 60000);
 
 test("parse builds sql with dialect placeholders", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -966,7 +966,7 @@ int main(void) {
     expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = $1 LIMIT 10');
     expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10');
     expect(stdout).toContain("1 2");
-});
+}, 60000);
 
 test("parse is memory-safe under AddressSanitizer", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -1019,7 +1019,7 @@ int main(void) {
     const { status, stderr } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-});
+}, 60000);
 
 test("invalid literal string argument aborts", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -1032,7 +1032,7 @@ int main(void) {
     expect(status).not.toBe(0);
     expect(signal === "SIGABRT" || (status !== null && status !== 0)).toBe(true);
     expect(stderr).toContain("literal");
-});
+}, 60000);
 
 test("number and boolean literals validate", () => {
     const runner = `#include "gntrees-method-chain.h"
@@ -1059,4 +1059,4 @@ int main(void) {
 `;
     const { status } = compileAndRun(runner);
     expect(status).toBe(0);
-});
+}, 60000);

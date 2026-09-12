@@ -377,11 +377,13 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define chain(...) \
     ((Builder){ \
         .type = "chain", \
-        .schema = { .exportName = 0, .chain = builder_chain( \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
-            (Builder[]){ __VA_ARGS__ }, \
-            BUILDER_COUNT(__VA_ARGS__), \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+        .schema = { .exportName = 0, .chain = ({ \
+            Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+            builder_chain( \
+                __lt_chain_args[0].schema.chain.typeName, \
+                __lt_chain_args, \
+                sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                __lt_chain_args[0].schema.chain.initFunction); }) } \
     })
 
 /**
@@ -3385,15 +3387,17 @@ static const FunctionSignature lingua_tungga_functions[] = {
         .schema = validate_and_return( \
             (SchemaType){ \
                 .exportName = "schema", \
-                .chain = builder_chain( \
-                    "lingua-tungga", \
-                    (Builder[]){ __VA_ARGS__ }, \
-                    BUILDER_COUNT(__VA_ARGS__), \
-                    (InitFunctionType){ \
-                        .name = "lingua-tungga", \
-                        .variableName = (meta).schema.chain.initFunction.variableName, \
-                        .importString = "import { linguaTungga } from \"./lingua-tungga.h\"", \
-                    }), \
+                .chain = ({ \
+                    Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+                    builder_chain( \
+                        "lingua-tungga", \
+                        __lt_chain_args, \
+                        sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                        (InitFunctionType){ \
+                            .name = "lingua-tungga", \
+                            .variableName = (meta).schema.chain.initFunction.variableName, \
+                            .importString = "import { linguaTungga } from \"./lingua-tungga.h\"", \
+                        }); }), \
             }, \
             gntrees_structures, COUNT_OF(gntrees_structures)) \
     })

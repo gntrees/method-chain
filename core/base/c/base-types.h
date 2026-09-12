@@ -367,11 +367,13 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define chain(...) \
     ((Builder){ \
         .type = "chain", \
-        .schema = { .exportName = 0, .chain = builder_chain( \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.typeName, \
-            (Builder[]){ __VA_ARGS__ }, \
-            BUILDER_COUNT(__VA_ARGS__), \
-            ((Builder[]){ __VA_ARGS__ })[0].schema.chain.initFunction) } \
+        .schema = { .exportName = 0, .chain = ({ \
+            Builder __lt_chain_args[] = { __VA_ARGS__ }; \
+            builder_chain( \
+                __lt_chain_args[0].schema.chain.typeName, \
+                __lt_chain_args, \
+                sizeof(__lt_chain_args) / sizeof(__lt_chain_args[0]), \
+                __lt_chain_args[0].schema.chain.initFunction); }) } \
     })
 
 /**

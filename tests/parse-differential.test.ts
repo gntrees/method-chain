@@ -251,11 +251,10 @@ const cases: Case[] = [
                 .from(c.table("users"))
                 .where(c.exists(c.select(c.col("id")).from(c.table("posts")).where(c.col("posts.user_id").eq(c.col("users.id")))))
                 .setDialect("postgres"),
-        cSetup: `Builder existsSub = chain(select(col(v_string("id"))), from(table(v_string("posts"))), where(chain(col(v_string("posts.user_id")), eq(chain(col(v_string("users.id")))))));`,
         cArgs: `setDialect("postgres"),
         select(col(v_string("id"))),
         from(table(v_string("users"))),
-        where(chain(exists(existsSub)))`,
+        where(chain(exists(chain(select(col(v_string("id"))), from(table(v_string("posts"))), where(chain(col(v_string("posts.user_id")), eq(chain(col(v_string("users.id"))))))))))`,
     },
     {
         name: "postgres in subquery",
@@ -317,11 +316,9 @@ const cases: Case[] = [
                     ),
                 ))
                 .setDialect("mysql"),
-        cSetup: `Builder bSub = chain(select(col(v_string("id"))), from(table(v_string("b"))), where(chain(col(v_string("ok")), eq(v_bool(1)))));
-    Builder mSub = chain(select(col(v_string("uid"))), from(table(v_string("m"))), where(chain(col(v_string("uid")), in(bSub))));`,
         cArgs: `setDialect("mysql"),
         select(col(v_string("id"))),
-        where(chain(col(v_string("id")), in(mSub)))`,
+        where(chain(col(v_string("id")), in(chain(select(col(v_string("uid"))), from(table(v_string("m"))), where(chain(col(v_string("uid")), in(chain(select(col(v_string("id"))), from(table(v_string("b"))), where(chain(col(v_string("ok")), eq(v_bool(1))))))))))))`,
     },
 ];
 
