@@ -311,9 +311,159 @@ static ArgumentValue lt_adopt_map(MapEntry *entries, size_t count)
     return (ArgumentValue){ .type = D_MAP, .count = count, .as.data = entries };
 }
 
+/* ---- growable buffer / list (amortized O(n), region-backed) ---- */
+
+typedef struct LtBuf
+{
+    char *data;
+    size_t len;
+    size_t cap;
+} LtBuf;
+
+typedef struct LtList
+{
+    ArgumentValue *data;
+    size_t len;
+    size_t cap;
+} LtList;
+
+static const char *lt_as_string(const ArgumentValue *v);
+static long long lt_as_int(const ArgumentValue *v);
+
+static ArgumentValue lt_buf_new(void)
+{
+    LtBuf *b = lt_alloc(sizeof(LtBuf));
+    if (!b)
+        return v_null();
+    b->cap = 64;
+    b->len = 0;
+    b->data = lt_alloc(b->cap);
+    if (!b->data)
+        return v_null();
+    b->data[0] = '\0';
+    return (ArgumentValue){ .type = D_BUFFER, .count = 0, .as.data = b };
+}
+
+static ArgumentValue lt_buf_append(ArgumentValue a, ArgumentValue text)
+{
+    LtBuf *b = a.type == D_BUFFER ? (LtBuf *)a.as.data : NULL;
+    if (!b)
+        return a;
+    const char *s = lt_as_string(&text);
+    size_t add = strlen(s);
+    size_t need = b->len + add + 1;
+    if (need > b->cap)
+    {
+        size_t cap = b->cap ? b->cap : 64;
+        while (cap < need)
+            cap *= 2;
+        char *grown = lt_alloc(cap);
+        if (!grown)
+            return a;
+        memcpy(grown, b->data, b->len);
+        b->data = grown;
+        b->cap = cap;
+    }
+    memcpy(b->data + b->len, s, add);
+    b->len += add;
+    b->data[b->len] = '\0';
+    ArgumentValue out = a;
+    out.count = b->len;
+    return out;
+}
+
+static ArgumentValue lt_buf_len(ArgumentValue a)
+{
+    LtBuf *b = a.type == D_BUFFER ? (LtBuf *)a.as.data : NULL;
+    return v_int(b ? (long long)b->len : 0);
+}
+
+static ArgumentValue lt_buf_str(ArgumentValue a)
+{
+    LtBuf *b = a.type == D_BUFFER ? (LtBuf *)a.as.data : NULL;
+    if (!b)
+        return v_string("");
+    char *out = lt_alloc(b->len + 1);
+    if (!out)
+        return v_null();
+    memcpy(out, b->data, b->len + 1);
+    return v_string(out);
+}
+
+static ArgumentValue lt_list_new(void)
+{
+    LtList *l = lt_alloc(sizeof(LtList));
+    if (!l)
+        return v_null();
+    l->cap = 8;
+    l->len = 0;
+    l->data = lt_alloc(l->cap * sizeof(ArgumentValue));
+    if (!l->data)
+        return v_null();
+    return (ArgumentValue){ .type = D_LIST, .count = 0, .as.data = l };
+}
+
+static ArgumentValue lt_list_push(ArgumentValue a, ArgumentValue item)
+{
+    LtList *l = a.type == D_LIST ? (LtList *)a.as.data : NULL;
+    if (!l)
+        return a;
+    if (l->len + 1 > l->cap)
+    {
+        size_t cap = l->cap ? l->cap : 8;
+        while (cap < l->len + 1)
+            cap *= 2;
+        ArgumentValue *grown = lt_alloc(cap * sizeof(ArgumentValue));
+        if (!grown)
+            return a;
+        memcpy(grown, l->data, l->len * sizeof(ArgumentValue));
+        l->data = grown;
+        l->cap = cap;
+    }
+    l->data[l->len++] = item;
+    ArgumentValue out = a;
+    out.count = l->len;
+    return out;
+}
+
+static ArgumentValue lt_list_len(ArgumentValue a)
+{
+    LtList *l = a.type == D_LIST ? (LtList *)a.as.data : NULL;
+    return v_int(l ? (long long)l->len : 0);
+}
+
+static ArgumentValue lt_list_get(ArgumentValue a, ArgumentValue index)
+{
+    LtList *l = a.type == D_LIST ? (LtList *)a.as.data : NULL;
+    long long i = lt_as_int(&index);
+    if (!l || i < 0 || (size_t)i >= l->len)
+        return v_null();
+    return l->data[i];
+}
+
+static ArgumentValue lt_list_value(ArgumentValue a)
+{
+    LtList *l = a.type == D_LIST ? (LtList *)a.as.data : NULL;
+    if (!l)
+        return a;
+    ArgumentValue *out = NULL;
+    if (l->len)
+    {
+        out = lt_alloc(l->len * sizeof(ArgumentValue));
+        if (!out)
+            return v_null();
+        memcpy(out, l->data, l->len * sizeof(ArgumentValue));
+    }
+    return lt_adopt_arr(out, l->len);
+}
+
 static const char *lt_as_string(const ArgumentValue *v)
 {
-    return v->type == D_STRING && v->as.s ? v->as.s : "";
+    if (v->type == D_STRING)
+        return v->as.s ? v->as.s : "";
+    if (v->type == D_BUFFER && v->as.data)
+        return ((const LtBuf *)v->as.data)->data;
+    return "";
 }
 
 static long long lt_as_int(const ArgumentValue *v)
@@ -347,6 +497,8 @@ static const char *lt_repr(ArgumentValue v, char *buf, size_t bufsize)
     switch (v.type)
     {
     case D_STRING:
+        return lt_as_string(&v);
+    case D_BUFFER:
         return lt_as_string(&v);
     case D_INT:
         snprintf(buf, bufsize, "%lld", v.as.i);
@@ -382,6 +534,10 @@ static ArgumentValue lt_len(ArgumentValue a)
 {
     if (a.type == D_STRING)
         return v_int((long long)strlen(lt_as_string(&a)));
+    if (a.type == D_BUFFER)
+        return lt_buf_len(a);
+    if (a.type == D_LIST)
+        return lt_list_len(a);
     if (a.type == D_ARRAY || a.type == D_MAP)
         return v_int((long long)a.count);
     return v_int(0);

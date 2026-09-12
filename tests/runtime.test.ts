@@ -502,6 +502,18 @@ test("parse binds limit and offset as params", () => {
     });
 });
 
+test("parse handles many parameters", () => {
+    const c = qb();
+    let chain: any = c.select(c.col("id")).from(c.table("t")).where(c.col("a0").eq(0));
+    for (let i = 1; i < 256; i++) {
+        chain = chain.where(c.col(`a${i}`).eq(i));
+    }
+    const result = chain.setDialect("postgres").parse();
+    expect(result.param).toHaveLength(256);
+    expect(result.param[255]).toBe(255);
+    expect(result.sql.endsWith("$256")).toBe(true);
+});
+
 test("parse builds in predicate", () => {
     const c = qb();
     const result = c.select(c.col("id")).where(c.col("x").in("1,2,3")).setDialect("postgres").parse();

@@ -13,7 +13,9 @@ enum DynamicType
     D_NULL,
     D_MAP,
     D_ARRAY,
-    D_CHAIN
+    D_CHAIN,
+    D_BUFFER,
+    D_LIST
 };
 
 typedef struct Builder Builder;

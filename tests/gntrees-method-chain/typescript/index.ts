@@ -2775,8 +2775,8 @@ export class QueryBuilder {
     const root: any = this.getSchema();
     let dialect = "";
     let quote = "";
-    let sql = "";
-    let wsql = "";
+    let sql = [] as any;
+    let wsql = [] as any;
     let params = [] as any[];
     let orderSql = "";
     let orderW = "";
@@ -2790,11 +2790,13 @@ export class QueryBuilder {
       return n.replaceAll("-", "").toLowerCase();
     }
     function pushSql(text: any) {
-      sql = sql + (" " + text);
+      sql = (sql.push(" "), sql);
+      sql = (sql.push(text), sql);
       return null;
     }
     function pushW(text: any) {
-      wsql = wsql + (" " + text);
+      wsql = (wsql.push(" "), wsql);
+      wsql = (wsql.push(text), wsql);
       return null;
     }
     function asString(arg: any) {
@@ -2861,7 +2863,7 @@ export class QueryBuilder {
       return tmpRef;
     }
     function emitParam(arg: any) {
-      params = [...params, arg];
+      params = (params.push(arg), params);
       if (dialect === "postgres") {
         tmp = "$" + String(params.length);
       } else {
@@ -2879,41 +2881,41 @@ export class QueryBuilder {
       return null;
     }
     function emitRaw(node: any) {
-      if (sql !== "") {
-        sql = sql + " ";
-        wsql = wsql + " ";
+      if (sql.length !== 0) {
+        sql = (sql.push(" "), sql);
+        wsql = (wsql.push(" "), wsql);
       }
       for (const rawArg of node["functionCall"]["arguments"]) {
         let rawVal = rawArg["argument"];
         if (!!Object.prototype.hasOwnProperty.call(rawVal, "string")) {
-          sql = sql + asString(rawVal);
-          wsql = wsql + asString(rawVal);
+          sql = (sql.push(asString(rawVal)), sql);
+          wsql = (wsql.push(asString(rawVal)), wsql);
         } else if (!!Object.prototype.hasOwnProperty.call(rawVal, "chain")) {
           tmpRef = isRef(rawVal["chain"]["values"]);
           if (tmpRef !== "") {
-            sql = sql + identStr(tmpRef);
-            wsql = wsql + identStr(tmpRef);
+            sql = (sql.push(identStr(tmpRef)), sql);
+            wsql = (wsql.push(identStr(tmpRef)), wsql);
           } else {
-            params = [...params, rawVal];
+            params = (params.push(rawVal), params);
             if (dialect === "postgres") {
               tmp = "$" + String(params.length);
             } else {
               tmp = "?";
             }
-            sql = sql + tmp;
+            sql = (sql.push(tmp), sql);
             tmp2 = literalOf(rawVal);
-            wsql = wsql + tmp2;
+            wsql = (wsql.push(tmp2), wsql);
           }
         } else {
-          params = [...params, rawVal];
+          params = (params.push(rawVal), params);
           if (dialect === "postgres") {
             tmp = "$" + String(params.length);
           } else {
             tmp = "?";
           }
-          sql = sql + tmp;
+          sql = (sql.push(tmp), sql);
           tmp2 = literalOf(rawVal);
-          wsql = wsql + tmp2;
+          wsql = (wsql.push(tmp2), wsql);
         }
       }
       return null;
@@ -3050,8 +3052,8 @@ export class QueryBuilder {
                 savedOrderSql = orderSql;
                 savedOrderW = orderW;
                 savedHasOrder = hasOrder;
-                sql = "";
-                wsql = "";
+                sql = [];
+                wsql = [];
                 orderSql = "";
                 orderW = "";
                 hasOrder = false;
@@ -3061,16 +3063,16 @@ export class QueryBuilder {
                   ],
                   0,
                 );
-                subSql = sql.trim();
-                subW = wsql.trim();
+                subSql = sql.join("").trim();
+                subW = wsql.join("").trim();
                 sql = savedSql;
                 wsql = savedW;
                 orderSql = savedOrderSql;
                 orderW = savedOrderW;
                 hasOrder = savedHasOrder;
                 if (withFirst === false) {
-                  sql = sql + ",";
-                  wsql = wsql + ",";
+                  sql = (sql.push(","), sql);
+                  wsql = (wsql.push(","), wsql);
                 } else {
                   withFirst = false;
                   pushSql("WITH");
@@ -3098,8 +3100,8 @@ export class QueryBuilder {
                   node["functionCall"]["arguments"][0]["argument"],
                 )) {
                   if (txnFirst === false) {
-                    sql = sql + ";";
-                    wsql = wsql + ";";
+                    sql = (sql.push(";"), sql);
+                    wsql = (wsql.push(";"), wsql);
                   }
                   txnFirst = false;
                   if (
@@ -3132,15 +3134,15 @@ export class QueryBuilder {
                         savedOrderW = orderW;
                         savedHasOrder = hasOrder;
                         savedAlias = subAlias;
-                        sql = "";
-                        wsql = "";
+                        sql = [];
+                        wsql = [];
                         orderSql = "";
                         orderW = "";
                         hasOrder = false;
                         subAlias = "";
                         renderNodes(txnItem["chain"]["values"], 0);
-                        subSql = sql.trim();
-                        subW = wsql.trim();
+                        subSql = sql.join("").trim();
+                        subW = wsql.join("").trim();
                         subAliasText = subAlias;
                         sql = savedSql;
                         wsql = savedW;
@@ -3173,8 +3175,8 @@ export class QueryBuilder {
                   node["functionCall"]["arguments"][0]["argument"],
                 )) {
                   if (firstItem === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   firstItem = false;
                   if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
@@ -3195,15 +3197,15 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
                       subAlias = "";
                       renderNodes(item["chain"]["values"], 0);
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -3279,8 +3281,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3291,8 +3293,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3372,8 +3374,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3384,8 +3386,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3473,8 +3475,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3485,8 +3487,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3574,8 +3576,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3586,8 +3588,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3675,8 +3677,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3687,8 +3689,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3776,8 +3778,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3788,8 +3790,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3877,8 +3879,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -3889,8 +3891,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -3942,8 +3944,8 @@ export class QueryBuilder {
                   node["functionCall"]["arguments"][0]["argument"],
                 )) {
                   if (firstItem === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   firstItem = false;
                   if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
@@ -3964,15 +3966,15 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
                       subAlias = "";
                       renderNodes(item["chain"]["values"], 0);
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -4012,8 +4014,8 @@ export class QueryBuilder {
                   node["functionCall"]["arguments"][0]["argument"],
                 )) {
                   if (firstItem === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   firstItem = false;
                   if (!!Object.prototype.hasOwnProperty.call(item, "chain")) {
@@ -4034,15 +4036,15 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
                       subAlias = "";
                       renderNodes(item["chain"]["values"], 0);
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -4123,8 +4125,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -4135,8 +4137,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -4211,8 +4213,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -4223,8 +4225,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -4306,8 +4308,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -4318,8 +4320,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -4348,8 +4350,8 @@ export class QueryBuilder {
                   ],
                 )) {
                   if (assnFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   assnFirst = false;
                   pushSql(identStr(ak));
@@ -4409,8 +4411,8 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
@@ -4421,8 +4423,8 @@ export class QueryBuilder {
                         ]["value"][ak]["chain"]["values"],
                         0,
                       );
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -4507,8 +4509,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -4519,8 +4521,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -4549,8 +4551,8 @@ export class QueryBuilder {
                   ],
                 )) {
                   if (colFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   colFirst = false;
                   pushSql(identStr(ck));
@@ -4569,8 +4571,8 @@ export class QueryBuilder {
                   ],
                 )) {
                   if (valFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   valFirst = false;
                   if (
@@ -4626,8 +4628,8 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
@@ -4638,8 +4640,8 @@ export class QueryBuilder {
                         ]["value"][vk]["chain"]["values"],
                         0,
                       );
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -4726,8 +4728,8 @@ export class QueryBuilder {
                     savedOrderW = orderW;
                     savedHasOrder = hasOrder;
                     savedAlias = subAlias;
-                    sql = "";
-                    wsql = "";
+                    sql = [];
+                    wsql = [];
                     orderSql = "";
                     orderW = "";
                     hasOrder = false;
@@ -4738,8 +4740,8 @@ export class QueryBuilder {
                       ],
                       0,
                     );
-                    subSql = sql.trim();
-                    subW = wsql.trim();
+                    subSql = sql.join("").trim();
+                    subW = wsql.join("").trim();
                     subAliasText = subAlias;
                     sql = savedSql;
                     wsql = savedW;
@@ -4769,8 +4771,8 @@ export class QueryBuilder {
                   ],
                 )) {
                   if (assnFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   assnFirst = false;
                   pushSql(identStr(ak));
@@ -4830,8 +4832,8 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
@@ -4842,8 +4844,8 @@ export class QueryBuilder {
                         ]["value"][ak]["chain"]["values"],
                         0,
                       );
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -4885,8 +4887,8 @@ export class QueryBuilder {
                 ) {
                   for (const tuple of valueRows) {
                     if (valueFirst === false) {
-                      sql = sql + ",";
-                      wsql = wsql + ",";
+                      sql = (sql.push(","), sql);
+                      wsql = (wsql.push(","), wsql);
                     }
                     valueFirst = false;
                     pushSql("(");
@@ -4894,8 +4896,8 @@ export class QueryBuilder {
                     let itemFirst = true;
                     for (const ti of itemsOf(tuple)) {
                       if (itemFirst === false) {
-                        sql = sql + ",";
-                        wsql = wsql + ",";
+                        sql = (sql.push(","), sql);
+                        wsql = (wsql.push(","), wsql);
                       }
                       itemFirst = false;
                       if (!!Object.prototype.hasOwnProperty.call(ti, "chain")) {
@@ -4916,15 +4918,15 @@ export class QueryBuilder {
                           savedOrderW = orderW;
                           savedHasOrder = hasOrder;
                           savedAlias = subAlias;
-                          sql = "";
-                          wsql = "";
+                          sql = [];
+                          wsql = [];
                           orderSql = "";
                           orderW = "";
                           hasOrder = false;
                           subAlias = "";
                           renderNodes(ti["chain"]["values"], 0);
-                          subSql = sql.trim();
-                          subW = wsql.trim();
+                          subSql = sql.join("").trim();
+                          subW = wsql.join("").trim();
                           subAliasText = subAlias;
                           sql = savedSql;
                           wsql = savedW;
@@ -4954,8 +4956,8 @@ export class QueryBuilder {
                   let itemFirst = true;
                   for (const ti of valueRows) {
                     if (itemFirst === false) {
-                      sql = sql + ",";
-                      wsql = wsql + ",";
+                      sql = (sql.push(","), sql);
+                      wsql = (wsql.push(","), wsql);
                     }
                     itemFirst = false;
                     if (!!Object.prototype.hasOwnProperty.call(ti, "chain")) {
@@ -4976,15 +4978,15 @@ export class QueryBuilder {
                         savedOrderW = orderW;
                         savedHasOrder = hasOrder;
                         savedAlias = subAlias;
-                        sql = "";
-                        wsql = "";
+                        sql = [];
+                        wsql = [];
                         orderSql = "";
                         orderW = "";
                         hasOrder = false;
                         subAlias = "";
                         renderNodes(ti["chain"]["values"], 0);
-                        subSql = sql.trim();
-                        subW = wsql.trim();
+                        subSql = sql.join("").trim();
+                        subW = wsql.join("").trim();
                         subAliasText = subAlias;
                         sql = savedSql;
                         wsql = savedW;
@@ -5055,8 +5057,8 @@ export class QueryBuilder {
                   ],
                 )) {
                   if (assnFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   assnFirst = false;
                   pushSql(identStr(ak));
@@ -5116,8 +5118,8 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
@@ -5128,8 +5130,8 @@ export class QueryBuilder {
                         ]["value"][ak]["chain"]["values"],
                         0,
                       );
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -5248,8 +5250,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5260,8 +5262,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5341,8 +5343,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5353,8 +5355,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5434,8 +5436,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5446,8 +5448,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5481,8 +5483,8 @@ export class QueryBuilder {
                     node["functionCall"]["arguments"][0]["argument"],
                   )) {
                     if (inFirst === false) {
-                      sql = sql + ",";
-                      wsql = wsql + ",";
+                      sql = (sql.push(","), sql);
+                      wsql = (wsql.push(","), wsql);
                     }
                     inFirst = false;
                     if (!!Object.prototype.hasOwnProperty.call(iv, "chain")) {
@@ -5503,15 +5505,15 @@ export class QueryBuilder {
                         savedOrderW = orderW;
                         savedHasOrder = hasOrder;
                         savedAlias = subAlias;
-                        sql = "";
-                        wsql = "";
+                        sql = [];
+                        wsql = [];
                         orderSql = "";
                         orderW = "";
                         hasOrder = false;
                         subAlias = "";
                         renderNodes(iv["chain"]["values"], 0);
-                        subSql = sql.trim();
-                        subW = wsql.trim();
+                        subSql = sql.join("").trim();
+                        subW = wsql.join("").trim();
                         subAliasText = subAlias;
                         sql = savedSql;
                         wsql = savedW;
@@ -5555,8 +5557,8 @@ export class QueryBuilder {
                   node["functionCall"]["arguments"][0]["argument"],
                 )) {
                   if (inFirst === false) {
-                    sql = sql + ",";
-                    wsql = wsql + ",";
+                    sql = (sql.push(","), sql);
+                    wsql = (wsql.push(","), wsql);
                   }
                   inFirst = false;
                   if (!!Object.prototype.hasOwnProperty.call(iv, "chain")) {
@@ -5577,15 +5579,15 @@ export class QueryBuilder {
                       savedOrderW = orderW;
                       savedHasOrder = hasOrder;
                       savedAlias = subAlias;
-                      sql = "";
-                      wsql = "";
+                      sql = [];
+                      wsql = [];
                       orderSql = "";
                       orderW = "";
                       hasOrder = false;
                       subAlias = "";
                       renderNodes(iv["chain"]["values"], 0);
-                      subSql = sql.trim();
-                      subW = wsql.trim();
+                      subSql = sql.join("").trim();
+                      subW = wsql.join("").trim();
                       subAliasText = subAlias;
                       sql = savedSql;
                       wsql = savedW;
@@ -5676,8 +5678,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5688,8 +5690,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5762,8 +5764,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5774,8 +5776,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5951,8 +5953,8 @@ export class QueryBuilder {
                   savedOrderW = orderW;
                   savedHasOrder = hasOrder;
                   savedAlias = subAlias;
-                  sql = "";
-                  wsql = "";
+                  sql = [];
+                  wsql = [];
                   orderSql = "";
                   orderW = "";
                   hasOrder = false;
@@ -5963,8 +5965,8 @@ export class QueryBuilder {
                     ],
                     0,
                   );
-                  subSql = sql.trim();
-                  subW = wsql.trim();
+                  subSql = sql.join("").trim();
+                  subW = wsql.join("").trim();
                   subAliasText = subAlias;
                   sql = savedSql;
                   wsql = savedW;
@@ -5999,6 +6001,9 @@ export class QueryBuilder {
       return null;
     }
     renderNodes(root["schema"]["chain"]["chain"]["values"], 0);
+    sql = sql.join("");
+    wsql = wsql.join("");
+    params = params;
     return {
       sql: sql.trim(),
       sqlWithParam: wsql.trim(),

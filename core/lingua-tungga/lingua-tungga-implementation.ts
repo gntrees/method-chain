@@ -386,6 +386,42 @@ const MANIPULATIONS: Record<string, ManipulationDef> = {
         arity: 2,
         render: (a, separator) => ({ typescript: `${a.typescript}.join(${separator.typescript})`, c: `lt_join(${a.c}, ${separator.c})` }),
     },
+    bufferNew: {
+        arity: 0,
+        render: () => ({ typescript: "[]", c: `lt_buf_new()` }),
+    },
+    bufferAppend: {
+        arity: 2,
+        render: (a, b) => ({ typescript: `(${a.typescript}.push(${b.typescript}), ${a.typescript})`, c: `lt_buf_append(${a.c}, ${b.c})` }),
+    },
+    bufferLength: {
+        arity: 1,
+        render: (a) => ({ typescript: `${a.typescript}.length`, c: `lt_buf_len(${a.c})` }),
+    },
+    bufferToString: {
+        arity: 1,
+        render: (a) => ({ typescript: `${a.typescript}.join("")`, c: `lt_buf_str(${a.c})` }),
+    },
+    listNew: {
+        arity: 0,
+        render: () => ({ typescript: "[]", c: `lt_list_new()` }),
+    },
+    listPush: {
+        arity: 2,
+        render: (a, b) => ({ typescript: `(${a.typescript}.push(${b.typescript}), ${a.typescript})`, c: `lt_list_push(${a.c}, ${b.c})` }),
+    },
+    listLength: {
+        arity: 1,
+        render: (a) => ({ typescript: `${a.typescript}.length`, c: `lt_list_len(${a.c})` }),
+    },
+    listGet: {
+        arity: 2,
+        render: (a, b) => ({ typescript: `${a.typescript}[${b.typescript}]`, c: `lt_list_get(${a.c}, ${b.c})` }),
+    },
+    listValue: {
+        arity: 1,
+        render: (a) => ({ typescript: `${a.typescript}`, c: `lt_list_value(${a.c})` }),
+    },
     arraySlice: {
         arity: 3,
         render: (a, start, end) => ({ typescript: `${a.typescript}.slice(${start.typescript}, ${end.typescript})`, c: `lt_slice(${a.c}, ${start.c}, ${end.c})` }),

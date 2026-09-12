@@ -117,6 +117,8 @@ static const char *value_kind_name(const ArgumentValue *v)
     case D_MAP: return "object";
     case D_ARRAY: return "array";
     case D_CHAIN: return "structure";
+    case D_BUFFER: return "buffer";
+    case D_LIST: return "list";
     }
     return "unknown";
 }

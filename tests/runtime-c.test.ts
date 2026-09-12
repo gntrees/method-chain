@@ -968,6 +968,32 @@ int main(void) {
     expect(stdout).toContain("2 2");
 }, 60000);
 
+test("parse grows buffers for many parameters", () => {
+    const n = 120;
+    const calls = Array.from({ length: n }, (_, i) => `where(chain(col(v_string("a${i}")), eq(v_int(${i}))))`).join(",\n        ");
+    const runner = `#include "gntrees-method-chain.h"
+#include <stdio.h>
+int main(void) {
+    Builder qb = queryBuilder(
+        variableName("q"),
+        setDialect("postgres"),
+        select(col(v_string("id"))),
+        ${calls});
+    ParseResult r = parse(qb);
+    printf("%zu\\n", r.paramCount);
+    printf("%s\\n", r.sql + strlen(r.sql) - 4);
+    lt_free_value((ArgumentValue){0});
+    return 0;
+}
+`;
+    const { status, stderr, stdout } = compileAndRun(runner);
+    expect(status).toBe(0);
+    expect(stderr).not.toContain("validate:");
+    const lines = stdout.trim().split("\n");
+    expect(lines[0]).toBe("120");
+    expect(lines[1]).toBe("$120");
+}, 60000);
+
 test("parse is memory-safe under AddressSanitizer", () => {
     const runner = `#include "gntrees-method-chain.h"
 #include <stdio.h>

@@ -18,6 +18,14 @@ const strReplace = (a: unknown, search: unknown, replacement: unknown): LT =>
     lt().stringReplace(a as never, search as never, replacement as never);
 const strOf = (a: unknown): LT => lt().stringOf(a as never);
 const valEq = (a: unknown, b: unknown): LT => lt().valueEqual(a as never, b as never);
+const bufAppend = (name: string, text: unknown): LT => lt().bufferAppend(ref(name), text as never);
+const bufLen = (name: string): LT => lt().bufferLength(ref(name));
+const bufReset = (): LT => lt().bufferNew();
+const bufStr = (name: string): LT => lt().bufferToString(ref(name));
+const listNew = (): LT => lt().listNew();
+const listPush = (name: string, item: unknown): LT => lt().listPush(ref(name), item as never);
+const listLength = (name: string): LT => lt().listLength(ref(name));
+const listValue = (name: string): LT => lt().listValue(ref(name));
 const valNeq = (a: unknown, b: unknown): LT => lt().valueNotEqual(a as never, b as never);
 const truthy = (a: unknown): LT => lt().truthy(a as never);
 const callExpr = (name: string, args: unknown[] = []): LT => lt().callFunction(name, args as never);
@@ -178,9 +186,9 @@ function buildParser(): LT {
     c = c
         .addVariable("dialect", "")
         .addVariable("quote", "")
-        .addVariable("sql", "")
-        .addVariable("wsql", "")
-        .addVariable("params", { typescript: "([] as any[])", c: "arr()" })
+        .addVariable("sql", { typescript: "([] as any)", c: "lt_buf_new()" })
+        .addVariable("wsql", { typescript: "([] as any)", c: "lt_buf_new()" })
+        .addVariable("params", { typescript: "([] as any[])", c: "lt_list_new()" })
         .addVariable("orderSql", "")
         .addVariable("orderW", "")
         .addVariable("hasOrder", false)
@@ -195,10 +203,12 @@ function buildParser(): LT {
         lt().returnRaw(strLower(strReplace(ref("n"), "-", ""))));
 
     c = localFn(c, "pushSql", ["text"], () =>
-        lt().setVariable("sql", strCat(ref("sql"), strCat(" ", ref("text"))))
+        lt().setVariable("sql", bufAppend("sql", " "))
+            .setVariable("sql", bufAppend("sql", ref("text")))
             .returnRaw(NULL_EXPR()));
     c = localFn(c, "pushW", ["text"], () =>
-        lt().setVariable("wsql", strCat(ref("wsql"), strCat(" ", ref("text"))))
+        lt().setVariable("wsql", bufAppend("wsql", " "))
+            .setVariable("wsql", bufAppend("wsql", ref("text")))
             .returnRaw(NULL_EXPR()));
 
     c = localFn(c, "asString", ["arg"], () =>
@@ -246,9 +256,9 @@ function buildParser(): LT {
             .returnRaw(ref("tmpRef")));
 
     c = localFn(c, "emitParam", ["arg"], () =>
-        lt().setVariable("params", lt().arrayAppend(ref("params"), ref("arg")))
+        lt().setVariable("params", listPush("params", ref("arg")))
             .if(valEq(ref("dialect"), "postgres"),
-                lt().setVariable("tmp", strCat("$", strOf(arrLen(ref("params"))))))
+                lt().setVariable("tmp", strCat("$", strOf(listLength("params")))))
             .else(lt().setVariable("tmp", "?"))
             .addCallFunction("pushSql", [ref("tmp")])
             .setVariable("tmp2", callExpr("literalOf", [ref("arg")]))
@@ -262,27 +272,27 @@ function buildParser(): LT {
             .returnRaw(NULL_EXPR()));
 
     const rawParam = (arg: LT): LT =>
-        lt().setVariable("params", lt().arrayAppend(ref("params"), arg))
+        lt().setVariable("params", listPush("params", arg))
             .if(valEq(ref("dialect"), "postgres"),
-                lt().setVariable("tmp", strCat("$", strOf(arrLen(ref("params"))))))
+                lt().setVariable("tmp", strCat("$", strOf(listLength("params")))))
             .else(lt().setVariable("tmp", "?"))
-            .setVariable("sql", strCat(ref("sql"), ref("tmp")))
+            .setVariable("sql", bufAppend("sql", ref("tmp")))
             .setVariable("tmp2", callExpr("literalOf", [arg]))
-            .setVariable("wsql", strCat(ref("wsql"), ref("tmp2")));
+            .setVariable("wsql", bufAppend("wsql", ref("tmp2")));
 
     c = localFn(c, "emitRaw", ["node"], () =>
-        lt().if(valNeq(ref("sql"), ""),
-                lt().setVariable("sql", strCat(ref("sql"), " ")).setVariable("wsql", strCat(ref("wsql"), " ")))
+        lt().if(valNeq(bufLen("sql"), 0),
+                lt().setVariable("sql", bufAppend("sql", " ")).setVariable("wsql", bufAppend("wsql", " ")))
             .forEach(member(ref("node"), "functionCall.arguments"), "rawArg",
                 lt().addVariable("rawVal", objGet(ref("rawArg"), "argument"))
                     .if(objHas(ref("rawVal"), "string"),
-                        lt().setVariable("sql", strCat(ref("sql"), callExpr("asString", [ref("rawVal")])))
-                            .setVariable("wsql", strCat(ref("wsql"), callExpr("asString", [ref("rawVal")]))))
+                        lt().setVariable("sql", bufAppend("sql", callExpr("asString", [ref("rawVal")])))
+                            .setVariable("wsql", bufAppend("wsql", callExpr("asString", [ref("rawVal")]))))
                     .elseIf(objHas(ref("rawVal"), "chain"),
                         lt().setVariable("tmpRef", callExpr("isRef", [member(ref("rawVal"), "chain.values")]))
                             .if(valNeq(ref("tmpRef"), ""),
-                                lt().setVariable("sql", strCat(ref("sql"), callExpr("identStr", [ref("tmpRef")])))
-                                    .setVariable("wsql", strCat(ref("wsql"), callExpr("identStr", [ref("tmpRef")]))))
+                                lt().setVariable("sql", bufAppend("sql", callExpr("identStr", [ref("tmpRef")])))
+                                    .setVariable("wsql", bufAppend("wsql", callExpr("identStr", [ref("tmpRef")]))))
                             .else(rawParam(ref("rawVal"))))
                     .else(rawParam(ref("rawVal"))))
             .returnRaw(NULL_EXPR()));
@@ -330,15 +340,15 @@ function buildParser(): LT {
             .setVariable("savedOrderW", ref("orderW"))
             .setVariable("savedHasOrder", ref("hasOrder"))
             .setVariable("savedAlias", ref("subAlias"))
-            .setVariable("sql", "")
-            .setVariable("wsql", "")
+            .setVariable("sql", bufReset())
+            .setVariable("wsql", bufReset())
             .setVariable("orderSql", "")
             .setVariable("orderW", "")
             .setVariable("hasOrder", false)
             .setVariable("subAlias", "")
             .addCallFunction("renderNodes", [valuesArg, 0])
-            .setVariable("subSql", lt().stringTrim(ref("sql")))
-            .setVariable("subW", lt().stringTrim(ref("wsql")))
+            .setVariable("subSql", lt().stringTrim(bufStr("sql")))
+            .setVariable("subW", lt().stringTrim(bufStr("wsql")))
             .setVariable("subAliasText", ref("subAlias"))
             .setVariable("sql", ref("savedSql"))
             .setVariable("wsql", ref("savedW"))
@@ -378,7 +388,7 @@ function buildParser(): LT {
             .forEach(callExpr("itemsOf", [arg]), "item",
                 emitOperandNode(
                     lt().if(valEq(ref("firstItem"), false),
-                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                         .setVariable("firstItem", false),
                     ref("item")));
 
@@ -387,7 +397,7 @@ function buildParser(): LT {
             .forEach(lt().objectKeys(member(arg, "object.value")), "ak",
                 emitRhsNode(
                     lt().if(valEq(ref("assnFirst"), false),
-                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                         .setVariable("assnFirst", false)
                         .addCallFunction("pushSql", [callExpr("identStr", [ref("ak")])])
                         .addCallFunction("pushW", [callExpr("identStr", [ref("ak")])])
@@ -407,7 +417,7 @@ function buildParser(): LT {
             .addVariable("colFirst", true)
             .forEach(lt().objectKeys(member(mapArg, "object.value")), "ck",
                 lt().if(valEq(ref("colFirst"), false),
-                        lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                        lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                     .setVariable("colFirst", false)
                     .addCallFunction("pushSql", [callExpr("identStr", [ref("ck")])])
                     .addCallFunction("pushW", [callExpr("identStr", [ref("ck")])]))
@@ -421,7 +431,7 @@ function buildParser(): LT {
             .forEach(lt().objectKeys(member(mapArg, "object.value")), "vk",
                 emitRhsNode(
                     lt().if(valEq(ref("valFirst"), false),
-                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                         .setVariable("valFirst", false),
                     objGet(member(mapArg, "object.value"), ref("vk"))))
             .addCallFunction("pushSql", [")"])
@@ -433,7 +443,7 @@ function buildParser(): LT {
             .if(lt().and(valNeq(arrLen(ref("valueRows")), 0), objHas(arrGet(ref("valueRows"), 0), "array")),
                 lt().forEach(ref("valueRows"), "tuple",
                     lt().if(valEq(ref("valueFirst"), false),
-                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                         .setVariable("valueFirst", false)
                         .addCallFunction("pushSql", ["("])
                         .addCallFunction("pushW", ["("])
@@ -441,7 +451,7 @@ function buildParser(): LT {
                         .forEach(callExpr("itemsOf", [ref("tuple")]), "ti",
                             emitRhsNode(
                                 lt().if(valEq(ref("itemFirst"), false),
-                                        lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                                        lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                                     .setVariable("itemFirst", false),
                                 ref("ti")))
                         .addCallFunction("pushSql", [")"])
@@ -453,7 +463,7 @@ function buildParser(): LT {
                     .forEach(ref("valueRows"), "ti",
                         emitRhsNode(
                             lt().if(valEq(ref("itemFirst"), false),
-                                    lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                                    lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                                 .setVariable("itemFirst", false),
                             ref("ti")))
                     .addCallFunction("pushSql", [")"])
@@ -465,7 +475,7 @@ function buildParser(): LT {
             .addVariable("txnFirst", true)
             .forEach(callExpr("itemsOf", [arg]), "txnItem",
                 lt().if(valEq(ref("txnFirst"), false),
-                        lt().setVariable("sql", strCat(ref("sql"), ";")).setVariable("wsql", strCat(ref("wsql"), ";")))
+                        lt().setVariable("sql", bufAppend("sql", ";")).setVariable("wsql", bufAppend("wsql", ";")))
                     .setVariable("txnFirst", false)
                     .if(objHas(ref("txnItem"), "chain"),
                         lt().addCallFunction("renderNodes", [member(ref("txnItem"), "chain.values"), 0]))
@@ -484,7 +494,7 @@ function buildParser(): LT {
             .forEach(callExpr("itemsOf", [arg]), "iv",
                 emitRhsNode(
                     lt().if(valEq(ref("inFirst"), false),
-                            lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                            lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
                         .setVariable("inFirst", false),
                     ref("iv")))
             .addCallFunction("pushSql", [")"])
@@ -675,21 +685,21 @@ function buildParser(): LT {
             .setVariable("savedOrderSql", ref("orderSql"))
             .setVariable("savedOrderW", ref("orderW"))
             .setVariable("savedHasOrder", ref("hasOrder"))
-            .setVariable("sql", "")
-            .setVariable("wsql", "")
+            .setVariable("sql", bufReset())
+            .setVariable("wsql", bufReset())
             .setVariable("orderSql", "")
             .setVariable("orderW", "")
             .setVariable("hasOrder", false)
             .addCallFunction("renderNodes", [member(argAt(node, 0), "chain.values"), 0])
-            .setVariable("subSql", lt().stringTrim(ref("sql")))
-            .setVariable("subW", lt().stringTrim(ref("wsql")))
+            .setVariable("subSql", lt().stringTrim(bufStr("sql")))
+            .setVariable("subW", lt().stringTrim(bufStr("wsql")))
             .setVariable("sql", ref("savedSql"))
             .setVariable("wsql", ref("savedW"))
             .setVariable("orderSql", ref("savedOrderSql"))
             .setVariable("orderW", ref("savedOrderW"))
             .setVariable("hasOrder", ref("savedHasOrder"))
             .if(valEq(ref("withFirst"), false),
-                lt().setVariable("sql", strCat(ref("sql"), ",")).setVariable("wsql", strCat(ref("wsql"), ",")))
+                lt().setVariable("sql", bufAppend("sql", ",")).setVariable("wsql", bufAppend("wsql", ",")))
             .else(lt().setVariable("withFirst", false)
                 .addCallFunction("pushSql", ["WITH"])
                 .addCallFunction("pushW", ["WITH"]))
@@ -828,6 +838,9 @@ function buildParser(): LT {
             .returnRaw(NULL_EXPR()));
 
     c = callStmt(c, "renderNodes", [member(ref("root"), "schema.chain.chain.values"), 0]);
+    c = c.setVariable("sql", bufStr("sql"))
+        .setVariable("wsql", bufStr("wsql"))
+        .setVariable("params", listValue("params"));
     return c;
 }
 
