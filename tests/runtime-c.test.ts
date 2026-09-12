@@ -963,9 +963,9 @@ int main(void) {
     const { status, stderr, stdout } = compileAndRun(runner);
     expect(status).toBe(0);
     expect(stderr).not.toContain("validate:");
-    expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = $1 LIMIT 10');
+    expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = $1 LIMIT $2');
     expect(stdout).toContain('SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10');
-    expect(stdout).toContain("1 2");
+    expect(stdout).toContain("2 2");
 }, 60000);
 
 test("parse is memory-safe under AddressSanitizer", () => {
@@ -1003,7 +1003,7 @@ int main(void) {
     expect(stderr).not.toContain("runtime error:");
     expect(stderr).not.toContain("validate:");
     expect(stdout).toContain(
-        "SELECT `id`, `name` FROM `users` WHERE ( `age` >= ? AND `active` = ? ) ORDER BY `name` DESC LIMIT 5"
+        "SELECT `id`, `name` FROM `users` WHERE ( `age` >= ? AND `active` = ? ) ORDER BY `name` DESC LIMIT ?"
     );
 }, 60000);
 

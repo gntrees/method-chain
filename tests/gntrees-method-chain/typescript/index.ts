@@ -3016,12 +3016,6 @@ export class QueryBuilder {
     } else {
       quote = '"';
     }
-    function emitLiteralPlaceholder(arg: any) {
-      tmp = literalOf(arg);
-      pushSql(tmp);
-      pushW(tmp);
-      return null;
-    }
     function renderNodes(nodes: any, mode: any) {
       let savedSql = "";
       let savedW = "";
@@ -4004,16 +3998,178 @@ export class QueryBuilder {
                 flushOrder();
                 pushSql("LIMIT");
                 pushW("LIMIT");
-                emitLiteralPlaceholder(
-                  node["functionCall"]["arguments"][0]["argument"],
-                );
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
               } else if (nameNorm === "offset") {
                 flushOrder();
                 pushSql("OFFSET");
                 pushW("OFFSET");
-                emitLiteralPlaceholder(
-                  node["functionCall"]["arguments"][0]["argument"],
-                );
+                if (
+                  !!Object.prototype.hasOwnProperty.call(
+                    node["functionCall"]["arguments"][0]["argument"],
+                    "chain",
+                  )
+                ) {
+                  tmpRef = isRef(
+                    node["functionCall"]["arguments"][0]["argument"]["chain"][
+                      "values"
+                    ],
+                  );
+                  if (tmpRef !== "") {
+                    emitIdent(tmpRef);
+                  } else if (
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "select" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "with" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "values" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "insert" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "update" ||
+                    firstKind(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                    ) === "delete"
+                  ) {
+                    savedSql = sql;
+                    savedW = wsql;
+                    savedOrderSql = orderSql;
+                    savedOrderW = orderW;
+                    savedHasOrder = hasOrder;
+                    savedAlias = subAlias;
+                    sql = "";
+                    wsql = "";
+                    orderSql = "";
+                    orderW = "";
+                    hasOrder = false;
+                    subAlias = "";
+                    renderNodes(
+                      node["functionCall"]["arguments"][0]["argument"]["chain"][
+                        "values"
+                      ],
+                      0,
+                    );
+                    subSql = sql.trim();
+                    subW = wsql.trim();
+                    subAliasText = subAlias;
+                    sql = savedSql;
+                    wsql = savedW;
+                    orderSql = savedOrderSql;
+                    orderW = savedOrderW;
+                    hasOrder = savedHasOrder;
+                    subAlias = savedAlias;
+                    pushSql("(" + (subSql + ")"));
+                    pushW("(" + (subW + ")"));
+                    if (subAliasText !== "") {
+                      pushSql(subAliasText);
+                      pushW(subAliasText);
+                    }
+                  } else {
+                    emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                  }
+                } else {
+                  emitParam(node["functionCall"]["arguments"][0]["argument"]);
+                }
               } else if (nameNorm === "raw") {
                 emitRaw(node);
               } else if (nameNorm === "as") {
@@ -5539,8 +5695,21 @@ export class QueryBuilder {
               }
               pushSql(base);
               pushW(base);
-              pushSql("IS NULL");
-              pushW("IS NULL");
+              if (
+                !!Object.prototype.hasOwnProperty.call(
+                  node["functionCall"]["arguments"][0]["argument"],
+                  "boolean",
+                ) &&
+                node["functionCall"]["arguments"][0]["argument"]["boolean"][
+                  "value"
+                ] === false
+              ) {
+                pushSql("IS NOT NULL");
+                pushW("IS NOT NULL");
+              } else {
+                pushSql("IS NULL");
+                pushW("IS NULL");
+              }
               hasLeft = false;
             } else if (pn === "not") {
               if (first === false) {

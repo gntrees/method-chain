@@ -420,8 +420,8 @@ test("parse builds postgres sql with placeholders and params", () => {
         .setDialect("postgres")
         .parse();
     expect(result).toEqual({
-        sql: 'SELECT "id" FROM "users" WHERE "active" = $1 LIMIT 10',
-        param: [true],
+        sql: 'SELECT "id" FROM "users" WHERE "active" = $1 LIMIT $2',
+        param: [true, 10],
         sqlWithParam: 'SELECT "id" FROM "users" WHERE "active" = TRUE LIMIT 10',
     });
 });
@@ -479,6 +479,26 @@ test("parse builds is null predicate without params", () => {
         sql: 'SELECT "id" WHERE "x" IS NULL',
         param: [],
         sqlWithParam: 'SELECT "id" WHERE "x" IS NULL',
+    });
+});
+
+test("parse builds is not null for isNull(false)", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).where(c.col("x").isNull(false)).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" WHERE "x" IS NOT NULL',
+        param: [],
+        sqlWithParam: 'SELECT "id" WHERE "x" IS NOT NULL',
+    });
+});
+
+test("parse binds limit and offset as params", () => {
+    const c = qb();
+    const result = c.select(c.col("id")).from(c.table("t")).limit(10).offset(2).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'SELECT "id" FROM "t" LIMIT $1 OFFSET $2',
+        param: [10, 2],
+        sqlWithParam: 'SELECT "id" FROM "t" LIMIT 10 OFFSET 2',
     });
 });
 

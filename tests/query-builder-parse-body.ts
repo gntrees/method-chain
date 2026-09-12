@@ -524,8 +524,12 @@ function buildParser(): LT {
                         ).setVariable("hasLeft", false))
                     .elseIf(valEq(ref("pn"), "isnull"),
                         emitBase(separator(lt()))
-                            .addCallFunction("pushSql", ["IS NULL"])
-                            .addCallFunction("pushW", ["IS NULL"])
+                            .if(
+                                lt().and(
+                                    objHas(argAt(node, 0), "boolean"),
+                                    valEq(objGet(objGet(argAt(node, 0), "boolean"), "value"), false)),
+                                lt().addCallFunction("pushSql", ["IS NOT NULL"]).addCallFunction("pushW", ["IS NOT NULL"]))
+                            .else(lt().addCallFunction("pushSql", ["IS NULL"]).addCallFunction("pushW", ["IS NULL"]))
                             .setVariable("hasLeft", false))
                     .elseIf(valEq(ref("pn"), "not"),
                         separator(lt())
@@ -703,8 +707,8 @@ function buildParser(): LT {
                     .setVariable("orderW", "")
                     .addCallFunction("emitOrderList", [argAt(n, 0)]),
             },
-            { names: ["limit"], build: (n) => keywordClause(n, "LIMIT", (ch, a) => ch.addCallFunction("emitLiteralPlaceholder", [a]), (a) => a) },
-            { names: ["offset"], build: (n) => keywordClause(n, "OFFSET", (ch, a) => ch.addCallFunction("emitLiteralPlaceholder", [a]), (a) => a) },
+            { names: ["limit"], build: (n) => keywordClause(n, "LIMIT", emitRhsNode, (a) => a) },
+            { names: ["offset"], build: (n) => keywordClause(n, "OFFSET", emitRhsNode, (a) => a) },
             { names: ["raw"], build: (n) => lt().addCallFunction("emitRaw", [n]) },
             {
                 names: ["as"],
@@ -771,13 +775,6 @@ function buildParser(): LT {
         });
         return b.else(lt().throwError(strCat("query-builder parse: unsupported clause ", ref("name"))));
     };
-
-    // literal clause needs a tiny local helper; define once before the loop
-    c = localFn(c, "emitLiteralPlaceholder", ["arg"], () =>
-        lt().setVariable("tmp", callExpr("literalOf", [ref("arg")]))
-            .addCallFunction("pushSql", [ref("tmp")])
-            .addCallFunction("pushW", [ref("tmp")])
-            .returnRaw(NULL_EXPR()));
 
     const chainBody = (): LT =>
         lt().forEach(ref("nodes"), "node",

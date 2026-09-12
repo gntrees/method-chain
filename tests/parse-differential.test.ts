@@ -64,6 +64,13 @@ const cases: Case[] = [
         where(chain(col(v_string("x")), isNull(v_bool(1))))`,
     },
     {
+        name: "is not null",
+        query: (c) => c.select(c.col("id")).where(c.col("x").isNull(false)).setDialect("postgres"),
+        cArgs: `setDialect("postgres"),
+        select(col(v_string("id"))),
+        where(chain(col(v_string("x")), isNull(v_bool(0))))`,
+    },
+    {
         name: "in with literal list",
         query: (c) => c.select(c.col("id")).where(c.col("x").in("1,2,3")).setDialect("postgres"),
         cArgs: `setDialect("postgres"),
