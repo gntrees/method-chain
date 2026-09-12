@@ -734,6 +734,49 @@ test("parse builds conflict clauses", () => {
     ).toBe('INSERT INTO "t" ( "name" ) VALUES ( $1 ) ON CONFLICT ("id") DO UPDATE SET "name" = $2');
 });
 
+test("parse builds update with subquery assignment", () => {
+    const c = qb();
+    const result = c.update(c.table("t"), { x: c.select(c.col("id")).from(c.table("b")) }).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'UPDATE "t" SET "x" = (SELECT "id" FROM "b")',
+        param: [],
+        sqlWithParam: 'UPDATE "t" SET "x" = (SELECT "id" FROM "b")',
+    });
+});
+
+test("parse builds insert with subquery value", () => {
+    const c = qb();
+    const result = c.insert(c.table("t"), { x: c.select(c.col("id")).from(c.table("b")) }).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'INSERT INTO "t" ( "x" ) VALUES ( (SELECT "id" FROM "b") )',
+        param: [],
+        sqlWithParam: 'INSERT INTO "t" ( "x" ) VALUES ( (SELECT "id" FROM "b") )',
+    });
+});
+
+test("parse builds values with subquery element", () => {
+    const c = qb();
+    const result = c.values([[c.select(c.col("id")).from(c.table("b")), 1]]).setDialect("postgres").parse();
+    expect(result).toEqual({
+        sql: 'VALUES ( (SELECT "id" FROM "b"), $1 )',
+        param: [1],
+        sqlWithParam: 'VALUES ( (SELECT "id" FROM "b"), 1 )',
+    });
+});
+
+test("parse builds on conflict update with subquery assignment", () => {
+    const c = qb();
+    const result = c.insert(c.table("t"), { name: "x" })
+        .onConflictDoUpdate(c.col("id"), { name: c.select(c.col("n")).from(c.table("b")) })
+        .setDialect("mysql")
+        .parse();
+    expect(result).toEqual({
+        sql: "INSERT INTO `t` ( `name` ) VALUES ( ? ) ON CONFLICT (`id`) DO UPDATE SET `name` = (SELECT `n` FROM `b`)",
+        param: ["x"],
+        sqlWithParam: "INSERT INTO `t` ( `name` ) VALUES ( 'x' ) ON CONFLICT (`id`) DO UPDATE SET `name` = (SELECT `n` FROM `b`)",
+    });
+});
+
 test("parse renders raw template literals", () => {
     const c = qb();
     const identifiers = c.raw`SELECT ${c.col("id")} FROM ${c.table("t")}`.setDialect("mysql").parse();

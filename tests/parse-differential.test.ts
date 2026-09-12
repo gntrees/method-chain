@@ -320,6 +320,33 @@ const cases: Case[] = [
         select(col(v_string("id"))),
         where(chain(col(v_string("id")), in(chain(select(col(v_string("uid"))), from(table(v_string("m"))), where(chain(col(v_string("uid")), in(chain(select(col(v_string("id"))), from(table(v_string("b"))), where(chain(col(v_string("ok")), eq(v_bool(1))))))))))))`,
     },
+    {
+        name: "postgres update set subquery",
+        query: (c) =>
+            c.update(c.table("t"), { x: c.select(c.col("id")).from(c.table("b")) })
+                .setDialect("postgres"),
+        cSetup: `Builder setSub = chain(select(col(v_string("id"))), from(table(v_string("b"))));`,
+        cArgs: `setDialect("postgres"),
+        update(table(v_string("t")), map(entry("x", setSub)))`,
+    },
+    {
+        name: "postgres insert subquery value",
+        query: (c) =>
+            c.insert(c.table("t"), { x: c.select(c.col("id")).from(c.table("b")) })
+                .setDialect("postgres"),
+        cSetup: `Builder insSub = chain(select(col(v_string("id"))), from(table(v_string("b"))));`,
+        cArgs: `setDialect("postgres"),
+        insert(table(v_string("t")), map(entry("x", insSub)))`,
+    },
+    {
+        name: "postgres values with subquery element",
+        query: (c) =>
+            c.values([[c.select(c.col("id")).from(c.table("b")), 1]])
+                .setDialect("postgres"),
+        cSetup: `Builder valSub = chain(select(col(v_string("id"))), from(table(v_string("b"))));`,
+        cArgs: `setDialect("postgres"),
+        values(arr(arr(valSub, v_int(1))))`,
+    },
 ];
 
 for (const { name, query, cArgs, cSetup } of cases) {
