@@ -427,7 +427,7 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define map(...) CAT(map_, __VA_OPT__(1))(__VA_ARGS__)
 #define map_() \
     ((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })
-#define map_1(...) \
+#define map_1(...) \ 
     ((ArgumentValue){ \
         .type = D_MAP, \
         .count = sizeof((MapEntry[]){ __VA_ARGS__ }) / sizeof(MapEntry), \
