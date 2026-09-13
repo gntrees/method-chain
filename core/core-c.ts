@@ -69,7 +69,7 @@ export function stringifyCStruct(struct: StructType['struct']): string {
 function cDefaultLiteral(def: NonNullable<ArgumentType["argument"]["default"]>): string {
     if ("string" in def) return `"${escapeCString(def.string.value)}"`;
     if ("number" in def) return def.number.value.toString();
-    if ("boolean" in def) return def.boolean.value ? "1" : "0";
+    if ("boolean" in def) return def.boolean.value ? "true" : "false";
     if ("null" in def) return "NULL";
     if ("array" in def) {
         const items = def.array.value.map(cDefaultContainerItem);
@@ -89,7 +89,7 @@ function cDefaultLiteral(def: NonNullable<ArgumentType["argument"]["default"]>):
 }
 
 function cDefaultContainerItem(def: NonNullable<ArgumentType["argument"]["default"]>): string {
-    if ("boolean" in def) return `v_bool(${def.boolean.value ? "1" : "0"})`;
+    if ("boolean" in def) return `v_bool(${def.boolean.value ? "true" : "false"})`;
     return cDefaultLiteral(def);
 }
 

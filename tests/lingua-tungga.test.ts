@@ -51,7 +51,7 @@ test("addStructureFunctionCall renders literals per language", async () => {
         .addStructureFunctionCall("unset", [null])
         .generate();
     expect(out.typescript).toEqual('this.select("id");\nthis.limit(5);\nthis.flag(true);\nthis.unset(null);');
-    expect(out.c).toEqual('select(v_string("id"));\nlimit(v_int(5));\nflag(v_bool(1));\nunset(v_null());\nlt_free_all();');
+    expect(out.c).toEqual('select(v_string("id"));\nlimit(v_int(5));\nflag(v_bool(true));\nunset(v_null());\nlt_free_all();');
 });
 
 test("addStructureFunctionCall renders objects, arrays and expression records", async () => {
@@ -103,7 +103,7 @@ test("addVariable emits declarations per language", async () => {
     ].join("\n"));
     expect(out.c).toEqual([
         "ArgumentValue count = v_int(5);",
-        "ArgumentValue flag = v_bool(1);",
+        "ArgumentValue flag = v_bool(true);",
         "ArgumentValue nothing = v_null();",
         'ArgumentValue items = arr(v_string("a"), v_string("b"));',
         'ArgumentValue user = map(entry("name", v_string("bob")));',
@@ -114,7 +114,7 @@ test("addVariable emits declarations per language", async () => {
 test("addValue producer renders values per language", async () => {
     expect(await linguaTungga().addValue("hi").generate()).toEqual({ typescript: '"hi"', c: 'v_string("hi")' });
     expect(await linguaTungga().addValue(5).generate()).toEqual({ typescript: "5", c: "v_int(5)" });
-    expect(await linguaTungga().addValue(true).generate()).toEqual({ typescript: "true", c: "v_bool(1)" });
+    expect(await linguaTungga().addValue(true).generate()).toEqual({ typescript: "true", c: "v_bool(true)" });
     expect(await linguaTungga().addValue(null).generate()).toEqual({ typescript: "null", c: "v_null()" });
     expect(await linguaTungga().addValue([1, 2]).generate()).toEqual({ typescript: "[1, 2]", c: "arr(v_int(1), v_int(2))" });
     expect(await linguaTungga().addValue([["a"], ["b"]]).generate()).toEqual({
@@ -527,7 +527,7 @@ test("setVariable works inside a block for outer variables", async () => {
         .if(linguaTungga().equal(1, 1), linguaTungga().setVariable("flag", true))
         .generate();
     expect(out.typescript).toEqual("let flag = false;\nif (1 === 1) {\n  flag = true;\n}");
-    expect(out.c).toEqual("ArgumentValue flag = v_bool(0);\nif (1 == 1) {\n  flag = v_bool(1);\n}\nlt_free_all();");
+    expect(out.c).toEqual("ArgumentValue flag = v_bool(false);\nif (1 == 1) {\n  flag = v_bool(true);\n}\nlt_free_all();");
 });
 
 test("addGlobalFunction emits a function before statements", async () => {

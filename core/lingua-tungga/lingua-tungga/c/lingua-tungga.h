@@ -13,6 +13,12 @@
 
 #include <stddef.h>
 #include <alloca.h>
+#include <stdbool.h>
+
+#undef true
+#undef false
+#define true ((bool)1)
+#define false ((bool)0)
 
 enum DynamicType
 {
@@ -238,10 +244,10 @@ static ArgumentValue v_float(double x);
  */
 static ArgumentValue v_string(const char *s);
 /**
- * @param b int
+ * @param b bool
  * @return ArgumentValue (boolean)
  */
-static ArgumentValue v_bool(int b);
+static ArgumentValue v_bool(bool b);
 /**
  * @return ArgumentValue (null)
  */
@@ -364,6 +370,7 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
     int: v_int,                            \
     long: v_int,                           \
     long long: v_int,                      \
+    bool: v_bool,                          \
     double: v_float,                       \
     float: v_float,                        \
     char *: v_string,                      \
@@ -1161,9 +1168,9 @@ static ArgumentValue lt_contains(ArgumentValue a, ArgumentValue item)
         const ArgumentValue *items = a.as.data;
         for (size_t i = 0; i < a.count; i++)
             if (lt_value_equals(items[i], item))
-                return v_bool(1);
+                return v_bool(true);
     }
-    return v_bool(0);
+    return v_bool(false);
 }
 
 static ArgumentValue lt_index_of(ArgumentValue a, ArgumentValue item)
@@ -1464,12 +1471,12 @@ static ArgumentValue lt_has(ArgumentValue a, ArgumentValue key)
 {
     const char *k = lt_as_string(&key);
     if (a.type != D_MAP)
-        return v_bool(0);
+        return v_bool(false);
     const MapEntry *entries = a.as.data;
     for (size_t i = 0; i < a.count; i++)
         if (entries[i].key && strcmp(entries[i].key, k) == 0)
-            return v_bool(1);
-    return v_bool(0);
+            return v_bool(true);
+    return v_bool(false);
 }
 
 /* Arena-backed open-addressing string->index map (untuk dedup key di merge). */
@@ -1615,7 +1622,7 @@ static ArgumentValue lt_entries(ArgumentValue a)
 V(v_int, D_INT, i, long long, x)
 V(v_float, D_FLOAT, f, double, x)
 V(v_string, D_STRING, s, const char *, x)
-V(v_bool, D_BOOL, i, int, x ? 1 : 0)
+V(v_bool, D_BOOL, i, bool, x ? 1 : 0)
 
 static ArgumentValue v_null(void) { return (ArgumentValue){.type = D_NULL, .as.i = 0}; }
 

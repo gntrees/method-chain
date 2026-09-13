@@ -88,7 +88,7 @@ function renderValue(value: JsonValue, ctx: RenderContext): string {
         return String(value.number.value);
     }
     if ("boolean" in value) {
-        return `v_bool(${value.boolean.value ? 1 : 0})`;
+        return `v_bool(${value.boolean.value ? "true" : "false"})`;
     }
     if ("null" in value) {
         return "v_null()";

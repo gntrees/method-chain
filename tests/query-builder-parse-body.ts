@@ -549,12 +549,13 @@ function buildParser(): LT {
                         ).setVariable("hasLeft", false))
                     .elseIf(valEq(ref("pn"), "isnull"),
                         emitBase(separator(lt()))
-                            .if(
-                                lt().and(
-                                    objHas(argAt(node, 0), "boolean"),
-                                    valEq(objGet(objGet(argAt(node, 0), "boolean"), "value"), false)),
-                                lt().addCallFunction("pushSql", ["IS NOT NULL"]).addCallFunction("pushW", ["IS NOT NULL"]))
-                            .else(lt().addCallFunction("pushSql", ["IS NULL"]).addCallFunction("pushW", ["IS NULL"]))
+                            .addCallFunction("pushSql", ["IS NULL"])
+                            .addCallFunction("pushW", ["IS NULL"])
+                            .setVariable("hasLeft", false))
+                    .elseIf(valEq(ref("pn"), "isnotnull"),
+                        emitBase(separator(lt()))
+                            .addCallFunction("pushSql", ["IS NOT NULL"])
+                            .addCallFunction("pushW", ["IS NOT NULL"])
                             .setVariable("hasLeft", false))
                     .elseIf(valEq(ref("pn"), "not"),
                         separator(lt())

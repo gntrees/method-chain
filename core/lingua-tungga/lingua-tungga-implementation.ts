@@ -82,7 +82,7 @@ function renderValue(value: unknown): ExpressionRecord {
     if (typeof value === "boolean") {
         return {
             typescript: `${value}`,
-            c: `v_bool(${value ? 1 : 0})`,
+            c: `v_bool(${value ? "true" : "false"})`,
         };
     }
     if (value === null) {

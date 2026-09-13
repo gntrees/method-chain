@@ -708,9 +708,9 @@ static ArgumentValue lt_contains(ArgumentValue a, ArgumentValue item)
         const ArgumentValue *items = a.as.data;
         for (size_t i = 0; i < a.count; i++)
             if (lt_value_equals(items[i], item))
-                return v_bool(1);
+                return v_bool(true);
     }
-    return v_bool(0);
+    return v_bool(false);
 }
 
 static ArgumentValue lt_index_of(ArgumentValue a, ArgumentValue item)
@@ -1011,12 +1011,12 @@ static ArgumentValue lt_has(ArgumentValue a, ArgumentValue key)
 {
     const char *k = lt_as_string(&key);
     if (a.type != D_MAP)
-        return v_bool(0);
+        return v_bool(false);
     const MapEntry *entries = a.as.data;
     for (size_t i = 0; i < a.count; i++)
         if (entries[i].key && strcmp(entries[i].key, k) == 0)
-            return v_bool(1);
-    return v_bool(0);
+            return v_bool(true);
+    return v_bool(false);
 }
 
 /* Arena-backed open-addressing string->index map (untuk dedup key di merge). */

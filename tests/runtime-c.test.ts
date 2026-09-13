@@ -267,7 +267,7 @@ int main(void) {
 test("union error message includes branch reasons", () => {
     const runner = `#include "gntrees-method-chain.h"
 int main(void) {
-    Builder b = createTypeConverter(variableName("c"), unify(v_bool(1)));
+    Builder b = createTypeConverter(variableName("c"), unify(true));
     return 0;
 }
 `;
@@ -950,7 +950,7 @@ int main(void) {
         setDialect("postgres"),
         select(col(v_string("id"))),
         from(table(v_string("users"))),
-        where(chain(col(v_string("active")), eq(v_bool(1)))),
+        where(chain(col(v_string("active")), eq(true))),
         limit(v_int(10)));
     ParseResult r = parse(qb);
     printf("%s\\n", r.sql);
@@ -1005,7 +1005,7 @@ int main(void) {
         from(table(v_string("users"))),
         where(chain(and(arr(
             chain(col(v_string("age")), gte(v_int(18))),
-            chain(col(v_string("active")), eq(v_bool(1))))))),
+            chain(col(v_string("active")), eq(true)))))),
         orderBy(chain(col(v_string("name")), desc())),
         limit(v_int(5)));
     ParseResult r = parse(qb);
@@ -1070,8 +1070,8 @@ int main(void) {
     ArgumentValue i6 = v_int(6);
     ArgumentValue f15 = v_float(1.5);
     ArgumentValue f50 = v_float(5.0);
-    ArgumentValue b1 = v_bool(1);
-    ArgumentValue b0 = v_bool(0);
+    ArgumentValue b1 = v_bool(true);
+    ArgumentValue b0 = v_bool(false);
     ArgumentValue sx = v_string("x");
     if (validate_value(&i5, &int_lit) != V_OK) return 1;
     if (validate_value(&f15, &float_lit) != V_OK) return 2;

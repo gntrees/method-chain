@@ -474,7 +474,7 @@ test("parse builds or with not predicate", () => {
 
 test("parse builds is null predicate without params", () => {
     const c = qb();
-    const result = c.select(c.col("id")).where(c.col("x").isNull(true)).setDialect("postgres").parse();
+    const result = c.select(c.col("id")).where(c.col("x").isNull()).setDialect("postgres").parse();
     expect(result).toEqual({
         sql: 'SELECT "id" WHERE "x" IS NULL',
         param: [],
@@ -482,9 +482,9 @@ test("parse builds is null predicate without params", () => {
     });
 });
 
-test("parse builds is not null for isNull(false)", () => {
+test("parse builds is not null for isNotNull", () => {
     const c = qb();
-    const result = c.select(c.col("id")).where(c.col("x").isNull(false)).setDialect("postgres").parse();
+    const result = c.select(c.col("id")).where(c.col("x").isNotNull()).setDialect("postgres").parse();
     expect(result).toEqual({
         sql: 'SELECT "id" WHERE "x" IS NOT NULL',
         param: [],

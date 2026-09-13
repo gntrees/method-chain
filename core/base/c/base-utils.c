@@ -16,7 +16,7 @@
 V(v_int, D_INT, i, long long, x)
 V(v_float, D_FLOAT, f, double, x)
 V(v_string, D_STRING, s, const char *, x)
-V(v_bool, D_BOOL, i, int, x ? 1 : 0)
+V(v_bool, D_BOOL, i, bool, x ? 1 : 0)
 
 static ArgumentValue v_null(void) { return (ArgumentValue){.type = D_NULL, .as.i = 0}; }
 

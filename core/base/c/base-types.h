@@ -3,6 +3,12 @@
 
 #include <stddef.h>
 #include <alloca.h>
+#include <stdbool.h>
+
+#undef true
+#undef false
+#define true ((bool)1)
+#define false ((bool)0)
 
 enum DynamicType
 {
@@ -228,10 +234,10 @@ static ArgumentValue v_float(double x);
  */
 static ArgumentValue v_string(const char *s);
 /**
- * @param b int
+ * @param b bool
  * @return ArgumentValue (boolean)
  */
-static ArgumentValue v_bool(int b);
+static ArgumentValue v_bool(bool b);
 /**
  * @return ArgumentValue (null)
  */
@@ -354,6 +360,7 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
     int: v_int,                            \
     long: v_int,                           \
     long long: v_int,                      \
+    bool: v_bool,                          \
     double: v_float,                       \
     float: v_float,                        \
     char *: v_string,                      \
@@ -427,7 +434,7 @@ static SchemaType validate_and_return(SchemaType s, const StructureRegistry *reg
 #define map(...) CAT(map_, __VA_OPT__(1))(__VA_ARGS__)
 #define map_() \
     ((ArgumentValue){ .type = D_MAP, .count = 0, .as.data = 0 })
-#define map_1(...) \ 
+#define map_1(...) \
     ((ArgumentValue){ \
         .type = D_MAP, \
         .count = sizeof((MapEntry[]){ __VA_ARGS__ }) / sizeof(MapEntry), \

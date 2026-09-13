@@ -2305,29 +2305,14 @@ export class QueryBuilder {
       ),
     );
   }
-  isNull(value: string | number | boolean | QueryBuilder): QueryBuilder {
+  isNull(): QueryBuilder {
     return new QueryBuilder().initFromStructure<QueryBuilder>(
-      createSchema(
-        this.getSchema(),
-        "isNull",
-        [
-          {
-            arg: value,
-            struct: {
-              union: {
-                types: [
-                  { string: { type: "string" } },
-                  { number: { type: "number" } },
-                  { boolean: { type: "boolean" } },
-                  { structureCall: { name: "query-builder" } },
-                ],
-              },
-            },
-            provided: arguments.length >= 1,
-          },
-        ],
-        false,
-      ),
+      createSchema(this.getSchema(), "isNull", [], false),
+    );
+  }
+  isNotNull(): QueryBuilder {
+    return new QueryBuilder().initFromStructure<QueryBuilder>(
+      createSchema(this.getSchema(), "isNotNull", [], false),
     );
   }
   in(value: string | number | boolean | QueryBuilder): QueryBuilder {
@@ -5811,21 +5796,24 @@ export class QueryBuilder {
               }
               pushSql(base);
               pushW(base);
-              if (
-                !!Object.prototype.hasOwnProperty.call(
-                  node["functionCall"]["arguments"][0]["argument"],
-                  "boolean",
-                ) &&
-                node["functionCall"]["arguments"][0]["argument"]["boolean"][
-                  "value"
-                ] === false
-              ) {
-                pushSql("IS NOT NULL");
-                pushW("IS NOT NULL");
-              } else {
-                pushSql("IS NULL");
-                pushW("IS NULL");
+              pushSql("IS NULL");
+              pushW("IS NULL");
+              hasLeft = false;
+            } else if (pn === "isnotnull") {
+              if (first === false) {
+                pushSql("AND");
+                pushW("AND");
               }
+              first = false;
+              if (!!hasLeft) {
+                base = left;
+              } else {
+                base = "?";
+              }
+              pushSql(base);
+              pushW(base);
+              pushSql("IS NOT NULL");
+              pushW("IS NOT NULL");
               hasLeft = false;
             } else if (pn === "not") {
               if (first === false) {
